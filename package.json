@@ -1,0 +1,46 @@
+{
+  "name": "alpha-suit",
+  "description": "Data manager for your games",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
+  "contributors": [
+    "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
+  ],
+  "dependencies": {
+    "@typhonjs-fvtt/runtime": "^0.0.19",
+    "class-transformer": "^0.5.1",
+    "consola": "^2.15.3",
+    "crew-components": "file:../crew-components",
+    "daisyui": "^2.22.0",
+    "fast-sort": "^3.2.0",
+    "filtrex": "^3.0.0",
+    "iconify": "^1.4.0",
+    "iconify-icon": "^1.0.0-beta.2",
+    "svelte": "^3.49.0",
+    "svelte-collapsible": "^0.2.1",
+    "svelte-copy-to-clipboard": "^0.2.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@typhonjs-config/eslint-config": "^0.3.0",
+    "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",
+    "eslint": "^8",
+    "svelte-dnd-action": "^0.9.19",
+    "svelte-preprocess": "^4.10.0",
+    "svelte-windicss-preprocess": "^4.2.8",
+    "vite": "^3",
+    "vite-plugin-windicss": "^1.8.7",
+    "windicss": "^3.5.6"
+  },
+  "browserslist": [
+    ">5%",
+    "not IE 11"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "eslint": "eslint ."
+  }
+}

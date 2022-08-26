@@ -1,0 +1,279 @@
+.svelte-select-list {
+    z-index: 9999;
+}
+
+.alpha-icon::before {
+    content: "α";
+}
+
+#alpha-tree.window-app,
+#alpha-browser.window-app {
+    --main-input-height: 2.5rem;
+    h2 {
+        font-size: 1rem !important;
+        border: none;
+        margin: 0px;
+        font-weight: 500;
+    }
+    /* min-width: 60rem; */
+    max-width: 80%;
+    max-height: 90%;
+    --tw-bg-opacity: 0.9 !important;
+    .ui-bg-white {
+        --tw-bg-opacity: 0.9 !important;
+    }
+
+    button:hover,
+    button:focus {
+        box-shadow: unset;
+    }
+    a:hover {
+        text-shadow: unset;
+    }
+
+    svg {
+        border-radius: 0px !important;
+    }
+    .window-content {
+        padding: 0px;
+        overflow-y: hidden;
+    }
+
+    .ui-btn-group * {
+        margin: 0px;
+    }
+
+    .inline button,
+    .inline label {
+        border-radius: 0;
+    }
+
+    .icon-button {
+        border-radius: 8px;
+        padding: 2px;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+    .icon-button:hover {
+        border: 1px solid grey;
+    }
+
+    .force-select-width .svelte-select {
+        min-width: unset !important;
+        width: 100% !important;
+        border-radius: 0;
+        input {
+            padding: 4px !important;
+        }
+        .selected-item {
+            padding: 0px !important;
+        }
+    }
+    .svelte-select {
+        min-width: 180px;
+        width: fit-content;
+        max-width: 600px;
+        border-radius: var(--rounded-btn, 0.5rem);
+        background: #fff !important;
+        height: 2rem !important;
+
+        input,
+        .selection {
+            font-size: 1rem !important;
+            height: 100% !important;
+        }
+    }
+
+    .svelte-tags-input-tag {
+        align-items: center;
+    }
+
+    .svelte-tags-input-layout {
+        height: 100%;
+        align-items: stretch;
+        input {
+            display: flex;
+            height: unset !important;
+        }
+    }
+    .ui-tabs-boxed .ui-tab-active {
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--p) / var(--tw-bg-opacity));
+        --tw-text-opacity: 1;
+        color: hsl(var(--pc) / var(--tw-text-opacity));
+        border-radius: var(--rounded-btn, 0.5rem);
+        font-weight: 600;
+    }
+
+    .ui-input-group > :where(span) {
+        display: flex;
+        align-items: center;
+        --tw-bg-opacity: 1;
+        background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .ui-input-group,
+    .ui-btn-group {
+        :first-child:not(:last-child) {
+            border-top-left-radius: var(--rounded-btn, 0.5rem);
+            border-top-right-radius: 0;
+            border-bottom-left-radius: var(--rounded-btn, 0.5rem);
+            border-bottom-right-radius: 0;
+        }
+
+        :last-child:not(:first-child) {
+            border-top-left-radius: 0;
+            border-top-right-radius: var(--rounded-btn, 0.5rem);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: var(--rounded-btn, 0.5rem);
+        }
+    }
+
+    .ui-input-group > :not(:last-child):not(:first-child) {
+        border-radius: 0px;
+    }
+
+    .ui-input-lg {
+        border-color: #ddd !important;
+        height: var(--main-input-height) !important;
+    }
+
+    .ui-text-base {
+        font-size: 1rem !important;
+    }
+
+    .ui-drawer {
+        height: 100%;
+    }
+
+    .ui-input {
+        padding-left: 1rem !important;
+        height: 2rem !important;
+        /* width: fit-content !important; */
+    }
+
+    .ui-drawer-side ul {
+        margin: 0px;
+    }
+    button > i {
+        margin: 0px !important;
+    }
+    .ui-tabs {
+        justify-content: center;
+    }
+    .ui-tabs-boxed {
+        padding: 0.5rem;
+        border-radius: none;
+    }
+
+    .ui-toggle {
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        width: 3rem !important;
+        height: 1.5rem !important;
+    }
+
+    .ui-checkbox {
+        flex-shrink: 0 !important;
+        flex-basis: auto !important;
+        height: 1.5rem !important;
+        width: 1.5rem !important;
+        border-radius: var(--rounded-btn, 0.5rem) !important;
+        border-color: lightgray;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    .ui-btn.ui-loading:before {
+        border-style: solid;
+    }
+
+    .ui-input {
+        border-color: #ddd !important;
+        /* height: 3rem !important; */
+    }
+
+    .ui-btn {
+        height: var(--main-input-height) !important;
+        min-height: var(--main-input-height) !important;
+    }
+    .ui-btn.ui-btn-xs {
+        height: 1.5rem !important;
+        min-height: 1.5rem !important;
+    }
+    .ui-btn-square {
+        width: var(--main-input-height) !important;
+        height: var(--main-input-height) !important;
+    }
+}
+
+.ui-stack {
+    display: inline-grid;
+    place-items: center;
+    align-items: flex-end;
+}
+.ui-stack > *:nth-child(1) {
+    transform: translateY(0) scale(1);
+    z-index: 3;
+    opacity: 1;
+}
+.ui-stack > * {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    transform: translateY(0.5rem) scale(0.9);
+    z-index: 1;
+    width: 100%;
+    opacity: 0.6;
+}
+
+.card.open .card-body {
+    overflow: visible !important;
+}
+
+:root {
+    --p: 196 80% 42%;
+    --pf: 196 98% 40%;
+    --pc: 0 0% 100%;
+    --s: 15 98% 54%;
+    --sf: 15 84% 44%;
+    --sc: 0 0% 100%;
+    --a: 190 100% 26%;
+    --af: 190 100% 17%;
+    --ac: 0 0% 100%;
+    --n: 210 14% 32%;
+    --nf: 210 12% 21%;
+    --nc: 0 0% 100%;
+    --b1: 0 0% 100%;
+    --b2: 210 16% 95%;
+    --b3: 206 9% 84%;
+    --bc: 210 14% 32%;
+    --in: 196 90% 32%;
+    --su: 196 100% 46%;
+    --wa: 39 100% 50%;
+    --er: 0 78% 63%;
+
+    --rounded-box: 1rem; /* border-radius for cards and other big elements */
+    --rounded-btn: 0.5rem; /* border-radius for buttons and similar elements */
+    --rounded-badge: 9999px; /* border-radius for badge and other small elements */
+
+    --animation-btn: 0.25s; /* bounce animation time for button */
+    --animation-input: 0.4s; /* bounce animation time for checkbox, toggle, etc */
+
+    --padding-card: 2rem; /* default card-body padding */
+
+    --btn-text-case: uppercase; /* default text case for buttons */
+    --navbar-padding: 0.5rem; /* default padding for navbar */
+    --border-btn: 1px; /* default border size for button */
+    --focus-ring: 2px; /* focus ring size for button and inputs */
+    --focus-ring-offset: 2px; /* focus ring offset size for button and inputs */
+}
+
+.director-icon::before {
+    content: "🎬";
+}
+
+.list-container {
+    z-index: 1000;
+}
