@@ -160,9 +160,19 @@
          {/each}
       </div>
    {:else}
-      <p>Your system isn't supported yet. The instruction how to contribute is <a class="ui-link">HERE</a>.</p>
       <p>
-         You can perform filters and sortings by hand using the top search bar. <a class="ui-link">HERE</a> is the manual.
+         Your system isn't supported yet. The instruction how to contribute is <a
+            class="ui-link"
+            target="_blank"
+            href="https://github.com/averrin/alpha-suit/wiki/How-to-add-system-support">HERE</a
+         >.
+      </p>
+      <p>
+         You can perform filters and sortings by hand using the top search bar. <a
+            class="ui-link"
+            target="_blank"
+            href="https://github.com/averrin/alpha-suit/wiki/How-to-use-filters">HERE</a
+         > is the manual.
       </p>
    {/if}
 </div>

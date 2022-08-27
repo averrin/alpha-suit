@@ -2,6 +2,8 @@
 
 ## Alpha version
 
+This module is useful if you want to organize large trees of actors and items or for dealing with compendiums.
+
 ## Features
 - v9 & v10 support
 - Dual-pane navigators for your imported assets and compendiums
