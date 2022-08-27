@@ -111,14 +111,14 @@ export function filterItems(items, filter) {
         item =>
           item.root
           || item?.source?.depth
-          || filterItemPredicate(item.source.data, filter, {})
+          || filterItemPredicate(item.source.data, filter, { "@onScene": "onScene(@item)" })
       )
     for (let n = 0; n < 5; n++) {
       filtered.forEach(v => {
         v.children = v.children.filter((ch) => filtered.find(item => item.id == ch.id));
       });
       filtered = filtered.filter(
-        v => v.root || !(v?.source instanceof Folder) || v.children.length > 0
+        v => v.root || !(v?.source instanceof Folder || v?.source?.depth) || v.children.length > 0
       );
     }
     if (filtered) {

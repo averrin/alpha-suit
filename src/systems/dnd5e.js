@@ -100,7 +100,9 @@ const dnd5e = new System({
   },
 
   aliases: {
-    "Common": {},
+    "Common": {
+
+    },
     "Spells": {
       getDamageTypes,
     },
