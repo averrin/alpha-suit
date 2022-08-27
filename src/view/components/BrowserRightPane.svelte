@@ -174,6 +174,7 @@
                   return null;
                }
             }
+            c.icon - "fa-solid:folder";
             return c;
          }
       );

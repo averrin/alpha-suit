@@ -44,5 +44,9 @@
     "fvttdevleague": {
       "package-jam": 2022
     }
+  },
+  "compatibility": {
+    "minimum": "0.9.0",
+    "verified": "9"
   }
 }

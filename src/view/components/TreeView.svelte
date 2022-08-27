@@ -152,5 +152,6 @@
       on:consider={handleDndConsider}
       on:select={handleSelection}
       {selected}
+      showCreateButtons={true}
    />
 </div>

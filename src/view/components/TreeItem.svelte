@@ -16,6 +16,7 @@
    export let isRoot = false;
    export let showTags = false;
    export let disableReorder = false;
+   export let showCreateButtons = false;
    const minHeight = "1.8rem";
 
    const isFolder = node?.source instanceof Folder || node?.source?.depth;
@@ -157,7 +158,7 @@
          <div
             class="ui-justify-self-end ui-flex-none ui-flex ui-flex-row ui-justify-center ui-items-center ui-gap-2 ui-px-1 ui-max-w-1/2 ui-overflow-hidden ui-max-h-16"
          >
-            {#if isFolder}
+            {#if isFolder && showCreateButtons}
                <div class="create-buttons">
                   <CreateButtons parent={node.source} />
                </div>
@@ -208,6 +209,7 @@
                   {showTags}
                   {disableReorder}
                   {selected}
+                  {showCreateButtons}
                   on:click
                   on:consider
                   on:finalize
