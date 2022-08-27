@@ -3,7 +3,7 @@
 </script>
 
 <div class="ui-text-xs">
-   {#if item.source.type == "equipment"}
+   {#if item.source.type == "equipment" && item.source.data.armor.value > 0}
       <span class="ui-font-bold">AC:</span>
       {item.source.data.armor.value}
       |

@@ -44,6 +44,13 @@ export default () => {
       keepNames: true   // Note: doesn't seem to work.
     },
 
+    alias: [
+      // {
+      //   find: "process.env.NODE_ENV",
+      //   replacement: "development",
+      // },
+    ],
+
     css: {
       // Creates a standard configuration for PostCSS with autoprefixer & postcss-preset-env.
       postcss: postcssConfig({ compress: s_COMPRESS, sourceMap: s_SOURCEMAPS })

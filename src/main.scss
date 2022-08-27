@@ -76,11 +76,13 @@
         border-radius: var(--rounded-btn, 0.5rem);
         background: #fff !important;
         height: 2rem !important;
+        min-height: unset !important;
 
         input,
         .selection {
-            font-size: 1rem !important;
+            font-size: 0.8rem !important;
             height: 100% !important;
+            color: var(--color-text-dark-primary) !important;
         }
     }
 
