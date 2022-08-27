@@ -34,7 +34,7 @@
       </div>
    </div>
 
-   <div class="ui-bg-white ui-p-2 ui-h-full">
+   <div class="ui-bg-white ui-p-2 ui-h-full ui-pb-[120px]">
       <div class="ui-flex ui-flex-1 ui-flex-col">
          <FilterBar {filter} />
       </div>

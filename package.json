@@ -4,10 +4,7 @@
   "license": "MIT",
   "private": true,
   "type": "module",
-  "author": "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)",
-  "contributors": [
-    "Michael Leahy <support@typhonjs.io> (https://github.com/typhonrt)"
-  ],
+  "author": "Averrin",
   "dependencies": {
     "@typhonjs-fvtt/runtime": "^0.0.19",
     "class-transformer": "^0.5.1",

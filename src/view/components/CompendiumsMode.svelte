@@ -27,7 +27,7 @@
 
 <div class="ui-flex ui-flex-row ui-gap-2 ui-container">
    <div
-      class="ui-bg-white ui-flex-col ui-flex"
+      class="ui-bg-white ui-flex-col ui-flex ui-pb-[26px]"
       class:ui-w-[40%]={$selectedBrowser.length > 0}
       class:ui-w-full={$selectedBrowser.length == 0}
       style="height: {contentH}px;"
