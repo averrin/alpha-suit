@@ -42,7 +42,6 @@
       fields.push(...si);
       si = $filterCompendium.filters?.map((s) => s.index)?.flat() || [];
       fields.push(...si);
-      logger.info(fields, $filterCompendium);
       return fields;
    }
 
@@ -52,7 +51,6 @@
       await compendium.getIndex({ fields: ["img", ...fields] }).then((i) => {
          index = i;
          compendium.index = index;
-         logger.info(index);
       });
    }
 
@@ -63,17 +61,15 @@
    );
 
    function rebuild() {
-      logger.info("rebuild");
       currentPage = 1;
       root = undefined;
       content = undefined;
       index = undefined;
       if (!compendium) return;
-      packCode = `${compendium.metadata?.package}.${compendium.metadata?.name}`;
+      packCode = `${compendium.metadata?.package || compendium.metadata?.packageName}.${compendium.metadata?.name}`;
 
       if (game.modules.get("compendium-folders")?.active) {
          Promise.all([game.CF.FICFolderAPI.loadFolders(packCode), updateIndex()]).then(() => {
-            logger.info("custom folders and index updated");
             game.customFolders.fic.folders.contents.forEach((f) => (f.icon = "fa-solid:folder"));
             fic = game.customFolders.fic.folders.contents;
             children = game.customFolders.fic.folders.contents.filter((f) => f.packCode == packCode && !f.parent);
@@ -146,7 +142,6 @@
    }
 
    function init() {
-      logger.info("init tree");
       items = addTree(
          { content, children },
          undefined,
@@ -174,7 +169,7 @@
                   return null;
                }
             }
-            c.icon - "fa-solid:folder";
+            c.icon = "fa-solid:folder";
             return c;
          }
       );
@@ -225,7 +220,6 @@
 
    async function importItem(e, item) {
       e.stopPropagation();
-      logger.info(item);
       const doc = await compendium.getDocument(item.source._id);
       doc.collection.importFromCompendium(compendium, doc.id);
       ui.notifications.info(`Imported: ${doc.name}`);

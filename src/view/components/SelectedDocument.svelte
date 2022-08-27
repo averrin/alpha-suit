@@ -31,7 +31,6 @@
    function setTags(e) {
       setFlag(item, "tagger", e.detail);
       tags = getFlag(item, "tagger")?.tags;
-      logger.info(item);
    }
    $: tags = getFlag(item, "tagger")?.tags || [];
 
@@ -45,7 +44,6 @@
          left: window.innerWidth - 720,
       }).render(true);
    }
-   logger.info(item);
 </script>
 
 <div class="ui-flex ui-flex-col ui-gap-3" id={item.id}>

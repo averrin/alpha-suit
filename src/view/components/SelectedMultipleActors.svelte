@@ -43,7 +43,6 @@
    }
 
    function updateMutual() {
-      logger.info("update m tags");
       tagsSelected = $items.map((t) => getFlag(t, "tagger")?.tags.filter((t) => t.trim() != ""));
       tagsMutual = [];
       for (let a of tagsSelected.filter((a) => a)) {

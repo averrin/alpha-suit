@@ -12,6 +12,7 @@ This module is useful if you want to organize large trees of actors and items or
 - Fast and flexible search, filters, and sortings
 - System-agnostic
 - Extensible system-specific features. You can add support for your favorite system in declarative way.
+- Compendium Folders integration
 
 ## Images
 ![tree](/assets/tree-main.png)

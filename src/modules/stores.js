@@ -38,7 +38,7 @@ async function initCompendiumTreeCF() {
   const ignored = setting(SETTINGS.IGNORED_PACKS);
 
   compendiumTree.set(buildTree({ content: content, children }, undefined, (item, source) => {
-    source = game.packs.get(source.id);
+    source = game.packs.get(source.id) || source;
     item.source = source;
     item.count = source.index?.size;
     item.extraIcons = [];
@@ -53,6 +53,9 @@ async function initCompendiumTreeCF() {
       item.extraIcons.push("fa-solid:lock");
     }
     return item;
+  }, (c) => {
+    c.icon = "fa-solid:folder"
+    return c;
   }));
 }
 

@@ -16,7 +16,6 @@
 
    const unsub2 = item.subscribe((i) => {
       if (!i) return;
-      logger.info(i.name);
       tokens = getTokens(i);
    });
    onDestroy(unsub2);

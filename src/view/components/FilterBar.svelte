@@ -72,7 +72,6 @@
    }
 
    function changeTags(e) {
-      logger.info("change tags");
       tags = e.detail.tags;
       filter.update((f) => {
          let rest = tags.filter((t) => !t.startsWith("sort:") && !t.startsWith("show:") && !t.match(fieldRegex));
