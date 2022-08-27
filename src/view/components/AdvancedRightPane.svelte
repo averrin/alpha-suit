@@ -1,7 +1,7 @@
 <script>
    import AdvancedTreeView from "./AdvancedTreeView.svelte";
    import FilterBar from "./FilterBar.svelte";
-   import { filterAdvanced, system } from "../../modules/stores.js";
+   import { filterAdvanced, system, browserMode } from "../../modules/stores.js";
    import { TreeItem } from "../../modules/Tree.js";
    import TreeItemComponent from "./TreeItem.svelte";
    import { pageContent, sortContent, filterItemPredicate, showGetter } from "crew-components/helpers";
@@ -11,8 +11,6 @@
    import { moduleId, SETTINGS } from "../../modules/constants.js";
    import { logger, setting } from "crew-components/helpers";
 
-   export let mode;
-
    let extraInfo = [];
 
    let currentPage = 1;
@@ -21,23 +19,25 @@
    let fields;
    let _fields = ["name", "type", "img", "thumbnail"];
    let ignored = setting(SETTINGS.IGNORED_PACKS);
-
-   async function processPack(pack) {
-      const index = await pack.getIndex({ fields });
-      let items = index.contents;
-      items = items.filter((i) => $mode.subtypes.includes(i.type) && i.name != "#[CF_tempEntity]");
-      items.forEach((i) => (i.compendium = pack));
-      total += items.length;
-      return items;
-   }
    let content = [];
    let fullContent = [];
+   let modeName;
    let aliases = {};
-   let modeName = $mode.title || "Common";
    if ($system && $system.aliases) {
       aliases = $system.aliases[modeName];
    }
    let fc;
+
+   async function processPack(pack, mn) {
+      if (mn != modeName) return;
+      const index = await pack.getIndex({ fields });
+      if (mn != modeName) return;
+      let items = index.contents;
+      items = items.filter((i) => $browserMode.subtypes.includes(i.type) && i.name != "#[CF_tempEntity]");
+      items.forEach((i) => (i.compendium = pack));
+      total += items.length;
+      return items;
+   }
 
    function setContent() {
       extraInfo = [];
@@ -76,8 +76,8 @@
 
    function updateFields() {
       let fields = [..._fields];
-      if ($system.data?.extraInfo && $system.data?.extraInfo[$mode.title]) {
-         fields.push(...$system.data?.extraInfo[$mode.title].index);
+      if ($system.data?.extraInfo && $system.data?.extraInfo[modeName]) {
+         fields.push(...$system.data?.extraInfo[modeName].index);
       }
       let si = [];
       si = $filterAdvanced.sort?.map((s) => s.index)?.flat() || [];
@@ -86,23 +86,24 @@
       fields.push(...si);
       si = $filterAdvanced.filters?.map((s) => s.index)?.flat() || [];
       fields.push(...si);
-      logger.info(fields, $filterAdvanced);
       return fields;
    }
 
    function init() {
+      fields = updateFields();
+      // debugger;
+      logger.info(fields, $filterAdvanced, modeName);
+
       total = 0;
       content = [];
       fullContent = [];
       currentPage = 1;
-      if ($system && $system.aliases) {
-         aliases = $system.aliases[modeName];
-      }
+
       let packs = game.packs.contents
          .filter((c) => !ignored.includes(c.metadata.label))
-         .filter((c) => c.metadata.type == $mode.type);
+         .filter((c) => c.metadata.type == $browserMode.type);
       for (const pack of packs) {
-         processPack(pack).then((items) => {
+         processPack(pack, modeName).then((items) => {
             if (!items || items.length == 0) return;
             fullContent.push(...items);
             setContent();
@@ -110,9 +111,19 @@
          });
       }
    }
-   fields = updateFields();
-   onDestroy(mode.subscribe(init));
-   onDestroy(filterAdvanced.subscribe(setContent));
+   const unsub = browserMode.subscribe((m) => {
+      if (modeName == m.title) return;
+      modeName = m.title || "Common";
+      if ($system && $system.aliases) {
+         aliases = $system.aliases[modeName];
+      }
+      init();
+   });
+   const unsub2 = filterAdvanced.subscribe(setContent);
+   onDestroy(() => {
+      unsub();
+      unsub2();
+   });
 
    async function importItem(e, item) {
       e.stopPropagation();
@@ -160,7 +171,7 @@
 
 <div class="ui-flex ui-flex-col">
    <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center ui-items-center ui-gap-2 ui-px-2">
-      <div class="ui-font-bold ui-text-lg ui-flex-1 ui-w-full ui-text-center">{$mode.title}: {total}</div>
+      <div class="ui-font-bold ui-text-lg ui-flex-1 ui-w-full ui-text-center">{modeName}: {total}</div>
       <div class="ui-flex-none ui-flex-row ui-items-center ui-flex ui-gap-2">
          <iconify-icon icon="fa-solid:download" class="ui-text-lg icon-button" on:click={(_) => importFiltered()} />
          {#if fc?.length > 0}
@@ -170,13 +181,13 @@
    </div>
 </div>
 
-<div id={$mode.title} class="ui-p-2 ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto">
+<div id={modeName} class="ui-p-2 ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto">
    <div class="ui-flex ui-flex-col ui-gap-1">
       {#each content as node (node.id)}
          <TreeItemComponent {node} on:click={itemClick}>
             <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center" slot="right">
-               {#if $system.data?.extraInfo && $system.data?.extraInfo[$mode.title]?.component && node.source?.data}
-                  <svelte:component this={$system.data?.extraInfo[$mode.title]?.component} item={node} />
+               {#if $system.data?.extraInfo && $system.data?.extraInfo[modeName]?.component && node.source?.data}
+                  <svelte:component this={$system.data?.extraInfo[modeName]?.component} item={node} />
                {/if}
 
                {#each extraInfo as info}

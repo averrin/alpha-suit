@@ -1,11 +1,10 @@
 <svelte:options accessors={true} />
 
 <script>
-   import { tagsStore, system } from "../modules/stores.js";
+   import { tagsStore, system, browserMode } from "../modules/stores.js";
    import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
    import "../main.scss";
    import { setContext } from "svelte";
-   import { writable } from "svelte/store";
    import CompendiumsMode from "./components/CompendiumsMode.svelte";
    import AdvancedMode from "./components/AdvancedMode.svelte";
    import Tag from "crew-components/Tag";
@@ -21,10 +20,9 @@
       { title: "Settings", icon: "fa6-solid:gears" },
    ];
 
-   let mode = writable(availableTabs[0]);
-   // selectMode(availableTabs[0])
+   browserMode.set(availableTabs[0]);
    function selectMode(t) {
-      mode.set(t);
+      browserMode.set(t);
    }
 </script>
 
@@ -42,7 +40,7 @@
                <a
                   class="ui-tab ui-tab-xs ui-text-black"
                   on:click={() => selectMode(t)}
-                  class:ui-tab-active={t.title == $mode.title}
+                  class:ui-tab-active={t.title == $browserMode.title}
                >
                   <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
                   {t.title}
@@ -51,12 +49,12 @@
          </div>
       </div>
 
-      {#if $mode.title == "Compendiums"}
+      {#if $browserMode.title == "Compendiums"}
          <CompendiumsMode />
-      {:else if $mode.title == "Settings"}
+      {:else if $browserMode.title == "Settings"}
          <BrowserSettings />
       {:else}
-         <AdvancedMode {mode} />
+         <AdvancedMode />
       {/if}
    </main>
 </ApplicationShell>

@@ -17,6 +17,8 @@ export const filterCompendium = writable({});
 export const filterAdvanced = writable({});
 export const currentCollection = writable(null);
 export const isDragging = writable(false);
+export const aliases = writable({});
+export const browserMode = writable(null);
 
 export const tagsStore = writable([]);
 export const systems = writable({});

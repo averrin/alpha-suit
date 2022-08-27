@@ -2,15 +2,21 @@
    import Tags from "crew-components/Tags";
    import { onDestroy } from "svelte";
    import { createSort, createShow, createFilter, fieldRegex } from "crew-components/helpers";
-   import { system } from "../../modules/stores.js";
+   import { system, browserMode } from "../../modules/stores.js";
 
    export let filter;
-   export let mode;
-   let modeName = $mode?.title || "Common";
+   let modeName = $browserMode?.title || "Common";
    let aliases = {};
    if ($system && $system.aliases) {
       aliases = $system.aliases[modeName];
    }
+
+   onDestroy(
+      browserMode.subscribe((m) => {
+         modeName = m?.title || "Common";
+         aliases = $system.aliases[modeName];
+      })
+   );
 
    function clearFilter() {
       filter.update((f) => {

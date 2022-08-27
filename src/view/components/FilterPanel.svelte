@@ -1,6 +1,6 @@
 <script>
    import FilterBar from "./FilterBar.svelte";
-   import { filterAdvanced, system } from "../../modules/stores.js";
+   import { filterAdvanced, system, browserMode } from "../../modules/stores.js";
    import ArgInput from "crew-components/ArgInput";
    import { createSort, createShow, createFilter } from "crew-components/helpers";
    import { CollapsibleCard } from "svelte-collapsible";
@@ -8,9 +8,7 @@
    import { SETTINGS } from "../../modules/constants.js";
    import { logger, setting } from "crew-components/helpers";
 
-   export let mode;
-
-   let modeName = $mode?.title || "Common";
+   let modeName = $browserMode?.title || "Common";
    let aliases = {};
    if ($system && $system.aliases) {
       aliases = $system.aliases[modeName];
@@ -18,8 +16,10 @@
 
    let cache = {};
    onDestroy(
-      mode.subscribe(() => {
+      browserMode.subscribe((m) => {
          cache = {};
+         modeName = m?.title || "Common";
+         aliases = $system.aliases[modeName];
       })
    );
 
@@ -100,18 +100,18 @@
 
 <div class="ui-p-2 ui-flex ui-flex-col ui-gap-2 ui-w-full ui-h-full ui-max-w-full ui-overflow-x-auto">
    <div class:ui-hidden={!setting(SETTINGS.ADVANCED_MODE)}>
-      <FilterBar filter={filterAdvanced} {mode} />
+      <FilterBar filter={filterAdvanced} />
    </div>
 
    <div class="ui-divider ui-h-1 ui-m-1" />
    <ArgInput type="string" label="Name" on:change={(e) => setNameSearch(e)} />
 
-   {#if $system && $system?.data?.sortings[$mode.title]}
+   {#if $system && $system?.data?.sortings[$browserMode.title]}
       <div class="ui-border ui-border-base-300 ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">
          <CollapsibleCard open={false}>
             <h2 slot="header">Sortings</h2>
             <div slot="body" class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-pt-2">
-               {#each $system?.data?.sortings[$mode.title] as sort}
+               {#each $system?.data?.sortings[$browserMode.title] as sort}
                   {#if sort.asc}
                      <div
                         class="ui-btn ui-btn-xs"
@@ -137,9 +137,9 @@
       </div>
    {/if}
 
-   {#if $system && $system?.data.filters && $system?.data.filters[$mode.title]}
+   {#if $system && $system?.data.filters && $system?.data.filters[$browserMode.title]}
       <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap filters">
-         {#each Object.entries($system?.data.filters[$mode.title]) as [cat, filters]}
+         {#each Object.entries($system?.data.filters[$browserMode.title]) as [cat, filters]}
             <div class="ui-border ui-border-base-300 ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">
                <CollapsibleCard open={false}>
                   <h2 slot="header">{cat}</h2>
