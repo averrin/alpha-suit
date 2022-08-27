@@ -25,50 +25,41 @@ browser.addSystem(dnd5e);
 import common from "./systems/common.js";
 browser.addSystem(common);
 
-window.AlphaBrowser = browser;
+const tools = {
+  name: "alpha-suit",
+  title: "Alpha Suit",
+  icon: "mdi:alpha",
+
+  tools: [
+    {
+      name: "alpha-tree",
+      title: "Toggle Tree",
+      icon: "icon-park-solid:tree-list",
+      onClick: () => {
+        app.toggle();
+      },
+      button: true
+    }, {
+      name: "alpha-browser",
+      title: "Toggle Browser",
+      icon: "ph:books-fill",
+      onClick: () => {
+        browser.toggle();
+      },
+      button: true
+    }
+  ]
+}
 
 Hooks.once('init', async () => {
   initSettings(app);
 });
 
-Hooks.on('getSceneControlButtons', (buttons) => {
-  if (game.user.isGM) {
-    addTools({
-      name: "alpha-suit",
-      title: "Alpha Suit",
-      icon: "mdi:alpha",
-
-      tools: [
-        {
-          name: "alpha-tree",
-          title: "Toggle Tree",
-          icon: "icon-park-solid:tree-list",
-          visible: game.user.isGM,
-          onClick: () => {
-            app.toggle();
-          },
-          button: true
-        }, {
-          name: "alpha-browser",
-          title: "Toggle Browser",
-          icon: "ph:books-fill",
-          visible: game.user.isGM,
-          onClick: () => {
-            browser.toggle();
-          },
-          button: true
-        }
-      ]
-    });
-
-    // buttons.push({
-    //   name: "alpha-suit",
-    //   title: "Alpha Suit",
-    //   icon: "fas alpha-hud-icon",
-    //   layer: "tokens",
-    //   visible: game.user.isGM,
-    //   activeTool: "select",
-    // });
+Hooks.on('renderSceneControls', (_) => {
+  if (game?.user?.isGM) {
+    if (!document.querySelector(`[data-control='${tools.name}']`)) {
+      addTools(tools);
+    }
   }
 });
 
