@@ -102,6 +102,9 @@ function initActorsTree() {
   Hooks.on("updateActor", () => {
     treeItems.set(buildTree(getTree(), get(filter)));
   });
+  Hooks.on("updateItem", () => {
+    treeItems.set(buildTree(getTree(), get(filter)));
+  });
   filter.subscribe((f) => {
     treeItems.set(buildTree(getTree(), f));
   });

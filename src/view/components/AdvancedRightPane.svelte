@@ -33,7 +33,9 @@
       const index = await pack.getIndex({ fields });
       if (mn != modeName) return;
       let items = index.contents;
-      items = items.filter((i) => $browserMode.subtypes.includes(i.type) && i.name != "#[CF_tempEntity]");
+      if ($browserMode.subtypes?.length > 0) {
+         items = items.filter((i) => $browserMode.subtypes.includes(i.type) && i.name != "#[CF_tempEntity]");
+      }
       items.forEach((i) => (i.compendium = pack));
       total += items.length;
       return items;
@@ -101,7 +103,7 @@
 
       let packs = game.packs.contents
          .filter((c) => !ignored.includes(c.metadata.label))
-         .filter((c) => c.metadata.type == $browserMode.type);
+         .filter((c) => c.metadata?.type == $browserMode.type);
       for (const pack of packs) {
          processPack(pack, modeName).then((items) => {
             if (!items || items.length == 0) return;

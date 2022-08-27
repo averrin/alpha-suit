@@ -19,7 +19,10 @@
       browserMode.subscribe((m) => {
          cache = {};
          modeName = m?.title || "Common";
-         aliases = $system.aliases[modeName];
+         aliases = {};
+         if ($system.aliases) {
+            aliases = $system.aliases[modeName] || {};
+         }
       })
    );
 
@@ -106,12 +109,12 @@
    <div class="ui-divider ui-h-1 ui-m-1" />
    <ArgInput type="string" label="Name" on:change={(e) => setNameSearch(e)} />
 
-   {#if $system && $system?.data?.sortings[$browserMode.title]}
+   {#if $system && $system?.data?.sortings && $system?.data?.sortings[modeName]}
       <div class="ui-border ui-border-base-300 ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">
          <CollapsibleCard open={false}>
             <h2 slot="header">Sortings</h2>
             <div slot="body" class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-pt-2">
-               {#each $system?.data?.sortings[$browserMode.title] as sort}
+               {#each $system?.data?.sortings[modeName] as sort}
                   {#if sort.asc}
                      <div
                         class="ui-btn ui-btn-xs"
@@ -137,7 +140,7 @@
       </div>
    {/if}
 
-   {#if $system && $system?.data.filters && $system?.data.filters[$browserMode.title]}
+   {#if $system && $system?.data.filters && $system?.data.filters[modeName]}
       <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap filters">
          {#each Object.entries($system?.data.filters[$browserMode.title]) as [cat, filters]}
             <div class="ui-border ui-border-base-300 ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">

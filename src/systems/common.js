@@ -4,15 +4,13 @@ const common = new System({
   id: "*",
   common: true,
   tabs: [
-    { title: "NPC", icon: "fa-solid:users", type: "Actor", subtypes: ["npc"] },
+    { title: "Actors", icon: "fa-solid:users", type: "Actor", subtypes: [] },
     {
       title: "Items",
       icon: "fa-solid:suitcase",
       type: "Item",
-      subtypes: ["loot", "weapon", "tool", "equipment", "consumable"],
+      subtypes: [],
     },
-    { title: "Spells", icon: "fa-solid:magic", type: "Item", subtypes: ["spell"] },
-    { title: "Feats", icon: "fa-solid:star", type: "Item", subtypes: ["feat"] },
   ],
 });
 

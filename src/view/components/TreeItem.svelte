@@ -4,6 +4,7 @@
    import DocumentThumb from "./DocumentThumb.svelte";
    import CreateButtons from "./CreateButtons.svelte";
    import Permissions from "./Permissions.svelte";
+   import { createFilter } from "crew-components/helpers";
 
    import { dndzone, SHADOW_PLACEHOLDER_ITEM_ID, TRIGGERS } from "svelte-dnd-action";
    import { expanded, filter, currentCollection, isDragging } from "../../modules/stores.js";
@@ -39,7 +40,11 @@
    $: thumbnail = node.thumbnail;
 
    function onTagClick(_, tag) {
-      $filter.tags = [tag];
+      filter.update((f) => {
+         f.filters = f.filters || [];
+         f.filters.push(createFilter({}, tag, ""));
+         return f;
+      });
    }
 
    if (!isRoot && selected) {

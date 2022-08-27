@@ -14,7 +14,10 @@
    onDestroy(
       browserMode.subscribe((m) => {
          modeName = m?.title || "Common";
-         aliases = $system.aliases[modeName];
+         aliases = {};
+         if ($system.aliases) {
+            aliases = $system.aliases[modeName] || {};
+         }
       })
    );
 

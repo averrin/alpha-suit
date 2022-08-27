@@ -32,7 +32,7 @@
 
 {#if $item}
    <div class="ui-p-2 ui-flex ui-flex-col ui-gap-2">
-      <SelectedDocument bind:item={$item} />
+      <SelectedDocument bind:item />
       {#if tokens?.length > 0}
          <div class="ui-input-group">
             <span>Tokens</span>

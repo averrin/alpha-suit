@@ -30,7 +30,10 @@
    let fic;
    let _fields = ["name"];
    let fields = ["name"];
-   let aliases = $system?.aliases["Common"] || {};
+   let aliases = {};
+   if ($system?.aliases) {
+      aliases = $system?.aliases["Common"] || {};
+   }
    let extraInfo = [];
 
    function updateFields() {
