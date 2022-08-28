@@ -9,6 +9,8 @@ export const SETTINGS = {
   UI_SCALE: "ui-scale",
   RESOLUTION: "resolution",
   SHOW_TREE: "show-tree",
+  SHOW_TREE_TIP: "show-tree-tip",
+  SHOW_HELP: "show-help",
   COLLAPSED: "collapsed",
 
   KEY_SHOW: "key-show",

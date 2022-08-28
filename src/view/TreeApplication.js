@@ -2,13 +2,13 @@ import { SvelteApplication } from "@typhonjs-fvtt/runtime/svelte/application";
 import { logger, setting } from "crew-components/helpers";
 import { moduleId, SETTINGS } from "../modules/constants.js";
 
-import MainUI from "./MainUI.svelte";
+import TreeUI from "./TreeUI.svelte";
 
-export default class MainApplication extends SvelteApplication {
+export default class TreeApplication extends SvelteApplication {
 
   constructor() {
     super({ widgetId: "alpha-tree" });
-    globalThis.Hooks.on("closeMainApplication", () => {
+    globalThis.Hooks.on("closeTreeApplication", () => {
       globalThis.game.settings.set(moduleId, SETTINGS.SHOW_TREE, false);
     });
 
@@ -26,7 +26,7 @@ export default class MainApplication extends SvelteApplication {
       title: "Alpha Tree",
 
       svelte: {
-        class: MainUI,
+        class: TreeUI,
         target: document.body,
         props: function() {
           return {};

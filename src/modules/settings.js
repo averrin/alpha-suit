@@ -31,6 +31,20 @@ export function initSettings(app) {
     default: false,
   });
 
+  game.settings.register(moduleId, SETTINGS.SHOW_HELP, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register(moduleId, SETTINGS.SHOW_TREE_TIP, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
   game.settings.register(moduleId, SETTINGS.SHOW_BROWSER, {
     scope: "client",
     config: false,

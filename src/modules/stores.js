@@ -5,10 +5,13 @@ import Tag from "crew-components/tags";
 import { moduleId, SETTINGS } from "./constants.js";
 import { setting } from './settings.js';
 import { filterItemPredicate } from "crew-components/helpers";
+import { helpContent } from "./help_content.js"
 let tagSource = moduleId;
+
 
 export const selected = writable([]);
 export const selectedBrowser = writable([]);
+export const selectedHelp = writable([]);
 export const expanded = writable([]);
 export const treeItems = writable({});
 export const compendiumTree = writable({});
@@ -19,6 +22,8 @@ export const currentCollection = writable(null);
 export const isDragging = writable(false);
 export const aliases = writable({});
 export const browserMode = writable(null);
+export const helpTopic = writable(null);
+export const helpTree = writable({});
 
 export const tagsStore = writable([]);
 export const systems = writable({});
@@ -142,6 +147,12 @@ export function filterItems(items, filter) {
   return items
 }
 
+export function buildHelpTree() {
+  let items = {};
+  addTree(helpContent).forEach(i => items[i.id] = i);
+  return items;
+}
+
 export function buildTree(tree, filter, transform, folderTransform) {
   let items = {};
   addTree(tree, undefined, transform, folderTransform).forEach(i => items[i.id] = i);
@@ -158,6 +169,8 @@ export function initStores() {
   if (globalThis.game.modules.get("director")?.active) {
     tagSource = setting(SETTINGS.USE_DIRECTOR_TAGS) ? "director" : moduleId;
   }
+
+  helpTree.set(buildHelpTree())
 
   currentCollection.set(game.actors);
   tagsStore.set(game.settings.get(tagSource, SETTINGS.TAGS).map(Tag.fromPlain).filter(a => a));
@@ -178,6 +191,9 @@ export function addTree(tree, parent, transform, folderTransform) {
   item.color = tree.color || tree.data?.color || tree.folder?.color;;
   let content = tree.content || tree.contents || tree.documents || [];
   item.count = tree.children?.length + content?.length;
+  if (isNaN(item.count)) {
+    item.count = content?.length;
+  }
   if (parent) {
     parent.children.push({ id: item.id });
   } else {
@@ -186,7 +202,7 @@ export function addTree(tree, parent, transform, folderTransform) {
   }
   items.push(item);
 
-  for (let c of tree?.children) {
+  for (let c of tree?.children || []) {
     if (folderTransform) {
       c = folderTransform(c);
     }

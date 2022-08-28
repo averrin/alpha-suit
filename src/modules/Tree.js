@@ -30,6 +30,7 @@ export class TreeItem {
     item.source = source;
     item.thumbnail = source.thumbnail;
     item.icon = source.icon;
+    item.component = source.component;
     return item;
   }
 }

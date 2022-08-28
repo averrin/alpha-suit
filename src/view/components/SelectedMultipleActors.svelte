@@ -5,6 +5,7 @@
    import { getFlag, setFlag } from "crew-components/helpers";
    import { selected } from "../../modules/stores.js";
    import { onDestroy, tick } from "svelte";
+   import { writable } from "svelte/store";
 
    function removeAll() {
       $items[0].deleteDialog().then((r) => {
@@ -88,6 +89,6 @@
 <div class="ui-flex ui-flex-col ui-gap-2 ui-overflow-auto ui-flex-1 ui-p-2">
    {#each $items as item (item.id)}
       <div class="ui-divider ui-my-0" />
-      <SelectedDocument bind:item />
+      <SelectedDocument item={writable(item)} />
    {/each}
 </div>

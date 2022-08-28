@@ -3,6 +3,8 @@
    import FilterBar from "./FilterBar.svelte";
    import TreeView from "./TreeView.svelte";
    import CreateButtons from "./CreateButtons.svelte";
+   import { SETTINGS, moduleId } from "../../modules/constants.js";
+   import { setting } from "crew-components/helpers";
 
    const availableTabs = [
       { title: "Actors", get: () => game.actors, icon: "fa-solid:users" },
@@ -16,21 +18,61 @@
       $selected = [];
       $filter = {};
    }
+   let showTip = setting(SETTINGS.SHOW_TREE_TIP);
+   function closeTip() {
+      showTip = false;
+      game.settings.set(moduleId, SETTINGS.SHOW_TREE_TIP, false);
+   }
 </script>
 
 <div class="ui-flex ui-flex-none ui-flex-col ui-h-full">
+   {#if showTip}
+      <div class="ui-rounded ui-bg-white">
+         <div class="ui-text ui-flex ui-flex-col ui-gap-3 ui-text-center ui-p-2">
+            <div>
+               Hold <kbd class="ui-kbd">shift</kbd> and drag to reorder items.
+            </div>
+            <div>Drop item preview on the canvas to add a token.</div>
+            <div>
+               <kbd class="ui-kbd">right-click</kbd> to select an item.
+            </div>
+            <div>
+               <kbd class="ui-kbd">ctrl</kbd> + <kbd class="ui-kbd">right-click</kbd> to add an item to the selection.
+            </div>
+            <div class="ui-flex ui-flex-row ui-items-center ui-font-bold">
+               You can find more information in the Help Center
+               <iconify-icon
+                  icon="clarity:help-solid"
+                  class="ui-text-lg icon-button ui-flex-none"
+                  on:click={AlphaSuit.showHelp}
+                  on:pointerdown={(_) => null}
+               />
+            </div>
+            <div class="ui-btn ui-btn-primary" on:click={closeTip}>Close the tip</div>
+         </div>
+      </div>
+   {/if}
+
    <div class="ui-p-2">
       <div class="ui-tabs ui-tabs-boxed">
-         {#each availableTabs as t (t.title)}
-            <a
-               class="ui-tab ui-tab-xs ui-text-black"
-               on:click={() => selectMode(t)}
-               class:ui-tab-active={t.title == mode}
-            >
-               <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
-               {t.title}
-            </a>
-         {/each}
+         <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center">
+            {#each availableTabs as t (t.title)}
+               <a
+                  class="ui-tab ui-tab-xs ui-text-black"
+                  on:click={() => selectMode(t)}
+                  class:ui-tab-active={t.title == mode}
+               >
+                  <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
+                  {t.title}
+               </a>
+            {/each}
+         </div>
+         <iconify-icon
+            icon="clarity:help-solid"
+            class="ui-text-lg icon-button ui-flex-none"
+            on:click={AlphaSuit.showHelp}
+            on:pointerdown={(_) => null}
+         />
       </div>
    </div>
 

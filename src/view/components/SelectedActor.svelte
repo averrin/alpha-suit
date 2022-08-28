@@ -3,7 +3,6 @@
 
    import SelectedDocument from "./SelectedDocument.svelte";
    import TokenThumb from "./TokenThumb.svelte";
-   import { selected } from "../../modules/stores.js";
    export let item;
    let tokens = [];
 

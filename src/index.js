@@ -6,16 +6,19 @@ import { initSettings } from "./modules/settings.js";
 import { moduleId, SETTINGS, infoColor } from "./modules/constants.js";
 import initHelpers from "crew-components/helpers";
 import { logger, setting } from "crew-components/helpers";
-import MainApplication from './view/MainApplication.js';
+import TreeApplication from './view/TreeApplication.js';
 import BrowserApplication from './view/BrowserApplication.js';
-import { initStores } from './modules/stores.js';
+import HelpApplication from './view/HelpApplication.js';
+import { initStores, buildHelpTree, helpTree } from './modules/stores.js';
 import { addTools } from "crew-components/helpers"
 import { loadIcon } from "iconify-icon";
+import { helpContent } from "./modules/help_content.js"
 
 
 initHelpers(moduleId, infoColor, SETTINGS);
-const app = new MainApplication();
+const tree = new TreeApplication();
 const browser = new BrowserApplication();
+const help = new HelpApplication();
 
 import pf2e from "./systems/pf2e.js";
 browser.addSystem(pf2e);
@@ -32,27 +35,45 @@ const tools = {
 
   tools: [
     {
-      name: "alpha-tree",
+      name: "alpha-tree-btn",
       title: "Toggle Tree",
       icon: "icon-park-solid:tree-list",
       onClick: () => {
-        app.toggle();
+        tree.toggle();
       },
-      button: true
-    }, {
-      name: "alpha-browser",
+    },
+    {
+      name: "alpha-browser-btn",
       title: "Toggle Browser",
       icon: "ph:books-fill",
       onClick: () => {
         browser.toggle();
       },
-      button: true
+    },
+    {
+      name: "alpha-help-btn",
+      title: "Toggle Help Center",
+      icon: "clarity:help-solid",
+      onClick: () => {
+        help.toggle();
+      },
     }
   ]
 }
 
+window.AlphaSuit = {
+  showHelp: help.show.bind(help),
+  addTool: (tool) => {
+    tools.tools.push(tool);
+  },
+  addHelp: (data) => {
+    helpContent.children.push(data);
+    helpTree.set(buildHelpTree())
+  }
+}
+
 Hooks.once('init', async () => {
-  initSettings(app);
+  initSettings(tree);
 });
 
 Hooks.on('renderSceneControls', (_) => {
@@ -66,11 +87,14 @@ Hooks.on('renderSceneControls', (_) => {
 Hooks.once('ready', async () => {
   if (game.user.isGM) {
     initStores();
-    app.start();
-    if (setting(SETTINGS.SHOW_TREE)) app.show();
+    tree.start();
+    if (setting(SETTINGS.SHOW_TREE)) tree.show();
 
     browser.start();
     if (setting(SETTINGS.SHOW_BROWSER)) browser.show();
+
+    help.start();
+    if (setting(SETTINGS.SHOW_HELP)) help.show();
     logger.info("Started!")
   }
 }

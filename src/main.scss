@@ -7,7 +7,9 @@
 }
 
 #alpha-tree.window-app,
-#alpha-browser.window-app {
+#alpha-browser.window-app,
+#alpha-help.window-app
+{
     --main-input-height: 2.5rem;
     h2 {
         font-size: 1rem !important;

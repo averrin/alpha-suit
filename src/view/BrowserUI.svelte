@@ -36,16 +36,24 @@
                   compact={true}
                />
             </div>
-            {#each availableTabs as t (t.title)}
-               <a
-                  class="ui-tab ui-tab-xs ui-text-black"
-                  on:click={() => selectMode(t)}
-                  class:ui-tab-active={t.title == $browserMode.title}
-               >
-                  <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
-                  {t.title}
-               </a>
-            {/each}
+            <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center ui-flex-wrap">
+               {#each availableTabs as t (t.title)}
+                  <a
+                     class="ui-tab ui-tab-xs ui-text-black"
+                     on:click={() => selectMode(t)}
+                     class:ui-tab-active={t.title == $browserMode.title}
+                  >
+                     <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
+                     {t.title}
+                  </a>
+               {/each}
+            </div>
+            <iconify-icon
+               icon="clarity:help-solid"
+               class="ui-text-lg icon-button ui-flex-none"
+               on:click={AlphaSuit.showHelp}
+               on:pointerdown={(_) => null}
+            />
          </div>
       </div>
 
