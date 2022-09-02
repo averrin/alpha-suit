@@ -12,6 +12,7 @@
    import FilterBar from "./FilterBar.svelte";
    import Tag from "crew-components/Tag";
    import Pagenation from "crew-components/Pagenation";
+   import InlineButton from "crew-components/InlineButton";
    import { sortContent, pageContent, filterItemPredicate, setting } from "crew-components/helpers";
    import { SETTINGS } from "../../modules/constants.js";
 
@@ -90,7 +91,7 @@
 
    onDestroy(
       selectedBrowser.subscribe((s) => {
-         compendium = game.packs.get(s[0]) || $compendiumTree[s[0]].source;
+         compendium = game.packs.get(s[0]) || $compendiumTree[s[0]]?.source;
          rebuild();
       })
    );
@@ -235,11 +236,7 @@
          <div class="ui-font-bold ui-text-lg">
             {compendium.title}
          </div>
-         <iconify-icon
-            icon="fa-solid:download"
-            class="ui-text-lg icon-button"
-            on:click={(_) => compendium.importDialog()}
-         />
+         <InlineButton icon="fa-solid:download" color="#71717a" on:click={compendium.importDialog} />
       </div>
       <div class="ui-p-1">
          <FilterBar filter={filterCompendium} />
@@ -261,11 +258,7 @@
                {#each extraInfo as info}
                   <Tag tag={{ text: info(node.source) }} compact={true} />
                {/each}
-               <iconify-icon
-                  icon="fa-solid:download"
-                  class="ui-text-lg icon-button ui-text-zinc-500"
-                  on:click={(e) => importItem(e, node)}
-               />
+               <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importItem(e, node)} />
             </div>
          </TreeItemComponent>
       </div>

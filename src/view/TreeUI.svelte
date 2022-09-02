@@ -1,15 +1,20 @@
 <svelte:options accessors={true} />
 
 <script>
-   import { applyPosition } from "@typhonjs-fvtt/runtime/svelte/action";
-   import { selected, tagsStore } from "../modules/stores.js";
+   // import "virtual:windi.css";
+   import { selected, tagsStore, theme } from "../modules/stores.js";
    import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
-   import "../main.scss";
    import RightPane from "./components/RightPane.svelte";
    import LeftPane from "./components/LeftPane.svelte";
    import { setContext, getContext, tick, onDestroy } from "svelte";
    import TagSettings from "crew-components/TagSettings";
    import Tag from "crew-components/tags";
+
+   import "crew-components/styles/foundry-fixes.scss";
+   import "crew-components/styles/alpha-ui.scss";
+   import "crew-components/styles/global.scss";
+   import "crew-components/styles/themes.scss";
+   import "../main.scss";
 
    export let elementRoot;
 
@@ -47,8 +52,8 @@
 </script>
 
 <ApplicationShell bind:elementRoot>
-   <TagSettings {editTag} />
-   <main class="ui-flex ui-flex-row ui-gap-2 ui-container">
+   <main class="alpha-ui ui-flex ui-flex-row ui-gap-2 ui-container" data-theme={$theme}>
+      <TagSettings {editTag} />
       <div
          class="ui-flex-col ui-flex"
          class:ui-w-[40%]={$selected.length > 0}
@@ -59,7 +64,7 @@
       </div>
       {#if $selected.length > 0}
          <div
-            class="ui-bg-white ui-flex-col ui-flex"
+            class="ui-bg-base ui-flex-col ui-flex"
             class:ui-w-[60%]={$selected.length > 0}
             style="height: {contentH}px;"
          >
@@ -68,3 +73,6 @@
       {/if}
    </main>
 </ApplicationShell>
+
+<style>
+</style>

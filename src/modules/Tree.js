@@ -31,6 +31,7 @@ export class TreeItem {
     item.thumbnail = source.thumbnail;
     item.icon = source.icon;
     item.component = source.component;
+    item.content = source.content;
     return item;
   }
 }

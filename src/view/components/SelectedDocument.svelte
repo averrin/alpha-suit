@@ -1,12 +1,43 @@
 <script>
-   import { logger, getFlag, setFlag, hasFlag } from "crew-components/helpers";
+   import { logger, getFlag, setFlag, hasFlag, toggleFlag } from "crew-components/helpers";
    import Tags from "crew-components/Tags";
    import ArgInput from "crew-components/ArgInput";
+   import CopyButton from "crew-components/CopyButton";
+   import IconButton from "crew-components/IconButton";
+   import RemoveButton from "crew-components/RemoveButton";
    import DocumentThumb from "./DocumentThumb.svelte";
-   import CopyToClipboard from "svelte-copy-to-clipboard";
+
+   import Permissions from "./Permissions.svelte";
+   import { onDestroy } from "svelte";
 
    export let item;
    import { selected } from "../../modules/stores.js";
+   let isFav;
+   let tags = getFlag($item, "tagger")?.tags || [];
+
+   onDestroy(
+      item.subscribe((i) => {
+         isFav = getFlag(i, "alpha-suit.fav");
+         tags = getFlag(i, "tagger")?.tags || [];
+      })
+   );
+
+   async function setTokenImg() {
+      const data = await navigator.clipboard.read();
+      logger.info(data);
+      let path = data.find((i) => i.types.includes("text/plain"))?.getType("text/plain");
+      if (path) {
+         logger.info(path);
+         path = await (await path).text();
+         if ($item.data.token?.img) {
+            $item.update({ "token.img": path });
+         } else if ($item.data.prototypeToken.texture.src) {
+            $item.update({ "prototypeToken.texture.src": path });
+         }
+         item.set($item);
+         // $item.data.img || $item.data.prototypeToken.texture.src
+      }
+   }
 
    async function update(e, path) {
       const updates = { _id: $item.id };
@@ -27,14 +58,12 @@
    }
 
    if (!hasFlag($item, "tagger")) setFlag($item, "tagger", { tags: [] });
-   let tags = getFlag($item, "tagger")?.tags || [];
 
    async function setTags(e) {
       await setFlag($item, "tagger", e.detail);
       item.set($item);
       tags = getFlag($item, "tagger")?.tags;
    }
-   $: tags = getFlag($item, "tagger")?.tags || [];
 
    function changeColor(e) {
       $item.update({ color: e.detail });
@@ -49,80 +78,94 @@
    }
 </script>
 
-<div class="ui-flex ui-flex-col ui-gap-3" id={$item.id}>
+<div class="ui-flex ui-flex-col ui-gap-2" id={$item.id}>
    <div class="ui-flex ui-flex-row ui-gap-3 ui-items-center">
       {#if $item.thumbnail}
          <div class="ui-h-12 ui-w-12">
-            <DocumentThumb item={$item} on:click={() => $item.sheet.render(true)} />
+            <DocumentThumb {item} on:click={() => $item.sheet.render(true)} />
          </div>
       {:else}
          <iconify-icon icon="fa-solid:folder" class="ui-ml-2 ui-text-lg" />
       {/if}
 
       <div class="ui-flex ui-flex-row ui-flex-1">
-         <div class="ui-input-group">
+         <div class="ui-input-group ui-input-group-md">
             <span>Name</span>
-            <input type="text" class="ui-input-lg" value={$item.name} on:change={(e) => update(e, "name")} />
+            <input
+               type="text"
+               class="ui-input-lg ui-border-[#ccc] ui-pl-2"
+               value={$item.name}
+               on:change={(e) => update(e, "name")}
+            />
          </div>
       </div>
 
       <div class="ui-flex ui-flex-row ui-flex-none">
-         <div class="ui-btn-group">
-            <button class="ui-btn ui-btn-square" on:click={clone}>
-               <iconify-icon icon="fa-solid:clone" class="ui-text-lg" />
-            </button>
-
+         <div class="ui-btn-group ui-btn-group-md">
+            <IconButton on:click={clone} icon="fa-solid:clone" size={"md"} type="primary" />
             {#if !$item.thumbnail}
                <ArgInput type="color" value={$item.data.color} compact={true} inline={true} on:change={changeColor} />
             {/if}
-
-            <button class="ui-btn ui-btn-square ui-btn-error" on:click={remove}>
-               <iconify-icon icon="gridicons:cross" class="ui-text-xl" />
-            </button>
+            <RemoveButton on:click={remove} />
          </div>
       </div>
    </div>
-   <div class="ui-flex ui-flex-row ui-gap-1/2">
-      <button class="ui-btn ui-btn-square ui-btn-xs" title="Permissions">
-         <iconify-icon icon="fa:share-alt" class="ui-text-lg" on:click={changePermissions} />
-      </button>
-      <CopyToClipboard
+   <div class="ui-flex ui-flex-row ui-gap-1 ui-group ui-group-xs">
+      <IconButton size="xs" title="Permissions" icon="fa:share-alt" on:click={changePermissions} type="primary" />
+      <CopyButton
          text={$item.data.name}
-         on:copy={(_) => globalThis.ui.notifications.info("Name copied!")}
-         let:copy
-      >
-         <button class="ui-btn ui-btn-square ui-btn-xs" title="Copy name" on:click={copy}>
-            <iconify-icon icon="icon-park-solid:edit-name" class="ui-text-lg" />
-         </button>
-      </CopyToClipboard>
-      <CopyToClipboard text={$item.id} on:copy={(_) => globalThis.ui.notifications.info("ID copied!")} let:copy>
-         <button class="ui-btn ui-btn-square ui-btn-xs" title="Copy ID" on:click={copy}>
-            <iconify-icon icon="fluent-emoji-high-contrast:id-button" class="ui-text-lg" />
-         </button>
-      </CopyToClipboard>
+         title="Copy name"
+         notification={"Name copied!"}
+         icon="icon-park-solid:edit-name"
+      />
+      <CopyButton
+         text={$item.id}
+         title="Copy ID"
+         notification={"ID copied!"}
+         icon="fluent-emoji-high-contrast:id-button"
+      />
       {#if $item.thumbnail}
-         <CopyToClipboard
+         <CopyButton
             text={$item.data.img}
-            on:copy={(_) => globalThis.ui.notifications.info("Token path copied!")}
-            let:copy
-         >
-            <button class="ui-btn ui-btn-square ui-btn-xs" title="Copy token path" on:click={copy}>
-               <iconify-icon icon="fa:user-circle" class="ui-text-lg" />
-            </button>
-         </CopyToClipboard>
-         <CopyToClipboard
-            text={$item.data.img || $item.data.prototypeToken.texture.src}
-            on:copy={(_) => globalThis.ui.notifications.info("Portrait path copied!")}
-            let:copy
-         >
-            <button class="ui-btn ui-btn-square ui-btn-xs" title="Copy portrait path" on:click={copy}>
-               <iconify-icon icon="fa:image" class="ui-text-lg" />
-            </button>
-         </CopyToClipboard>
+            title="Copy portrait path"
+            notification={"Token path copied!"}
+            icon="fa:user-circle"
+         />
+         <CopyButton
+            text={$item.data.token.img || $item.data.prototypeToken.texture.src}
+            notification={"Portrait path copied!"}
+            title="Copy token path"
+            icon="fa:image"
+         />
+         <div class="ui-ml-2" />
+
+         <IconButton
+            size="xs"
+            icon="fa:user-circle-o"
+            title="Set token img path from clipboard"
+            on:click={setTokenImg}
+            type="primary"
+         />
+      {/if}
+      <IconButton
+         size="xs"
+         type="primary"
+         icon={!isFav ? "fa-regular:star" : "fa-solid:star"}
+         title="Toggle favorite"
+         on:click={async (_) => {
+            await toggleFlag($item, "alpha-suit.fav");
+            item.set($item);
+         }}
+      />
+
+      {#if $item?.data?.permission}
+         <div class="ui-mx-2 ui-flex ui-items-center">
+            <Permissions item={$item} />
+         </div>
       {/if}
    </div>
    <div class="ui-flex ui-flex-row ui-gap-3">
-      <div class="ui-input-group">
+      <div class="ui-input-group ui-input-group-md">
          <span>Tags</span>
          <Tags {tags} on:tags={setTags} allowPaste={true} allowDrop={true} onlyUnique={true} />
       </div>

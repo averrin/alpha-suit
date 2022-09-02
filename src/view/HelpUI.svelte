@@ -4,7 +4,7 @@
    import TreeItemComponent from "./components/TreeItem.svelte";
    import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
    import "../main.scss";
-   import { helpTopic, helpTree, expanded, selectedHelp } from "../modules/stores.js";
+   import { helpTopic, helpTree, expanded, selectedHelp, theme } from "../modules/stores.js";
    import { onDestroy } from "svelte";
 
    export let elementRoot;
@@ -57,8 +57,8 @@
 </script>
 
 <ApplicationShell bind:elementRoot>
-   <main class="ui-flex ui-flex-row ui-gap-2 ui-container">
-      <div class="ui-bg-white ui-flex-col ui-flex ui-w-[30%]">
+   <main class="ui-flex ui-flex-row ui-gap-2 ui-container" data-theme={$theme}>
+      <div class="alpha-ui ui-bg-base-100 ui-flex-col ui-flex ui-w-[30%]">
          <div>
             <TreeItemComponent
                node={Object.values($helpTree).find((i) => i.root)}
@@ -72,7 +72,7 @@
             />
          </div>
       </div>
-      <div class="ui-bg-white ui-flex-col ui-flex ui-w-[70%] ui-p-2" id="help-page">
+      <div class="ui-bg-base-100 ui-flex-col ui-flex ui-w-[70%] ui-p-2" id="help-page">
          {#if topic?.component}
             <svelte:component this={topic.component} />
          {:else if topic?.content}

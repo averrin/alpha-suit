@@ -11,36 +11,20 @@
    })();
 </script>
 
-<button class="token-icon" class:targeted on:click on:pointerdown title={token.name || token.data.name}>
-   <img class="icon" src={thumb} style:border={targeted ? `2px solid  ${player.data.color}` : "none"} />
-</button>
+<img
+   class="icon"
+   src={thumb}
+   style:border={targeted ? `2px solid  ${player.data.color}` : "none"}
+   on:click
+   on:pointerdown
+   title={token.name || token.data.name}
+   alt={token.name || token.data.name}
+/>
 
 <style lang="scss">
-   button.token-icon {
-      width: 30px;
-      height: 30px;
-   }
    .icon {
       border-radius: 4px;
-   }
-
-   button {
-      // width: 24px;
+      width: 30px;
       height: 30px;
-      padding: 2px;
-      background: none;
-      color: #eee;
-      border: none;
-      font-size: 24px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-   }
-
-   button:hover {
-      cursor: pointer;
-      border: none;
-      box-shadow: none;
-      color: #aaf;
    }
 </style>

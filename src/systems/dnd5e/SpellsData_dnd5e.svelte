@@ -1,6 +1,7 @@
 <script>
    export let item;
-   let components = item.source?.data?.components;
+   const data = item.source?.data || item.source?.system;
+   let components = data?.components;
 </script>
 
 <div class="ui-text-xs">
@@ -22,5 +23,5 @@
       {/if}
       |
    {/if}
-   {item.source.data.level}
+   {data.level}
 </div>

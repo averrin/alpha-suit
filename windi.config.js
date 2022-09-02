@@ -6,15 +6,14 @@ function range(size, startAt = 1) {
 export default {
   prefix: 'ui-',
   preflight: false,
+  daisyui: {
+    base: false,
+  },
   extract: {
     include: ["src/**/*.svelte"],
     exclude: ["src/styles/*"]
   },
   plugins: [
     transform('daisyui'),
-  ],
-
-  safelist: [
-    range(20).map(i => `ml-${i}`), // mt-1 to mt-10
   ],
 }

@@ -7,7 +7,7 @@
    let tokens = [];
 
    function getTokens(i) {
-      return canvas.scene.tokens.contents.filter((t) => t.actor.id == i.id) || [];
+      return canvas.scene.tokens.contents.filter((t) => t.actor?.id == i.id) || [];
    }
 
    const unsub = Hooks.on("refreshToken", () => (tokens = getTokens($item)));

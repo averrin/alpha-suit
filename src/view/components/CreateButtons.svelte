@@ -1,6 +1,6 @@
 <script>
    import { currentCollection, expanded } from "../../modules/stores.js";
-   import { tick } from "svelte";
+   import InlineButton from "crew-components/InlineButton";
    export let parent = null;
 
    function createDocument(e) {
@@ -28,18 +28,8 @@
 </script>
 
 <div class="ui-flex ui-flex-row ui-flex-0 ui-justify-end">
-   <iconify-icon
-      icon="eva:folder-add-fill"
-      class="ui-text-lg icon-button"
-      on:click={createFolder}
-      on:pointerdown={(_) => null}
-   />
-   <iconify-icon
-      icon="eva:file-add-fill"
-      class="ui-text-lg icon-button"
-      on:click={createDocument}
-      on:pointerdown={(_) => null}
-   />
+   <InlineButton icon="eva:folder-add-fill" on:click={createFolder} />
+   <InlineButton icon="eva:file-add-fill" on:click={createDocument} />
 </div>
 
 <style>

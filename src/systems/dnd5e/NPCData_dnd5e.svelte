@@ -8,8 +8,10 @@
       if (cr == 0.125) return "1/8";
       return cr;
    }
+
+   const data = item.source?.data || item.source?.system;
 </script>
 
 <div class="ui-text-xs">
-   {formatCR(item.source.data?.details?.cr)}
+   {formatCR(data?.details?.cr)}
 </div>

@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-   import { tagsStore, system, browserMode } from "../modules/stores.js";
+   import { tagsStore, system, browserMode, theme } from "../modules/stores.js";
    import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
    import "../main.scss";
    import { setContext } from "svelte";
@@ -27,7 +27,7 @@
 </script>
 
 <ApplicationShell bind:elementRoot>
-   <main class="ui-flex ui-flex-col ui-container">
+   <main class="alpha-ui ui-flex ui-flex-col ui-container" data-theme={$theme}>
       <div class="ui-p-2">
          <div class="ui-tabs ui-tabs-boxed">
             <div class="ui-mr-2">

@@ -1,6 +1,4 @@
 <script>
-   import AdvancedTreeView from "./AdvancedTreeView.svelte";
-   import FilterBar from "./FilterBar.svelte";
    import { filterAdvanced, system, browserMode } from "../../modules/stores.js";
    import { TreeItem } from "../../modules/Tree.js";
    import TreeItemComponent from "./TreeItem.svelte";
@@ -9,7 +7,8 @@
    import { onDestroy } from "svelte";
    import Tag from "crew-components/Tag";
    import { moduleId, SETTINGS } from "../../modules/constants.js";
-   import { logger, setting } from "crew-components/helpers";
+   import { logger, setting, updateFields } from "crew-components/helpers";
+   import InlineButton from "crew-components/InlineButton";
 
    let extraInfo = [];
 
@@ -52,7 +51,12 @@
          }
       }
 
-      const f = updateFields();
+      let systemExtraInfo = [];
+      if ($system.data?.extraInfo && $system.data?.extraInfo[modeName]) {
+         systemExtraInfo = $system.data?.extraInfo[modeName];
+      }
+
+      const f = updateFields(_fields, $filterAdvanced, systemExtraInfo);
       if (JSON.stringify(f) != JSON.stringify(fields)) {
          fields = f;
          init();
@@ -76,23 +80,12 @@
       });
    }
 
-   function updateFields() {
-      let fields = [..._fields];
-      if ($system.data?.extraInfo && $system.data?.extraInfo[modeName]) {
-         fields.push(...$system.data?.extraInfo[modeName].index);
-      }
-      let si = [];
-      si = $filterAdvanced.sort?.map((s) => s.index)?.flat() || [];
-      fields.push(...si);
-      si = $filterAdvanced.show?.map((s) => s.index)?.flat() || [];
-      fields.push(...si);
-      si = $filterAdvanced.filters?.map((s) => s.index)?.flat() || [];
-      fields.push(...si);
-      return fields;
-   }
-
    function init() {
-      fields = updateFields();
+      let systemExtraInfo = [];
+      if ($system.data?.extraInfo && $system.data?.extraInfo[modeName]) {
+         systemExtraInfo = $system.data?.extraInfo[modeName];
+      }
+      fields = updateFields(_fields, $filterAdvanced, systemExtraInfo);
       // debugger;
       logger.info(fields, $filterAdvanced, modeName);
 
@@ -175,7 +168,7 @@
    <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center ui-items-center ui-gap-2 ui-px-2">
       <div class="ui-font-bold ui-text-lg ui-flex-1 ui-w-full ui-text-center">{modeName}: {total}</div>
       <div class="ui-flex-none ui-flex-row ui-items-center ui-flex ui-gap-2">
-         <iconify-icon icon="fa-solid:download" class="ui-text-lg icon-button" on:click={(_) => importFiltered()} />
+         <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importFiltered()} />
          {#if fc?.length > 0}
             <div class="ui-btn ui-btn-xs" on:click={exportFiltered}>Export</div>
          {/if}
@@ -188,18 +181,14 @@
       {#each content as node (node.id)}
          <TreeItemComponent {node} on:click={itemClick}>
             <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center" slot="right">
-               {#if $system.data?.extraInfo && $system.data?.extraInfo[modeName]?.component && node.source?.data}
+               {#if $system.data?.extraInfo && $system.data?.extraInfo[modeName]?.component && (node.source?.data || node.source?.system)}
                   <svelte:component this={$system.data?.extraInfo[modeName]?.component} item={node} />
                {/if}
 
                {#each extraInfo as info}
                   <Tag tag={{ text: info(node.source) }} compact={true} />
                {/each}
-               <iconify-icon
-                  icon="fa-solid:download"
-                  class="ui-text-lg icon-button ui-text-zinc-500"
-                  on:click={(e) => importItem(e, node)}
-               />
+               <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importItem(e, node)} />
             </div>
          </TreeItemComponent>
       {/each}

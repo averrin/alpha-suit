@@ -1,10 +1,12 @@
 <script>
-   import { currentCollection, selected, filter, treeItems } from "../../modules/stores.js";
+   import { currentCollection, selected, filter, treeItems, aliases } from "../../modules/stores.js";
    import FilterBar from "./FilterBar.svelte";
    import TreeView from "./TreeView.svelte";
    import CreateButtons from "./CreateButtons.svelte";
    import { SETTINGS, moduleId } from "../../modules/constants.js";
-   import { setting } from "crew-components/helpers";
+   import { setting, toggleFilter } from "crew-components/helpers";
+   import InlineButton from "crew-components/InlineButton";
+   import HelpControls from "../help/HelpControls.svelte";
 
    const availableTabs = [
       { title: "Actors", get: () => game.actors, icon: "fa-solid:users" },
@@ -27,18 +29,9 @@
 
 <div class="ui-flex ui-flex-none ui-flex-col ui-h-full">
    {#if showTip}
-      <div class="ui-rounded ui-bg-white">
-         <div class="ui-text ui-flex ui-flex-col ui-gap-3 ui-text-center ui-p-2">
-            <div>
-               Hold <kbd class="ui-kbd">shift</kbd> and drag to reorder items.
-            </div>
-            <div>Drop item preview on the canvas to add a token.</div>
-            <div>
-               <kbd class="ui-kbd">right-click</kbd> to select an item.
-            </div>
-            <div>
-               <kbd class="ui-kbd">ctrl</kbd> + <kbd class="ui-kbd">right-click</kbd> to add an item to the selection.
-            </div>
+      <div class="ui-rounded ui-bg-base-100">
+         <div class="ui-text ui-flex ui-flex-col ui-gap-3 ui-p-2">
+            <HelpControls />
             <div class="ui-flex ui-flex-row ui-items-center ui-font-bold">
                You can find more information in the Help Center
                <iconify-icon
@@ -48,7 +41,7 @@
                   on:pointerdown={(_) => null}
                />
             </div>
-            <div class="ui-btn ui-btn-primary" on:click={closeTip}>Close the tip</div>
+            <div class="ui-btn ui-btn-md ui-btn-primary" on:click={closeTip}>Close the tip</div>
          </div>
       </div>
    {/if}
@@ -70,21 +63,24 @@
          <iconify-icon
             icon="clarity:help-solid"
             class="ui-text-lg icon-button ui-flex-none"
-            on:click={AlphaSuit.showHelp}
+            on:click={globalThis.AlphaSuit.showHelp}
             on:pointerdown={(_) => null}
          />
       </div>
    </div>
 
-   <div class="ui-bg-white ui-p-2 ui-h-full ui-pb-[120px]">
+   <div class="ui-bg-base-100 ui-p-2 ui-h-full ui-pb-[120px]">
       <div class="ui-flex ui-flex-1 ui-flex-col">
          <FilterBar {filter} />
       </div>
 
-      <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center">
+      <div class="ui-flex ui-flex-row ui-gap-1 ui-flex-1 ui-items-center">
          <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center">
             Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
          </div>
+
+         <InlineButton icon="fa-solid:map" on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)} />
+         <InlineButton icon="fa-solid:star" on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)} />
          <CreateButtons />
       </div>
       <div class="ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto ui-h-full">

@@ -1,5 +1,4 @@
-import 'virtual:windi.css'
-import 'virtual:windi-devtools'
+// import 'virtual:windi-devtools'
 
 import { initSettings } from "./modules/settings.js";
 

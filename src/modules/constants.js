@@ -21,6 +21,8 @@ export const SETTINGS = {
   IGNORED_PACKS: "ignored-packs",
   ADVANCED_MODE: "advanced-mode",
   USE_DIRECTOR_TAGS: "use-director-tags",
+  THEME: "theme",
+  INVERT_CLICKS: "invert-clicks",
 };
 
 export const HOOKS = [

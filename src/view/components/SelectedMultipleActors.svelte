@@ -70,7 +70,7 @@
       </div>
 
       <div class="ui-flex ui-flex-row ui-flex-none">
-         <div class="ui-btn-group">
+         <div class="ui-btn-group ui-btn-group-md">
             <button class="ui-btn ui-btn-square ui-btn-error" on:click={removeAll}>
                <iconify-icon icon="fluent:delete-20-filled" class="ui-text-xl" />
             </button>
@@ -79,7 +79,7 @@
    </div>
 
    <div class="ui-flex ui-flex-row ui-gap-3">
-      <div class="ui-input-group">
+      <div class="ui-input-group ui-input-group-md">
          <span>Mutual</span>
          <Tags on:tags={onMutualTags} tags={tagsMutual} allowPaste={true} allowDrop={true} onlyUnique={true} />
       </div>
@@ -88,7 +88,7 @@
 
 <div class="ui-flex ui-flex-col ui-gap-2 ui-overflow-auto ui-flex-1 ui-p-2">
    {#each $items as item (item.id)}
-      <div class="ui-divider ui-my-0" />
+      <div class="ui-divider ui-my-0 ui-h-2" />
       <SelectedDocument item={writable(item)} />
    {/each}
 </div>

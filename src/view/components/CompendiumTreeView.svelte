@@ -1,6 +1,8 @@
 <script>
    import TreeItemComponent from "./TreeItem.svelte";
    import { compendiumTree, expanded, selectedBrowser } from "../../modules/stores.js";
+   import { SETTINGS } from "../../modules/constants";
+   import { setting } from "crew-components/helpers";
 
    function toggleExpanded(node) {
       expanded.update((ex) => {
@@ -14,10 +16,11 @@
       });
    }
 
-   function itemClick(e) {
+   function itemClick(e, force = false) {
       const { node, event } = e.detail;
       const isFolder = node.source.content;
       if (!isFolder) {
+         if (!force && !setting(SETTINGS.INVERT_CLICKS)) return handleSelection(e, true);
          node.source?.apps[0].render(true);
       } else {
          if (!event.ctrlKey) {
@@ -28,7 +31,8 @@
       }
    }
 
-   function handleSelection(e) {
+   function handleSelection(e, force = false) {
+      if (!force && !setting(SETTINGS.INVERT_CLICKS)) return itemClick(e, true);
       const { node, event } = e.detail;
       const isFolder = node.source.content;
       if (isFolder) return;

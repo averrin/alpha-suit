@@ -1,5 +1,6 @@
 <script>
    import Tags from "crew-components/Tags";
+   import IconButton from "crew-components/IconButton";
    import { onDestroy } from "svelte";
    import { createSort, createShow, createFilter, fieldRegex } from "crew-components/helpers";
    import { system, browserMode } from "../../modules/stores.js";
@@ -95,9 +96,7 @@
    );
 </script>
 
-<div class="ui-input-group">
+<div class="ui-input-group ui-input-group-md ui-h-fit">
    <Tags bind:tags on:tags={changeTags} allowPaste={true} allowDrop={true} onlyUnique={true} />
-   <button class="ui-btn ui-btn-square ui-h-8 ui-min-h-8 ui-ml-0" on:click={clearFilter}>
-      <iconify-icon icon="gridicons:cross" />
-   </button>
+   <IconButton icon="fluent-emoji-high-contrast:cross-mark" on:click={clearFilter} size="md" type="primary" />
 </div>

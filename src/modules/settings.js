@@ -139,4 +139,27 @@ export function initSettings(app) {
     type: Array,
     default: [],
   });
+
+  game.settings.register(moduleId, SETTINGS.THEME, {
+    name: "UI theme",
+    hint: "",
+    scope: "client",
+    config: false,
+    choices: {
+      'light': "Light",
+      'dark': "Dark",
+    },
+    default: "light",
+    type: String,
+    onChange: debouncedReload
+  });
+
+  game.settings.register(moduleId, SETTINGS.INVERT_CLICKS, {
+    name: "Invert clicks in tree views",
+    hint: "Disabled: left-click for select, right for open builtin sheet",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 }

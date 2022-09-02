@@ -36,6 +36,7 @@ export default () => {
     base: '/modules/alpha-suit/',    // Base module path that 30001 / served dev directory.
     publicDir: false,                         // No public resources to copy.
     cacheDir: '../.vite-cache',               // Relative from root directory.
+    assetInclude: ["./assets/**/*", "./view/help/**/*"],
 
     resolve: { conditions: ['import', 'browser'] },
 

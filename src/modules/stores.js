@@ -28,6 +28,7 @@ export const helpTree = writable({});
 export const tagsStore = writable([]);
 export const systems = writable({});
 export const system = writable(null);
+export const theme = writable("light");
 
 function getTree() {
   let collection = get(currentCollection);
@@ -35,7 +36,7 @@ function getTree() {
 }
 
 async function initCompendiumTreeCF() {
-  game.packs.contents.forEach(p => p.type = `${p.metadata.type} (${p.metadata.package})`);
+  game.packs.contents.forEach(p => p.type = `${p.metadata.type} (${p.metadata.packageName})`);
   const children = game.customFolders.compendium.folders.contents.filter(f => f.id.startsWith("cfolder"));
   const content = game.customFolders.compendium.folders.get("default")?.content || [];
 
@@ -124,7 +125,7 @@ export function filterItems(items, filter) {
         item =>
           item.root
           || item?.source?.depth
-          || filterItemPredicate(item.source.data, filter, { "@onScene": "onScene(@item)" })
+          || filterItemPredicate(item.source.data, filter, get(aliases))
       )
     for (let n = 0; n < 5; n++) {
       filtered.forEach(v => {
@@ -161,6 +162,7 @@ export function buildTree(tree, filter, transform, folderTransform) {
 }
 
 export function initStores() {
+  theme.set(game.settings.get(moduleId, SETTINGS.THEME));
   let sys = get(systems)[globalThis.game.system.id] || get(systems)["*"];
   if (sys.id == "*") {
     sys.id = globalThis.game.system.id;
@@ -173,6 +175,7 @@ export function initStores() {
   helpTree.set(buildHelpTree())
 
   currentCollection.set(game.actors);
+  // aliases.set({ "@onScene": "onScene(@item)" })
   tagsStore.set(game.settings.get(tagSource, SETTINGS.TAGS).map(Tag.fromPlain).filter(a => a));
   tagsStore.subscribe(tags => {
     game.settings.set(tagSource, SETTINGS.TAGS, tags);

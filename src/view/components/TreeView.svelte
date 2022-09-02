@@ -4,6 +4,8 @@
    import { selected, expanded, filter, currentCollection, isDragging } from "../../modules/stores.js";
    import { dndzone, SHADOW_PLACEHOLDER_ITEM_ID, TRIGGERS } from "svelte-dnd-action";
    import { tick } from "svelte";
+   import { SETTINGS } from "../../modules/constants";
+   import { setting } from "crew-components/helpers";
 
    function toggleExpanded(node) {
       expanded.update((ex) => {
@@ -17,16 +19,18 @@
       });
    }
 
-   function itemClick(e) {
+   function itemClick(e, force = false) {
       const { node, event } = e.detail;
 
       const isFolder = node.source instanceof Folder || node.source?.depth;
       if (!isFolder) {
+         if (!force && !setting(SETTINGS.INVERT_CLICKS)) return handleSelection(e, true);
          node.source?.sheet.render(true);
       } else {
          if (!event.ctrlKey) {
             toggleExpanded(node);
          } else {
+            if (!force && !setting(SETTINGS.INVERT_CLICKS)) return handleSelection(e, true);
             node.source?.sheet.render(true);
          }
       }
@@ -116,7 +120,8 @@
       }
    }
 
-   function handleSelection(e) {
+   function handleSelection(e, force = false) {
+      if (!force && !setting(SETTINGS.INVERT_CLICKS)) return itemClick(e, true);
       const { node, event } = e.detail;
       selected.update((items) => {
          let isSelected = items.some((i) => i == node.id);

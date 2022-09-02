@@ -9,13 +9,14 @@
    }
 </script>
 
-<div class="ui-bg-white ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2">
+<div class="ui-bg-base ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2 ui-h-full">
    <div class="ui-text-center ui-text-lg ui-font-bold">Settings</div>
    <ArgInput
       type="bool"
       label="Advanced mode"
       value={setting(SETTINGS.ADVANCED_MODE)}
       on:change={(e) => saveSetting(SETTINGS.ADVANCED_MODE, e)}
+      size="md"
    />
 
    <ArgInput
@@ -23,6 +24,8 @@
       label="Page size"
       value={setting(SETTINGS.PAGE_SIZE)}
       on:change={(e) => saveSetting(SETTINGS.PAGE_SIZE, e)}
+      widthAuto={false}
+      size="md"
    />
 
    <ArgInput
@@ -36,6 +39,7 @@
       }}
       value={setting(SETTINGS.IGNORED_PACKS)}
       on:change={(e) => saveSetting(SETTINGS.IGNORED_PACKS, e)}
+      size="md"
    />
 </div>
 

@@ -4,6 +4,7 @@
    import DocumentThumb from "./DocumentThumb.svelte";
    import CreateButtons from "./CreateButtons.svelte";
    import Permissions from "./Permissions.svelte";
+   import { writable } from "svelte/store";
    import { createFilter } from "crew-components/helpers";
 
    import { dndzone, SHADOW_PLACEHOLDER_ITEM_ID, TRIGGERS } from "svelte-dnd-action";
@@ -36,8 +37,8 @@
    let isExpanded = isRoot;
    export let selected = null;
 
-   let thumbnail = node.thumbnail;
-   $: thumbnail = node.thumbnail;
+   let thumbnail = node?.thumbnail;
+   $: thumbnail = node?.thumbnail;
 
    function onTagClick(_, tag) {
       filter.update((f) => {
@@ -112,7 +113,7 @@
 
 {#if !isRoot}
    <div
-      class="ui-border ui-border-base-300 ui-bg-base-100 ui-rounded-box ui-rounded-md
+      class="ui-border-solid ui-border-base-300 ui-bg-base-100 ui-rounded-box ui-rounded-md
    ui-flex ui-flex-col ui-items-start ui-justify-center tree-item ui-border tree-item"
       style:min-height={minHeight}
       on:click={itemClick}
@@ -137,7 +138,7 @@
                {/if}
             {:else if thumbnail}
                <div class="ui-h-8 ui-w-8">
-                  <DocumentThumb item={node.source} fromCompendium={node.compendium} />
+                  <DocumentThumb item={writable(node.source)} fromCompendium={node.compendium} />
                </div>
             {:else if node.icon}
                <iconify-icon icon={node.icon} class="ui-ml-2 ui-text-lg" />
@@ -145,7 +146,11 @@
                <div class="ui-mr-1" />
             {/if}
             <div class="ui-flex ui-flex-col">
-               <span class="name" class:ui-underline={decorColor} style:text-decoration-color={decorColor}>
+               <span
+                  class="name ui-color-base-content"
+                  class:ui-underline={decorColor}
+                  style:text-decoration-color={decorColor}
+               >
                   {node.name}
                </span>
                {#if !isFolder}
@@ -203,7 +208,7 @@
       class:ui-pl-6={!isRoot}
       class:ui-h-full={isRoot}
       on:mousemove={checkShift}
-      style:background-color="{node.color != "#232323" ? node.color : "#dddddd"}30"
+      style:background-color="{node?.color != "#232323" ? node?.color : "#dddddd"}30"
       id={node.id}
    >
       {#if node.children?.length > 0}
