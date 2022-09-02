@@ -14,4 +14,4 @@ Added:
   * Buttons for "onScene" and "fav" filters
   * Button for "fav" toggling
   * BREAKING: inverted left and right clicks for trees. You can enable the old behaviour in the settings
-
+  * A little more help text about Alpha Tree
