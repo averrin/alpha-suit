@@ -135,21 +135,23 @@
                notification={"Token path copied!"}
                icon="fa:user-circle"
             />
-            <CopyButton
-               text={$item.data.token.img || $item.data.prototypeToken.texture.src}
-               notification={"Portrait path copied!"}
-               title="Copy token path"
-               icon="fa:image"
-            />
-            <div class="ui-ml-2" />
+            {#if $item.data.token || $item.data.prototypeToken}
+               <CopyButton
+                  text={$item.data.token.img || $item.data.prototypeToken.texture.src}
+                  notification={"Portrait path copied!"}
+                  title="Copy token path"
+                  icon="fa:image"
+               />
+               <div class="ui-ml-2" />
 
-            <IconButton
-               size="xs"
-               icon="fa:user-circle-o"
-               title="Set token img path from clipboard"
-               on:click={setTokenImg}
-               type="primary"
-            />
+               <IconButton
+                  size="xs"
+                  icon="fa:user-circle-o"
+                  title="Set token img path from clipboard"
+                  on:click={setTokenImg}
+                  type="primary"
+               />
+            {/if}
          {/if}
          <IconButton
             size="xs"
