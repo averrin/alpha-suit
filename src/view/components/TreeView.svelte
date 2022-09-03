@@ -36,7 +36,7 @@
       }
    }
 
-   function updateItemsParent(newItems, node) {
+   function updateItemsParent(newItems, folder) {
       let n = 0;
       let dn = 0;
       const updates = [];
@@ -52,12 +52,12 @@
             if (doc instanceof Folder || doc.depth) {
                u = dir_updates;
                changes["sort"] = dn;
-               changes["parent"] = node.source.id || node.source?.folder?.id || null;
+               changes["parent"] = folder.id || folder?.folder?.id || null;
                dn++;
             } else {
                u = updates;
                changes["sort"] = n;
-               changes["folder"] = node.source.id || node.source?.folder?.id || null;
+               changes["folder"] = folder.id || folder?.folder?.id || null;
                n++;
             }
 
@@ -107,14 +107,14 @@
                newItems = newItems.filter((item) => !$selected.includes(item.id));
                newItems.splice(idx - sidx, 0, ...$selected.map((i) => nodes[i]));
 
-               updateItemsParent(newItems, node);
+               updateItemsParent(newItems, node.source);
                node.children = newItems;
             });
          }
       } else {
          if (node.id != "root") node.source?.folder?.update({ sorting: "m" });
 
-         updateItemsParent(node.children, node);
+         updateItemsParent(node.children, node.source);
          // nodes = { ...nodes };
          node.children = newItems;
       }

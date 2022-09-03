@@ -2,6 +2,8 @@
    export let items;
    import SelectedDocument from "./SelectedDocument.svelte";
    import Tags from "crew-components/Tags";
+   import ArgInput from "crew-components/ArgInput";
+   import { treeItems, moveItemToFolder } from "../../modules/stores.js";
    import { getFlag, setFlag } from "crew-components/helpers";
    import { selected } from "../../modules/stores.js";
    import { onDestroy, tick } from "svelte";
@@ -61,15 +63,38 @@
    onDestroy(() => Hooks.off("updateActor", unsub1));
    let count = $items.length;
    $: count = $items.length;
+   let moveTo;
+
+   function moveItems() {
+      for (const item of $items) {
+         moveItemToFolder(item.id, moveTo);
+      }
+   }
 </script>
 
 <div class="ui-flex ui-flex-col ui-flex-none ui-gap-2 ui-p-2">
    <div class="ui-flex ui-flex-row ui-gap-3 ui-justify-center ui-items-center">
-      <div class="ui-flex ui-flex-row ui-flex-1 ui-text-lg ui-items-center ui-justify-center ui-w-full">
+      <div class="ui-flex ui-flex-row ui-flex-1 ui-text-lg ui-items-center ui-justify-start ui-w-full ui-px-1">
          Selected: {count}
       </div>
 
-      <div class="ui-flex ui-flex-row ui-flex-none">
+      <div class="ui-flex ui-flex-row ui-flex-none ui-gap-2 ui-items-center">
+         <ArgInput
+            type="select"
+            spec={{
+               control: "select",
+               options: Object.values($treeItems)
+                  .filter((n) => n.source instanceof Folder || n.source?.depth || n.root)
+                  .map((n) => {
+                     return { value: n.id, label: n.name || "Root" };
+                  }),
+            }}
+            size="md"
+            bind:value={moveTo}
+         >
+            <div class="ui-btn ui-btn-primary ui-btn-md" slot="right" on:click={(_) => moveItems()}>Move</div>
+         </ArgInput>
+
          <div class="ui-btn-group ui-btn-group-md">
             <button class="ui-btn ui-btn-square ui-btn-error" on:click={removeAll}>
                <iconify-icon icon="fluent:delete-20-filled" class="ui-text-xl" />

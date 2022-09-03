@@ -224,3 +224,27 @@ export function addTree(tree, parent, transform, folderTransform) {
   }
   return items;
 }
+
+export function moveItemToFolder(itemId, folderId) {
+  const updates = [];
+  const dir_updates = [];
+  let u;
+
+  const doc = get(currentCollection).get(itemId) || game.folders.get(itemId);
+  const folder = game.folders.get(folderId);
+  const changes = {
+    _id: doc.id,
+  };
+  if (doc instanceof Folder || doc.depth) {
+    u = dir_updates;
+    changes["parent"] = folder?.id || folder?.folder?.id || null;
+  } else {
+    u = updates;
+    changes["folder"] = folder?.id || folder?.folder?.id || null;
+  }
+
+  u.push(changes);
+  Folder.updateDocuments(dir_updates);
+  get(currentCollection).documentClass.updateDocuments(updates, { parent: null });
+  ui.notifications.info(`${doc.name} was moved to ${folder?.name || "Root"}`);
+}

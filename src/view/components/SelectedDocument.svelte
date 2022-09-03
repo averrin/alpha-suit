@@ -6,12 +6,13 @@
    import IconButton from "crew-components/IconButton";
    import RemoveButton from "crew-components/RemoveButton";
    import DocumentThumb from "./DocumentThumb.svelte";
+   import { treeItems, moveItemToFolder } from "../../modules/stores.js";
 
    import Permissions from "./Permissions.svelte";
    import { onDestroy } from "svelte";
 
    export let item;
-   import { selected } from "../../modules/stores.js";
+   import { selected, currentCollection } from "../../modules/stores.js";
    let isFav;
    let tags = getFlag($item, "tagger")?.tags || [];
 
@@ -76,6 +77,8 @@
          left: window.innerWidth - 720,
       }).render(true);
    }
+
+   let moveTo;
 </script>
 
 <div class="ui-flex ui-flex-col ui-gap-2" id={$item.id}>
@@ -110,59 +113,85 @@
          </div>
       </div>
    </div>
-   <div class="ui-flex ui-flex-row ui-gap-1 ui-group ui-group-xs">
-      <IconButton size="xs" title="Permissions" icon="fa:share-alt" on:click={changePermissions} type="primary" />
-      <CopyButton
-         text={$item.data.name}
-         title="Copy name"
-         notification={"Name copied!"}
-         icon="icon-park-solid:edit-name"
-      />
-      <CopyButton
-         text={$item.id}
-         title="Copy ID"
-         notification={"ID copied!"}
-         icon="fluent-emoji-high-contrast:id-button"
-      />
-      {#if $item.thumbnail}
+   <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center">
+      <div class="ui-flex ui-flex-row ui-gap-1 ui-group ui-group-xs ui-w-full ui-flex-1 ui-items-center">
+         <IconButton size="xs" title="Permissions" icon="fa:share-alt" on:click={changePermissions} type="primary" />
          <CopyButton
-            text={$item.data.img}
-            title="Copy portrait path"
-            notification={"Token path copied!"}
-            icon="fa:user-circle"
+            text={$item.data.name}
+            title="Copy name"
+            notification={"Name copied!"}
+            icon="icon-park-solid:edit-name"
          />
          <CopyButton
-            text={$item.data.token.img || $item.data.prototypeToken.texture.src}
-            notification={"Portrait path copied!"}
-            title="Copy token path"
-            icon="fa:image"
+            text={$item.id}
+            title="Copy ID"
+            notification={"ID copied!"}
+            icon="fluent-emoji-high-contrast:id-button"
          />
-         <div class="ui-ml-2" />
+         {#if $item.thumbnail}
+            <CopyButton
+               text={$item.data.img}
+               title="Copy portrait path"
+               notification={"Token path copied!"}
+               icon="fa:user-circle"
+            />
+            <CopyButton
+               text={$item.data.token.img || $item.data.prototypeToken.texture.src}
+               notification={"Portrait path copied!"}
+               title="Copy token path"
+               icon="fa:image"
+            />
+            <div class="ui-ml-2" />
 
+            <IconButton
+               size="xs"
+               icon="fa:user-circle-o"
+               title="Set token img path from clipboard"
+               on:click={setTokenImg}
+               type="primary"
+            />
+         {/if}
          <IconButton
             size="xs"
-            icon="fa:user-circle-o"
-            title="Set token img path from clipboard"
-            on:click={setTokenImg}
             type="primary"
+            icon={!isFav ? "fa-regular:star" : "fa-solid:star"}
+            title="Toggle favorite"
+            on:click={async (_) => {
+               await toggleFlag($item, "alpha-suit.fav");
+               item.set($item);
+            }}
          />
-      {/if}
-      <IconButton
-         size="xs"
-         type="primary"
-         icon={!isFav ? "fa-regular:star" : "fa-solid:star"}
-         title="Toggle favorite"
-         on:click={async (_) => {
-            await toggleFlag($item, "alpha-suit.fav");
-            item.set($item);
-         }}
-      />
 
-      {#if $item?.data?.permission}
-         <div class="ui-mx-2 ui-flex ui-items-center">
-            <Permissions item={$item} />
-         </div>
-      {/if}
+         {#if $item?.data?.permission}
+            <div class="ui-mx-2 ui-flex ui-items-center">
+               <Permissions item={$item} />
+            </div>
+         {/if}
+      </div>
+
+      <div class="ui-flex ui-flex-row ui-gap-none ui-items-center">
+         <ArgInput
+            type="select"
+            spec={{
+               control: "select",
+               options: Object.values($treeItems)
+                  .filter((n) => n.source instanceof Folder || n.source?.depth || n.root)
+                  .map((n) => {
+                     return { value: n.id, label: n.name || "Root" };
+                  }),
+            }}
+            size="xs"
+            bind:value={moveTo}
+         >
+            <div
+               class="ui-btn ui-btn-primary ui-btn-xs"
+               slot="right"
+               on:click={(_) => moveItemToFolder($item.id, moveTo)}
+            >
+               Move
+            </div>
+         </ArgInput>
+      </div>
    </div>
    <div class="ui-flex ui-flex-row ui-gap-3">
       <div class="ui-input-group ui-input-group-md">
