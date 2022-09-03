@@ -27,9 +27,10 @@ gum confirm "Commit changes?" || exit 128
     DESCRIPTION=$(gum write --placeholder "Details of this change (CTRL+D to finish)")
 
     # Commit these changes
-    gum confirm "Commit changes?" && git commit -a -m "$SUMMARY" -m "$DESCRIPTION"
+    gum confirm "Commit changes?" && git commit -a -m "$SUMMARY" -m "$DESCRIPTION" && git push
   ;;
   release)
     gum choose "patch" "minor" "major" | xargs git semver
+    git push --tags
   ;;
 esac

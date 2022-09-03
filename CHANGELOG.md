@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.1.3 - 0.1.4](https://github.com/averrin/alpha-suit/compare/0.1.3...0.1.4)
+Fixed:
+  * crash on item selection in the tree
+Added:
+  * ability to move item(s) to folder from the selection mode
+
 ## [0.1.2 - 0.1.3](https://github.com/averrin/alpha-suit/compare/0.1.2...0.1.3)
 Fixed:
   * Style leakage
