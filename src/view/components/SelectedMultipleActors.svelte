@@ -74,7 +74,9 @@
 
 <div class="ui-flex ui-flex-col ui-flex-none ui-gap-2 ui-p-2">
    <div class="ui-flex ui-flex-row ui-gap-3 ui-justify-center ui-items-center">
-      <div class="ui-flex ui-flex-row ui-flex-1 ui-text-lg ui-items-center ui-justify-start ui-w-full ui-px-1">
+      <div
+         class="ui-flex ui-flex-row ui-flex-1 ui-text-lg ui-items-center ui-justify-start ui-w-full ui-px-1 ui-text-base-content"
+      >
          Selected: {count}
       </div>
 

@@ -35,7 +35,7 @@
       {#if tokens?.length > 0}
          <div class="ui-input-group">
             <span>Tokens</span>
-            <div class="ui-border ui-flex ui-flex-row ui-gap-1 ui-p-1 ui-bg-zinc-200">
+            <div class="ui-border ui-flex ui-flex-row ui-gap-1 ui-p-1 ui-bg-base-300">
                {#each tokens as token (token.id)}
                   <TokenThumb
                      {token}

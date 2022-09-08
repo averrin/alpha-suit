@@ -166,7 +166,9 @@
 
 <div class="ui-flex ui-flex-col">
    <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center ui-items-center ui-gap-2 ui-px-2">
-      <div class="ui-font-bold ui-text-lg ui-flex-1 ui-w-full ui-text-center">{modeName}: {total}</div>
+      <div class="ui-font-bold ui-text-lg ui-flex-1 ui-w-full ui-text-center ui-text-base-content">
+         {modeName}: {total}
+      </div>
       <div class="ui-flex-none ui-flex-row ui-items-center ui-flex ui-gap-2">
          <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importFiltered()} />
          {#if fc?.length > 0}
@@ -195,6 +197,6 @@
    </div>
 </div>
 
-<div class="ui-flex ui-flex-row ui-p-1 ui-min-h-8 ui-justify-center" style="border-top: 1px solid #ccc">
+<div class="ui-flex ui-flex-row ui-p-1 ui-min-h-8 ui-justify-center" style="border-top: 1px solid hsl(var(--b2))">
    <Pagenation bind:currentPage {total} {pageSize} on:update={setContent} />
 </div>

@@ -27,14 +27,14 @@
 
 <div class="ui-flex ui-flex-row ui-gap-2 ui-container">
    <div
-      class="ui-bg-white ui-flex-col ui-flex ui-pb-[26px]"
+      class="ui-bg-base-100 ui-flex-col ui-flex ui-pb-[26px]"
       class:ui-w-[40%]={$selectedBrowser.length > 0}
       class:ui-w-full={$selectedBrowser.length == 0}
       style="height: {contentH}px;"
    >
       <div class="ui-flex ui-flex-none ui-flex-col ui-p-2 ui-pb-0 ui-flex-col ui-gap-1">
          <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center">
-            <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center">
+            <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-text-base-content">
                Items: <span class="ui-font-bold">{$compendiumTree ? Object.keys($compendiumTree)?.length - 1 : 0}</span>
             </div>
          </div>
@@ -45,7 +45,7 @@
    </div>
    {#if $selectedBrowser.length > 0}
       <div
-         class="ui-bg-white ui-flex-col ui-flex"
+         class="ui-bg-base-100 ui-flex-col ui-flex"
          class:ui-w-[60%]={$selectedBrowser.length > 0}
          style="height: {contentH}px;"
       >

@@ -1,21 +1,26 @@
 #!/bin/sh
+v=$(git semver get)
+p=$(cat ./package.json | jq -r .name)
 
-echo Project: $(cat ./package.json | jq -r .name)
+echo "Project: {{ Bold \"$p\" }} $v" | gum format -t template
 cc=$(cat ./package.json | jq -r ".dependencies[\"crew-components\"]")
+echo Action:
+ACTION=$(gum choose "commit" "release" "build" "dist" "dev")
+
+case $ACTION in
+  dev)
+    npm run dev;;
+  build)
+    echo "Building..."
+    npm run build;;
+  commit)
 if [ "$cc" != "github:averrin/crew-components" ]
 then
   echo "!!! Fix crew-components path first !!!"
   exit 127
 fi
-echo Action:
-ACTION=$(gum choose "build" "commit" "release")
-
-case $ACTION in
-  build)
-    npm run build;;
-  commit)
     git status
-gum confirm "Commit changes?" || exit 128
+    gum confirm "Commit changes?" || exit 128
     TYPE=$(gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert")
     SCOPE=$(gum input --placeholder "scope")
 
@@ -33,4 +38,13 @@ gum confirm "Commit changes?" || exit 128
     gum choose "patch" "minor" "major" | xargs git semver
     git push --tags
   ;;
+  dist)
+    echo "Building & making a local dist..."
+    npm run build
+    cd ..
+    rm -rf ./${p}-dist;
+    cp -r ./${p} ./${p}-dist;
+    rm -rf ./${p}-dist/node_modules
+  ;;
 esac
+echo "Done"

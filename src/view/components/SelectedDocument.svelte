@@ -96,7 +96,8 @@
             <span>Name</span>
             <input
                type="text"
-               class="ui-input-lg ui-border-[#ccc] ui-pl-2"
+               class="ui-input-lg ui-pl-2"
+               style:border-color="hsl(var(--b3))"
                value={$item.name}
                on:change={(e) => update(e, "name")}
             />

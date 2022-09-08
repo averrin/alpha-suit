@@ -113,14 +113,14 @@
 
 {#if !isRoot}
    <div
-      class="ui-border-solid ui-border-base-300 ui-bg-base-100 ui-rounded-box ui-rounded-md
+      class="ui-border-solid ui-border-base-300 ui-bg-base-200 ui-rounded-box ui-rounded-md
    ui-flex ui-flex-col ui-items-start ui-justify-center tree-item ui-border tree-item"
       style:min-height={minHeight}
       on:click={itemClick}
       class:selected={isSelected}
       class:ui-ring={isSelected}
       style:color={node.color}
-      style:border-color={node.color != "#232323" ? node.color : "#ddd"}
+      style:border-color={node.color != "#232323" ? node.color : "hsl(var(--b3))"}
       on:pointerdown={onPointerDown}
       id={node.id}
    >
@@ -129,25 +129,41 @@
             {#if isFolder}
                {#if !isExpanded}
                   {#if node.children?.length > 0}
-                     <iconify-icon icon="fa-solid:folder-plus" class="ui-ml-2 ui-text-lg" />
+                     <iconify-icon
+                        icon="fa-solid:folder-plus"
+                        class="ui-ml-2 ui-text-lg ui-text-base-content"
+                        style:color={node.color}
+                     />
                   {:else}
-                     <iconify-icon icon="fa-solid:folder-minus" class="ui-ml-2 ui-text-lg" />
+                     <iconify-icon
+                        icon="fa-solid:folder-minus"
+                        class="ui-ml-2 ui-text-lg ui-text-base-content"
+                        style:color={node.color}
+                     />
                   {/if}
                {:else}
-                  <iconify-icon icon="fa-solid:folder-open" class="ui-ml-2 ui-text-lg" />
+                  <iconify-icon
+                     icon="fa-solid:folder-open"
+                     class="ui-ml-2 ui-text-lg ui-text-base-content"
+                     style:color={node.color}
+                  />
                {/if}
             {:else if thumbnail}
                <div class="ui-h-8 ui-w-8">
                   <DocumentThumb item={writable(node.source)} fromCompendium={node.compendium} />
                </div>
             {:else if node.icon}
-               <iconify-icon icon={node.icon} class="ui-ml-2 ui-text-lg" />
+               <iconify-icon
+                  icon={node.icon}
+                  class="ui-ml-2 ui-text-lg ui-text-base-content"
+                  style:color={node.color}
+               />
             {:else}
                <div class="ui-mr-1" />
             {/if}
             <div class="ui-flex ui-flex-col">
                <span
-                  class="name ui-color-base-content"
+                  class="name ui-color-base-content ui-text-base-content"
                   class:ui-underline={decorColor}
                   style:text-decoration-color={decorColor}
                >
@@ -209,9 +225,9 @@
       class:ui-h-full={isRoot}
       on:mousemove={checkShift}
       style:background-color="{node?.color != "#232323" ? node?.color : "#dddddd"}30"
-      id={node.id}
+      id={node?.id}
    >
-      {#if node.children?.length > 0}
+      {#if node?.children?.length > 0}
          {#each node.children.filter((item) => item.id !== SHADOW_PLACEHOLDER_ITEM_ID && item.id in nodes) as item (item.id)}
             <div class="item">
                <svelte:self
@@ -232,7 +248,7 @@
          {/each}
       {:else}
          <div
-            class="ui-pl-4 ui-flex ui-flex-row ui-h-6 ui-text-zinc-400 ui-border-dashed ui-border ui-rounded ui-bg-[#eee]"
+            class="ui-pl-4 ui-flex ui-flex-row ui-h-6 ui-text-zinc-400 ui-border-dashed ui-border ui-rounded ui-bg-base-200"
          >
             <div class="ui-flex ui-flex-1 ui-w-full">empty</div>
             {#if showCreateButtons}
@@ -254,8 +270,8 @@
    }
 
    .tree-item:hover {
-      background-color: #eee;
-      border: 1px solid #ccc;
+      background-color: hsl(var(--b1));
+      border: 1px solid hsl(var(--b2));
    }
    .tree-item.selected {
       border: none !important;

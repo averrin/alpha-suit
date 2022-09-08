@@ -144,7 +144,7 @@ export function initSettings(app) {
     name: "UI theme",
     hint: "",
     scope: "client",
-    config: false,
+    config: true,
     choices: {
       'light': "Light",
       'dark': "Dark",

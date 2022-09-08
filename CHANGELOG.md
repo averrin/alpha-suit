@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.1.4 - 0.1.5](https://github.com/averrin/alpha-suit/compare/0.1.4...0.1.5)
+Added:
+  * GUI Dark theme
+
 ## [0.1.3 - 0.1.4](https://github.com/averrin/alpha-suit/compare/0.1.3...0.1.4)
 Fixed:
   * crash on item selection in the tree

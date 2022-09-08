@@ -5,7 +5,8 @@
     max-width: 80%;
     max-height: 90%;
     .window-content {
-        padding: 0px;
-        overflow-y: hidden;
+      padding: 0px;
+      overflow-y: hidden;
+      background: var(--window-background);
     }
 }

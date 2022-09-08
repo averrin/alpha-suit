@@ -7,8 +7,11 @@
       (smart-case)
    </li>
    <li>
-      Query language powered by <a href="https://github.com/joewalnes/filtrex" target="_blank">Filtrex</a>. You can use
-      all its power.
+      Query language powered by <a
+         class="ui-link ui-link-accent"
+         href="https://github.com/joewalnes/filtrex"
+         target="_blank">Filtrex</a
+      >. You can use all its power.
    </li>
    <li>
       To access the document's property, use @-notation. For example, <tt>@data.details.cr</tt> will transform into

@@ -57,7 +57,7 @@
 </script>
 
 <ApplicationShell bind:elementRoot>
-   <main class="ui-flex ui-flex-row ui-gap-2 ui-container" data-theme={$theme}>
+   <main class="ui-flex ui-flex-row ui-gap-2 ui-container ui-text-base-content" data-theme={$theme}>
       <div class="alpha-ui ui-bg-base-100 ui-flex-col ui-flex ui-w-[30%]">
          <div>
             <TreeItemComponent

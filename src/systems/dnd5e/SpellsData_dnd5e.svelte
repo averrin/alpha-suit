@@ -4,7 +4,7 @@
    let components = data?.components;
 </script>
 
-<div class="ui-text-xs">
+<div class="ui-text-xs ui-text-base-content">
    {#if components}
       {#if components.vocal}
          V

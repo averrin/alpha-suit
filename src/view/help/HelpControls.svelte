@@ -6,7 +6,7 @@
 </script>
 
 <h1>Alpha Tree controls</h1>
-<ul>
+<ul class="ui-text-base-content">
    <li>
       Hold <kbd class="ui-kbd">shift</kbd> and drag to reorder items.
    </li>

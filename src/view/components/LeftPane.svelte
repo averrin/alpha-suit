@@ -46,12 +46,12 @@
       </div>
    {/if}
 
-   <div class="ui-p-2">
+   <div class="ui-p-1">
       <div class="ui-tabs ui-tabs-boxed">
          <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center">
             {#each availableTabs as t (t.title)}
                <a
-                  class="ui-tab ui-tab-xs ui-text-black"
+                  class="ui-tab ui-tab-xs ui-text-base-content"
                   on:click={() => selectMode(t)}
                   class:ui-tab-active={t.title == mode}
                >
@@ -62,7 +62,7 @@
          </div>
          <iconify-icon
             icon="clarity:help-solid"
-            class="ui-text-lg icon-button ui-flex-none"
+            class="ui-text-lg icon-button ui-flex-none ui-text-base-content"
             on:click={globalThis.AlphaSuit.showHelp}
             on:pointerdown={(_) => null}
          />
@@ -75,7 +75,7 @@
       </div>
 
       <div class="ui-flex ui-flex-row ui-gap-1 ui-flex-1 ui-items-center">
-         <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center">
+         <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-text-base-content">
             Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
          </div>
 

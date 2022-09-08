@@ -49,6 +49,9 @@ async function initCompendiumTreeCF() {
     item.count = source.index?.size;
     item.extraIcons = [];
     item.icon = "fa-solid:atlas";
+    if (item.color == "#000000") {
+      item.color = undefined;
+    }
     if (ignored.includes(source.metadata.label)) {
       item.extraIcons.push("octicon:diff-ignored-16");
     }
@@ -61,6 +64,9 @@ async function initCompendiumTreeCF() {
     return item;
   }, (c) => {
     c.icon = "fa-solid:folder"
+    if (c.color == "#000000") {
+      c.color = undefined;
+    }
     return c;
   }));
 }
@@ -73,8 +79,6 @@ async function initCompendiumTree() {
   let children = [...new Set(game.packs.contents.map(p => p.metadata.type))];
   children = children.map(type => {
     const packs = game.packs.contents.filter(p => p.metadata.type == type);
-    packs.forEach(p => p.icon = "fa-solid:atlas");
-    packs.forEach(p => p.type = `${type} (${p.metadata.package})`);
     return {
       icon: "fa-solid:folder",
       id: type,
@@ -85,6 +89,8 @@ async function initCompendiumTree() {
   });
   compendiumTree.set(buildTree({ content: [], children }, undefined, (item, source) => {
     item.count = source.index?.size;
+    item.icon = "fa-solid:atlas";
+    item.type = `${source?.metadata?.type} (${source?.metadata?.package})`;
     item.extraIcons = [];
     if (ignored.includes(source.metadata.label)) {
       item.extraIcons.push("octicon:diff-ignored-16");
@@ -96,6 +102,11 @@ async function initCompendiumTree() {
       item.extraIcons.push("fa-solid:lock");
     }
     return item;
+  }, f => {
+    if (f.color == "#000000") {
+      f.color = undefined;
+    }
+    return f;
   }));
 }
 

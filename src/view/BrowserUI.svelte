@@ -28,7 +28,7 @@
 
 <ApplicationShell bind:elementRoot>
    <main class="alpha-ui ui-flex ui-flex-col ui-container" data-theme={$theme}>
-      <div class="ui-p-2">
+      <div class="ui-p-1">
          <div class="ui-tabs ui-tabs-boxed">
             <div class="ui-mr-2">
                <Tag
@@ -39,18 +39,18 @@
             <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center ui-flex-wrap">
                {#each availableTabs as t (t.title)}
                   <a
-                     class="ui-tab ui-tab-xs ui-text-black"
+                     class="ui-tab ui-tab-xs ui-text-base-content"
                      on:click={() => selectMode(t)}
                      class:ui-tab-active={t.title == $browserMode.title}
                   >
-                     <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg" />
+                     <iconify-icon icon={t.icon} class="ui-mr-2 ui-text-lg ui-text-base-content" />
                      {t.title}
                   </a>
                {/each}
             </div>
             <iconify-icon
                icon="clarity:help-solid"
-               class="ui-text-lg icon-button ui-flex-none"
+               class="ui-text-lg icon-button ui-flex-none ui-text-base-content"
                on:click={AlphaSuit.showHelp}
                on:pointerdown={(_) => null}
             />

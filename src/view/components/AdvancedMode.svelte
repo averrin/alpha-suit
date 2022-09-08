@@ -16,7 +16,7 @@
 </script>
 
 <div class="ui-flex ui-flex-row ui-gap-2 ui-container">
-   <div class="ui-bg-white ui-flex-col ui-flex ui-w-[40%]" style="height: {contentH}px;">
+   <div class="ui-bg-base ui-flex-col ui-flex ui-w-[40%]" style="height: {contentH}px;">
       <div class="ui-flex ui-flex-none ui-flex-col ui-p-2 ui-pb-0 ui-flex-col ui-gap-1 ui-h-full">
          <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-h-full">
             <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-h-full">
@@ -26,7 +26,7 @@
       </div>
       <!-- <div class="ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto">scroll view</div> -->
    </div>
-   <div class="ui-bg-white ui-flex-col ui-flex ui-w-[60%]" style="height: {contentH}px;">
+   <div class="ui-bg-base ui-flex-col ui-flex ui-w-[60%]" style="height: {contentH}px;">
       <AdvancedRightPane />
    </div>
 </div>

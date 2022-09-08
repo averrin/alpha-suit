@@ -233,7 +233,7 @@
 {#if compendium && root}
    <div class="ui-flex ui-flex-col">
       <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center ui-items-center ui-gap-2">
-         <div class="ui-font-bold ui-text-lg">
+         <div class="ui-font-bold ui-text-lg ui-text-base-content">
             {compendium.title}
          </div>
          <InlineButton icon="fa-solid:download" color="#71717a" on:click={compendium.importDialog} />

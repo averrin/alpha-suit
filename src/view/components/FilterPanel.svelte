@@ -101,7 +101,9 @@
    }
 </script>
 
-<div class="ui-p-2 ui-flex ui-flex-col ui-gap-2 ui-w-full ui-h-full ui-max-w-full ui-overflow-x-auto">
+<div
+   class="ui-p-2 ui-flex ui-flex-col ui-gap-2 ui-w-full ui-h-full ui-max-w-full ui-overflow-x-auto ui-text-base-content"
+>
    <div class:ui-hidden={!setting(SETTINGS.ADVANCED_MODE)}>
       <FilterBar filter={filterAdvanced} />
    </div>
@@ -110,7 +112,7 @@
    <ArgInput size="md" type="string" label="Name" on:change={(e) => setNameSearch(e)} />
 
    {#if $system && $system?.data?.sortings && $system?.data?.sortings[modeName]}
-      <div class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">
+      <div class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid" style="border-color: hsl(var(--n))">
          <CollapsibleCard open={false}>
             <h2 slot="header">Sortings</h2>
             <div slot="body" class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-pt-2">
@@ -143,7 +145,10 @@
    {#if $system && $system?.data.filters && $system?.data.filters[modeName]}
       <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap filters">
          {#each Object.entries($system?.data.filters[$browserMode.title]) as [cat, filters]}
-            <div class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2">
+            <div
+               class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid"
+               style="border-color: hsl(var(--n))"
+            >
                <CollapsibleCard open={false}>
                   <h2 slot="header">{cat}</h2>
                   <div class="ui-flex ui-flex-col ui-gap-2 ui-pt-2" slot="body">

@@ -4,8 +4,8 @@ export class TreeItem {
   constructor() {
     this.id = uuidv4();
     this.name = "New Tree Item"
-    this.color = "#232323";
-    this.bgColor = "#eeeeee";
+    this.color;
+    this.bgColor;
     this.children = [];
     this.icon = undefined;
     this.thumbnail = undefined;
