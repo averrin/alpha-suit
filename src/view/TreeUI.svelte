@@ -9,6 +9,7 @@
    import { setContext, getContext, tick, onDestroy } from "svelte";
    import TagSettings from "crew-components/TagSettings";
    import Tag from "crew-components/tags";
+   import ArgInput from "crew-components/ArgInput";
 
    import "crew-components/styles/foundry-fixes.scss";
    import "crew-components/styles/alpha-ui.scss";
@@ -53,7 +54,9 @@
 
 <ApplicationShell bind:elementRoot>
    <main class="alpha-ui ui-flex ui-flex-row ui-gap-2 ui-container" data-theme={$theme}>
-      <TagSettings {editTag} />
+      <TagSettings {editTag}>
+         <ArgInput bind:value={editTag.fav} label="Favorite" type="bool" slot="controls" />
+      </TagSettings>
       <div
          class="ui-flex-col ui-flex"
          class:ui-w-[40%]={$selected.length > 0}

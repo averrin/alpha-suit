@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.1.5 - 0.1.6](https://github.com/averrin/alpha-suit/compare/0.1.5...0.1.6)
+Added:
+  * Compendium name for each item in the browser
+  * Help pages for the browser
+
+Fixed:
+  * UI layout issues in the filter panel
+  * Hovered button's color in dark mode
+
 ## [0.1.4 - 0.1.5](https://github.com/averrin/alpha-suit/compare/0.1.4...0.1.5)
 Added:
   * GUI Dark theme

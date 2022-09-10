@@ -71,7 +71,9 @@
    function addSort(sort, dir = "asc") {
       filterAdvanced.update((f) => {
          if (sort.label) {
+            let ex = f.sort?.find((s) => s?.field == sort.query && s.dir == dir);
             f.sort = f.sort?.filter((s) => s?.id != sort.label) || [];
+            if (ex) return f;
          }
          f.sort.push(createSort(aliases, sort.query, dir, sort.label));
          if (sort.show) {

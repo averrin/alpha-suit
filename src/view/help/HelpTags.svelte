@@ -12,4 +12,7 @@
       Right click on a tag opens Tag Settings dialog to assign icon and color. If you are using Director, you can enable
       using tags from the Director by the setting.
    </li>
+   <li>
+      If you check "favorite" toggle, tag will be present in the "quick tags" bar. It's useful for frequent filters.
+   </li>
 </ul>

@@ -192,6 +192,17 @@
                {/each}
                <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importItem(e, node)} />
             </div>
+            <span
+               class="ui-link ui-font-bold !ui-text-[#999]"
+               slot="info"
+               on:click={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  node.compendium.apps[0].render(true);
+               }}
+            >
+               {node.compendium.title}
+            </span>
          </TreeItemComponent>
       {/each}
    </div>

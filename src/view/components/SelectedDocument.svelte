@@ -16,12 +16,17 @@
    let isFav;
    let tags = getFlag($item, "tagger")?.tags || [];
 
-   onDestroy(
-      item.subscribe((i) => {
-         isFav = getFlag(i, "alpha-suit.fav");
-         tags = getFlag(i, "tagger")?.tags || [];
-      })
-   );
+   function onUpdate(i) {
+      isFav = getFlag(i, "alpha-suit.fav");
+      tags = getFlag(i, "tagger")?.tags || [];
+   }
+
+   onDestroy(item.subscribe(onUpdate));
+
+   const unsub = Hooks.on("updateActor", onUpdate);
+   onDestroy((_) => Hooks.off("updateActor", unsub));
+   const unsub1 = Hooks.on("updateItem", onUpdate);
+   onDestroy((_) => Hooks.off("updateItem", unsub1));
 
    async function setTokenImg() {
       const data = await navigator.clipboard.read();

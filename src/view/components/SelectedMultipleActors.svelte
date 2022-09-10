@@ -7,7 +7,13 @@
    import { getFlag, setFlag } from "crew-components/helpers";
    import { selected } from "../../modules/stores.js";
    import { onDestroy, tick } from "svelte";
-   import { writable } from "svelte/store";
+   import { writable, get } from "svelte/store";
+   let itemStores;
+   onDestroy(
+      items.subscribe((it) => {
+         itemStores = it.map((i) => writable(i));
+      })
+   );
 
    function removeAll() {
       $items[0].deleteDialog().then((r) => {
@@ -114,8 +120,8 @@
 </div>
 
 <div class="ui-flex ui-flex-col ui-gap-2 ui-overflow-auto ui-flex-1 ui-p-2">
-   {#each $items as item (item.id)}
+   {#each itemStores as item (get(item).id)}
       <div class="ui-divider ui-my-0 ui-h-2" />
-      <SelectedDocument item={writable(item)} />
+      <SelectedDocument {item} />
    {/each}
 </div>

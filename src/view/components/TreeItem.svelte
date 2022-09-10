@@ -123,6 +123,7 @@
       style:border-color={node.color != "#232323" ? node.color : "hsl(var(--b3))"}
       on:pointerdown={onPointerDown}
       id={node.id}
+      title={`${node.name}`}
    >
       <div class="ui-flex ui-flex-row ui-w-full ui-justify-center">
          <div class="ui-text-xs ui-font-medium ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
@@ -177,6 +178,7 @@
                            <Permissions item={node.source} />
                         {/if}
                      {/if}
+                     <slot name="info" />
                   </span>
                {/if}
             </div>

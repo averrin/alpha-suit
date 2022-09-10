@@ -1,5 +1,5 @@
 <script>
-   import { currentCollection, selected, filter, treeItems, aliases } from "../../modules/stores.js";
+   import { currentCollection, selected, filter, treeItems, aliases, tagsStore } from "../../modules/stores.js";
    import FilterBar from "./FilterBar.svelte";
    import TreeView from "./TreeView.svelte";
    import CreateButtons from "./CreateButtons.svelte";
@@ -7,6 +7,16 @@
    import { setting, toggleFilter } from "crew-components/helpers";
    import InlineButton from "crew-components/InlineButton";
    import HelpControls from "../help/HelpControls.svelte";
+   import Tags from "crew-components/Tags";
+   import { createFilter } from "crew-components/helpers";
+   import { onDestroy } from "svelte";
+
+   let ftags = $tagsStore.filter((t) => t.fav);
+   onDestroy(
+      tagsStore.subscribe((tags) => {
+         ftags = tags.filter((t) => t.fav);
+      })
+   );
 
    const availableTabs = [
       { title: "Actors", get: () => game.actors, icon: "fa-solid:users" },
@@ -24,6 +34,14 @@
    function closeTip() {
       showTip = false;
       game.settings.set(moduleId, SETTINGS.SHOW_TREE_TIP, false);
+   }
+
+   function onTagClick(_, tag) {
+      filter.update((f) => {
+         f.filters = f.filters || [];
+         f.filters.push(createFilter({}, tag, ""));
+         return f;
+      });
    }
 </script>
 
@@ -83,6 +101,11 @@
          <InlineButton icon="fa-solid:star" on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)} />
          <CreateButtons />
       </div>
+
+      {#if ftags.length > 0}
+         <Tags {onTagClick} tags={ftags.map((t) => t.text)} disable={true} />
+      {/if}
+
       <div class="ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto ui-h-full">
          <TreeView />
       </div>
