@@ -24,7 +24,9 @@ jobs:
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
       # Install packages.
-      - run: npm install --force
+      - run: mkdir npm_cache
+      - run: npm_config_cache=npm_cache npm install
+      - run: rm -rf npm_cache
 
       # Build distribution.
       - run: npm run build
