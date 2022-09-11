@@ -24,9 +24,8 @@ jobs:
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
       # Install packages.
-      - run: mkdir npm_cache
-      - run: npm_config_cache=npm_cache npm install
-      - run: rm -rf npm_cache
+      - run: gh api --method DELETE -H "Accept: application/vnd.github+json" /repos/averrin/alpha-suit/actions/caches
+      - run: npm install
 
       # Build distribution.
       - run: npm run build
