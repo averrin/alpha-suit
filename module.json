@@ -14,7 +14,7 @@
   "readme": "https://github.com/averrin/alpha-suit/blob/master/README.md",
   "bugs": "https://github.com/averrin/alpha-suit/issues",
   "changelog": "https://github.com/averrin/alpha-suit/releases/latest/",
-  "version": "0.0.0",
+  "version": "0.1.7",
   "minimumCoreVersion": "0.8.6",
   "compatibleCoreVersion": "9",
   "esmodules": [
