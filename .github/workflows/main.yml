@@ -24,7 +24,10 @@ jobs:
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
       # Install packages.
-      - run: gh api --method DELETE -H "Accept: application/vnd.github+json" /repos/averrin/alpha-suit/actions/caches
+      - run: |
+              gh api \
+                -H 'Accept: application/vnd.github+json' \
+                 "/repos/${GITHUB_REPOSITORY}/actions/caches"
       - run: npm install
 
       # Build distribution.
