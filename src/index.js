@@ -8,16 +8,23 @@ import { logger, setting } from "crew-components/helpers";
 import TreeApplication from './view/TreeApplication.js';
 import BrowserApplication from './view/BrowserApplication.js';
 import HelpApplication from './view/HelpApplication.js';
+import HUDApplication from './view/HUDApplication.js';
+import SettingsApplication from './view/SettingsApplication.js';
 import { initStores, buildHelpTree, helpTree } from './modules/stores.js';
 import { addTools } from "crew-components/helpers"
 import { loadIcon } from "iconify-icon";
 import { helpContent } from "./modules/help_content.js"
+
+import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
+// import CharacterWidget from "./view/hud/widgets/CharactersWidget.js"
 
 
 initHelpers(moduleId, infoColor, SETTINGS);
 const tree = new TreeApplication();
 const browser = new BrowserApplication();
 const help = new HelpApplication();
+const hud = new HUDApplication();
+const settings = new SettingsApplication();
 
 import pf2e from "./systems/pf2e.js";
 browser.addSystem(pf2e);
@@ -49,6 +56,22 @@ const tools = {
         browser.toggle();
       },
     },
+    // {
+    //   name: "alpha-hud-btn",
+    //   title: "Toggle Alpha HUD",
+    //   icon: "ic:twotone-widgets",
+    //   onClick: () => {
+    //     hud.toggle();
+    //   },
+    // },
+    {
+      name: "alpha-settings",
+      title: "Settings",
+      icon: "fa6-solid:gears",
+      onClick: () => {
+        settings.toggle();
+      },
+    },
     {
       name: "alpha-help-btn",
       title: "Toggle Help Center",
@@ -56,9 +79,10 @@ const tools = {
       onClick: () => {
         help.toggle();
       },
-    }
+    },
   ]
 }
+/* ic:twotone-widgets */
 
 window.AlphaSuit = {
   showHelp: help.show.bind(help),
@@ -94,6 +118,19 @@ Hooks.once('ready', async () => {
 
     help.start();
     if (setting(SETTINGS.SHOW_HELP)) help.show();
+
+    if (globalThis.game.modules.get("director")?.active) {
+      hud.add(new DirectorWidget());
+    }
+
+    // hud.add(new CharacterWidget());
+
+    hud.start();
+    if (setting(SETTINGS.SHOW_HUD)) hud.show();
+
+    settings.start();
+    if (setting(SETTINGS.SHOW_SETTINGS)) settings.show();
+
     logger.info("Started!")
   }
 }

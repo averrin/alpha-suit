@@ -23,21 +23,28 @@ jobs:
           manifest: https://github.com/${{github.repository}}/releases/latest/download/module.json
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
 
-      # Install packages.
-      - run: mkdir npm_cache
-      - run: npm_config_cache=npm_cache npm install
-      - run: rm -rf npm_cache
+      - run: echo "VERSION:" ${{github.event.release.tag_name}}
+
+      - name: Clear caches
+        if: ${{ !env.ACT }}
+        uses: easimon/wipe-cache@main
+        
+      - name: NPM install
+        if: ${{ !env.ACT }}
+        run: npm install
 
       # Build distribution.
       - run: npm run build
 
       # Create a zip file with all files required by the module to add to the release.
-      - run: zip -r ./module.zip module.json index.js index.js.map style.css assets/ dist/ lang/ packs/ LICENSE AUTHORS
+      - run: rm -rf ./module.zip
+      - run: zip -r ./module.zip module.json index.js index.js.map style.css assets/ lang/ packs/ LICENSE AUTHORS
 
       # Create a release for this specific version.
       - name: Update Release with Files
         id: create_version_release
         uses: ncipollo/release-action@v1
+        if: ${{ !env.ACT }}
         with:
           allowUpdates: true # Set this to false if you want to prevent updating existing releases.
           name: ${{ github.event.release.name }}

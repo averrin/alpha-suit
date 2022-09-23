@@ -19,7 +19,7 @@ export default class HelpApplication extends SvelteApplication {
       resizable: true,
       minimizable: true,
       zIndex: 95,
-      title: "Alpha help",
+      title: "Alpha Help",
       width: 800,
       height: 600,
 
@@ -38,7 +38,7 @@ export default class HelpApplication extends SvelteApplication {
   }
 
   toggleCollapsed() {
-    Hooks.call("AlphahelpToggleCollapse");
+    Hooks.call("AlphaHelpToggleCollapse");
   }
 
   toggle() {

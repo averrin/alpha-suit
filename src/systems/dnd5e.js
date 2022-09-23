@@ -4,6 +4,8 @@ import SpellsData from "./dnd5e/SpellsData_dnd5e.svelte";
 import NPCData from "./dnd5e/NPCData_dnd5e.svelte";
 import FeatsData from "./dnd5e/FeatsData_dnd5e.svelte";
 
+import SelectedCharacter from "./dnd5e/SelectedCharacter_dnd5e.svelte";
+import SelectedNPC from "./dnd5e/SelectedNPC_dnd5e.svelte";
 
 
 function getDamageTypes(damage) {
@@ -100,6 +102,14 @@ const dnd5e = new System({
     "Spells": { component: SpellsData, index: ["data.components", "data.level"] },
     "NPC": { component: NPCData, index: ["data.details.cr"] },
     "Feats": { component: FeatsData, index: ["data.requirements"] },
+    "npc": { component: NPCData }
+  },
+
+  selectedInfo: {
+    "Actor": {
+      "npc": { component: SelectedNPC },
+      "character": { component: SelectedCharacter },
+    }
   },
 
   aliases: {

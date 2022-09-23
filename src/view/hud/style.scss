@@ -1,0 +1,79 @@
+.alpha-widget {
+    position: absolute;
+    border-left: 6px #eee solid;
+
+    font-size: 18px;
+    color: #eee;
+    text-shadow: -1px -1px 1px rgb(52 52 52), -1px -1px 1px rgb(52 52 52), -1px -1px 1px rgb(52 52 52), -1px -1px 1px rgb(52 52 52);
+
+    background-color: #00000088;
+    border-radius: 8px;
+
+    border: 1px solid var(--color-border-dark);
+    box-shadow: 0 0 12px var(--color-shadow-dark);
+    overflow: hidden;
+
+    .ui-tooltip::before, .ui-tooltip::after {
+      text-shadow: unset !important;
+  }
+
+    .divider:not(:last-child):not(:first-child) {
+        border: 1px solid #eeeeee55;
+        height: 14px;
+        border-radius: 6px;
+        margin: 0 12px;
+    }
+
+    .icon {
+        min-height: 30px;
+        min-width: 30px;
+        display: inline-flex;
+        background-size: contain;
+        margin-right: 6px;
+        background-repeat: no-repeat;
+        border-radius: 4px;
+    }
+
+    button.sq {
+        width: 30px;
+        height: 30px;
+    }
+
+    button {
+        min-width: 30px;
+        min-height: 30px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #eee;
+        padding: 2px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    button:hover {
+        border: none;
+        box-shadow: none;
+        color: #ccf;
+    }
+
+    button .icon {
+        width: 100%;
+        height: 100%;
+    }
+
+    item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
+        margin: 0;
+        padding: 0;
+    }
+}

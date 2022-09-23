@@ -1,50 +1,46 @@
 <script>
-   import { onDestroy } from "svelte";
+   import { system } from "../../modules/stores.js";
+   import ActorTokens from "./ActorTokens.svelte";
+   import ActorInventory from "./ActorInventory.svelte";
 
    import SelectedDocument from "./SelectedDocument.svelte";
-   import TokenThumb from "./TokenThumb.svelte";
+   import { writable } from "svelte/store";
+   import { onDestroy, setContext } from "svelte";
    export let item;
-   let tokens = [];
-
+   let token;
+   let ts = writable(null);
    function getTokens(i) {
       return canvas.scene.tokens.contents.filter((t) => t.actor?.id == i.id) || [];
    }
 
-   const unsub = Hooks.on("refreshToken", () => (tokens = getTokens($item)));
-   onDestroy((_) => Hooks.off("refreshToken", unsub));
-
-   const unsub2 = item.subscribe((i) => {
-      if (!i) return;
-      tokens = getTokens(i);
-   });
-   onDestroy(unsub2);
-
-   function tokenClick(token) {
-      globalThis.canvas.animatePan({ x: token.object.center.x, y: token.object.center.y, scale: 1 });
-   }
-
-   function tokenAltClick(event, token) {
-      if (event.which == 3) return token.object.control({ releaseOthers: !event.shiftKey });
-      if (event.which == 2) return token.sheet.render(true);
-   }
+   setContext("token", ts);
+   onDestroy(
+      item.subscribe((i) => {
+         token = null;
+         if (i && getTokens(i).length > 0) {
+            token = getTokens(i)[0];
+         }
+         logger.info(token);
+         if (i) {
+            ts.set(token || { actor: i });
+         }
+      })
+   );
 </script>
 
 {#if $item}
    <div class="ui-p-2 ui-flex ui-flex-col ui-gap-2">
       <SelectedDocument bind:item />
-      {#if tokens?.length > 0}
-         <div class="ui-input-group">
-            <span>Tokens</span>
-            <div class="ui-border ui-flex ui-flex-row ui-gap-1 ui-p-1 ui-bg-base-300">
-               {#each tokens as token (token.id)}
-                  <TokenThumb
-                     {token}
-                     on:click={(_) => tokenClick(token)}
-                     on:pointerdown={(e) => tokenAltClick(e, token)}
-                  />
-               {/each}
-            </div>
+      <ActorTokens bind:item />
+
+      {#if $system.data?.selectedInfo && $system.data?.selectedInfo["Actor"] && $system.data?.selectedInfo["Actor"][$item.type]?.component}
+         <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center">
+            <svelte:component this={$system.data?.selectedInfo["Actor"][$item.type]?.component} {item} />
          </div>
+      {/if}
+
+      {#if $ts && globalThis.game.itempiles}
+         <ActorInventory item={ts} />
       {/if}
    </div>
 {/if}

@@ -5,10 +5,10 @@
    import { pageContent, sortContent, filterItemPredicate, showGetter } from "crew-components/helpers";
    import Pagenation from "crew-components/Pagenation";
    import { onDestroy } from "svelte";
-   import Tag from "crew-components/Tag";
    import { moduleId, SETTINGS } from "../../modules/constants.js";
    import { logger, setting, updateFields } from "crew-components/helpers";
    import InlineButton from "crew-components/InlineButton";
+   import BrowserItemExtra from "./BrowserItemExtra.svelte";
 
    let extraInfo = [];
 
@@ -87,7 +87,7 @@
       }
       fields = updateFields(_fields, $filterAdvanced, systemExtraInfo);
       // debugger;
-      logger.info(fields, $filterAdvanced, modeName);
+      // logger.info(fields, $filterAdvanced, modeName);
 
       total = 0;
       content = [];
@@ -120,13 +120,6 @@
       unsub2();
    });
 
-   async function importItem(e, item) {
-      e.stopPropagation();
-      const doc = await item.compendium.getDocument(item.source._id);
-      doc.collection.importFromCompendium(item.compendium, doc.id);
-      ui.notifications.info(`Imported: ${doc.name}`);
-   }
-
    async function itemClick(e) {
       const { node, event } = e.detail;
       logger.info(node);
@@ -150,12 +143,14 @@
 
       const citems = fc.map((item) => ({
          type: CONST.TABLE_RESULT_TYPES.COMPENDIUM,
-         collection: item.compendium,
+         collection: `${item.compendium.metadata.package}.${item.compendium.metadata.name}`,
          text: item.name,
          img: item.img || item.thumbnail,
          weight: 1,
          range: [1, 1],
+         id: item._id,
       }));
+      logger.info(fc);
       await table.update({
          results: citems,
       });
@@ -181,17 +176,7 @@
 <div id={modeName} class="ui-p-2 ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto">
    <div class="ui-flex ui-flex-col ui-gap-1">
       {#each content as node (node.id)}
-         <TreeItemComponent {node} on:click={itemClick}>
-            <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center" slot="right">
-               {#if $system.data?.extraInfo && $system.data?.extraInfo[modeName]?.component && (node.source?.data || node.source?.system)}
-                  <svelte:component this={$system.data?.extraInfo[modeName]?.component} item={node} />
-               {/if}
-
-               {#each extraInfo as info}
-                  <Tag tag={{ text: info(node.source) }} compact={true} />
-               {/each}
-               <InlineButton icon="fa-solid:download" color="#71717a" on:click={(e) => importItem(e, node)} />
-            </div>
+         <TreeItemComponent {node} on:click={itemClick} extraComponents={(_) => [BrowserItemExtra]}>
             <span
                class="ui-link ui-font-bold !ui-text-[#999]"
                slot="info"

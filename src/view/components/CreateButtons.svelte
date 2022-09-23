@@ -28,8 +28,8 @@
 </script>
 
 <div class="ui-flex ui-flex-row ui-flex-0 ui-justify-end">
-   <InlineButton icon="eva:folder-add-fill" on:click={createFolder} />
-   <InlineButton icon="eva:file-add-fill" on:click={createDocument} />
+   <InlineButton title="Create folder" icon="eva:folder-add-fill" on:click={createFolder} />
+   <InlineButton title="Create document" icon="eva:file-add-fill" on:click={createDocument} />
 </div>
 
 <style>

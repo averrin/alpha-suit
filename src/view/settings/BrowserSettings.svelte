@@ -10,7 +10,7 @@
 </script>
 
 <div class="ui-bg-base ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2 ui-h-full">
-   <div class="ui-text-center ui-text-base-content ui-text-lg ui-font-bold">Settings</div>
+   <div class="ui-text-center ui-text-base-content ui-text-lg ui-font-bold">Browser Settings</div>
    <ArgInput
       type="bool"
       label="Advanced mode"
@@ -18,6 +18,7 @@
       on:change={(e) => saveSetting(SETTINGS.ADVANCED_MODE, e)}
       size="md"
    />
+   <span class="ui-label-text ui-text-xs ui-ml-2">Shows controls to make filters more flexible</span>
 
    <ArgInput
       type="int"

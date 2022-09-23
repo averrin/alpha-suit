@@ -17,6 +17,7 @@
    style:border={targeted ? `2px solid  ${player.data.color}` : "none"}
    on:click
    on:pointerdown
+   on:dblclick
    title={token.name || token.data.name}
    alt={token.name || token.data.name}
 />

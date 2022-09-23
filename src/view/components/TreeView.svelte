@@ -1,11 +1,12 @@
 <script>
    import TreeItemComponent from "./TreeItem.svelte";
-   import { treeItems } from "../../modules/stores.js";
+   import { treeItems, system } from "../../modules/stores.js";
    import { selected, expanded, filter, currentCollection, isDragging } from "../../modules/stores.js";
    import { dndzone, SHADOW_PLACEHOLDER_ITEM_ID, TRIGGERS } from "svelte-dnd-action";
    import { tick } from "svelte";
    import { SETTINGS } from "../../modules/constants";
    import { setting } from "crew-components/helpers";
+   import TreeItemExtra from "./TreeItemExtra.svelte";
 
    function toggleExpanded(node) {
       expanded.update((ex) => {
@@ -158,5 +159,6 @@
       on:select={handleSelection}
       {selected}
       showCreateButtons={true}
+      extraComponents={(_) => [TreeItemExtra]}
    />
 </div>

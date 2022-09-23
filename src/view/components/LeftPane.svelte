@@ -97,8 +97,16 @@
             Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
          </div>
 
-         <InlineButton icon="fa-solid:map" on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)} />
-         <InlineButton icon="fa-solid:star" on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)} />
+         <InlineButton
+            title="On Scene"
+            icon="fa-solid:map"
+            on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)}
+         />
+         <InlineButton
+            title="Favs"
+            icon="fa-solid:star"
+            on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)}
+         />
          <CreateButtons />
       </div>
 

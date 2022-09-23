@@ -6,12 +6,14 @@ import { moduleId, SETTINGS } from "./constants.js";
 import { setting } from './settings.js';
 import { filterItemPredicate } from "crew-components/helpers";
 import { helpContent } from "./help_content.js"
+import { settingsContent } from "./settings_content.js"
 let tagSource = moduleId;
 
 
 export const selected = writable([]);
 export const selectedBrowser = writable([]);
 export const selectedHelp = writable([]);
+export const selectedSetting = writable([]);
 export const expanded = writable([]);
 export const treeItems = writable({});
 export const compendiumTree = writable({});
@@ -24,11 +26,17 @@ export const aliases = writable({});
 export const browserMode = writable(null);
 export const helpTopic = writable(null);
 export const helpTree = writable({});
+export const settingsTopic = writable(null);
+export const settingsTree = writable({});
 
 export const tagsStore = writable([]);
 export const systems = writable({});
 export const system = writable(null);
 export const theme = writable("light");
+
+export const directorActionsStore = writable([]);
+export const charactersStore = writable([]);
+export const targetsStore = writable([]);
 
 function getTree() {
   let collection = get(currentCollection);
@@ -165,6 +173,12 @@ export function buildHelpTree() {
   return items;
 }
 
+export function buildSettingsTree() {
+  let items = {};
+  addTree(settingsContent).forEach(i => items[i.id] = i);
+  return items;
+}
+
 export function buildTree(tree, filter, transform, folderTransform) {
   let items = {};
   addTree(tree, undefined, transform, folderTransform).forEach(i => items[i.id] = i);
@@ -184,6 +198,7 @@ export function initStores() {
   }
 
   helpTree.set(buildHelpTree())
+  settingsTree.set(buildSettingsTree())
 
   currentCollection.set(game.actors);
   // aliases.set({ "@onScene": "onScene(@item)" })

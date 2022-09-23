@@ -8,17 +8,12 @@
    import CompendiumsMode from "./components/CompendiumsMode.svelte";
    import AdvancedMode from "./components/AdvancedMode.svelte";
    import Tag from "crew-components/Tag";
-   import BrowserSettings from "./components/BrowserSettings.svelte";
 
    export let elementRoot;
 
    setContext("tagsStore", tagsStore);
 
-   const availableTabs = [
-      { title: "Compendiums", icon: "fa-solid:atlas" },
-      ...($system?.tabs || []),
-      { title: "Settings", icon: "fa6-solid:gears" },
-   ];
+   const availableTabs = [{ title: "Compendiums", icon: "fa-solid:atlas" }, ...($system?.tabs || [])];
 
    browserMode.set(availableTabs[0]);
    function selectMode(t) {
@@ -59,8 +54,6 @@
 
       {#if $browserMode.title == "Compendiums"}
          <CompendiumsMode />
-      {:else if $browserMode.title == "Settings"}
-         <BrowserSettings />
       {:else}
          <AdvancedMode />
       {/if}

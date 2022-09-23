@@ -11,6 +11,8 @@ export const SETTINGS = {
   SHOW_TREE: "show-tree",
   SHOW_TREE_TIP: "show-tree-tip",
   SHOW_HELP: "show-help",
+  SHOW_SETTINGS: "show-settings",
+  SHOW_HUD: "show-hud",
   COLLAPSED: "collapsed",
 
   KEY_SHOW: "key-show",

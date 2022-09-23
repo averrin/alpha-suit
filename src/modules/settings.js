@@ -1,5 +1,5 @@
 import { moduleId, SETTINGS } from './constants.js';
-import {theme} from "./stores.js"
+import { theme } from "./stores.js"
 
 export let setting = key => {
   return game.settings.get(moduleId, key);
@@ -53,6 +53,20 @@ export function initSettings(app) {
     default: false,
   });
 
+  game.settings.register(moduleId, SETTINGS.SHOW_HUD, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register(moduleId, SETTINGS.SHOW_SETTINGS, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(moduleId, SETTINGS.COLLAPSED, {
     scope: "client",
     config: false,
@@ -64,11 +78,11 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.UI_SCALE, {
     name: 'UI scale',
     hint: 'If ui are too big or too small for your display. Requires refresh.',
-    config: true,
+    config: false,
     type: Number,
     default: 1,
     onChange: value => {
-      debouncedReload();
+      // debouncedReload();
     },
     range: {
       min: 0.1,
@@ -156,7 +170,7 @@ export function initSettings(app) {
   });
 
   game.settings.register(moduleId, SETTINGS.INVERT_CLICKS, {
-    name: "Invert clicks in tree views",
+    name: "Invert clicks in the Tree",
     hint: "Disabled: left-click for select, right for open builtin sheet",
     scope: "client",
     config: true,

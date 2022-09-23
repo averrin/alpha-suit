@@ -19,6 +19,7 @@
    export let showTags = false;
    export let disableReorder = false;
    export let showCreateButtons = false;
+   export let extraComponents;
    const minHeight = "1.8rem";
 
    const isFolder = node?.source instanceof Folder || node?.source?.depth;
@@ -114,7 +115,7 @@
 {#if !isRoot}
    <div
       class="ui-border-solid ui-border-base-300 ui-bg-base-200 ui-rounded-box ui-rounded-md
-   ui-flex ui-flex-col ui-items-start ui-justify-center tree-item ui-border tree-item"
+   ui-flex ui-flex-col ui-items-start ui-justify-center tree-item ui-border tree-item ui-pr-2"
       style:min-height={minHeight}
       on:click={itemClick}
       class:selected={isSelected}
@@ -185,7 +186,7 @@
          </div>
 
          <div
-            class="ui-justify-self-end ui-flex-none ui-flex ui-flex-row ui-justify-center ui-items-center ui-gap-2 ui-px-1 ui-max-w-1/2 ui-overflow-hidden ui-max-h-16"
+            class="ui-justify-self-end ui-flex-none ui-flex ui-flex-row ui-justify-center ui-items-center ui-gap-1 ui-max-w-1/2 ui-overflow-hidden ui-max-h-16"
          >
             {#if isFolder && showCreateButtons}
                <div class="create-buttons">
@@ -202,12 +203,16 @@
                   <iconify-icon {icon} class="ui-text-md ui-text-zinc-500" />
                {/each}
             {/if}
-            {#if node.count !== undefined}
-               <div class="ui-font-bold ui-text-center ui-w-8 ui-text-blue-600">
+            {#if node.count > 0}
+               <div class="ui-font-bold ui-text-center ui-w-4 ui-text-blue-600">
                   {node.count}
                </div>
             {/if}
-            <slot name="right" />
+            {#if extraComponents}
+               {#each extraComponents(node) as component}
+                  <svelte:component this={component} item={node} />
+               {/each}
+            {/if}
          </div>
       </div>
    </div>
@@ -239,13 +244,12 @@
                   {disableReorder}
                   {selected}
                   {showCreateButtons}
+                  {extraComponents}
                   on:click
                   on:consider
                   on:finalize
                   on:select
-               >
-                  <slot name="right" slot="right" node={nodes[item.id]} />
-               </svelte:self>
+               />
             </div>
          {/each}
       {:else}
