@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.1.7 - 0.1.8](https://github.com/averrin/alpha-suit/compare/0.1.7...0.1.8)
+Fixed:
+  * I can bet that i fixed something. But i forgot.
+
+Added:
+  * More info for selected actors (system-specific)
+  * Separate Settings window
+  * Items Pile integration (optional)
+
 ## [0.1.6 - 0.1.7](https://github.com/averrin/alpha-suit/compare/0.1.6...0.1.7)
 Fixed:
   * crew-components dependency causes broken styles in release build
