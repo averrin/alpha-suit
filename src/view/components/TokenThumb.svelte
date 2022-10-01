@@ -1,5 +1,5 @@
 <script>
-   import { thumbs, updateThumb } from "crew-components/helpers";
+   import { thumbs, updateThumb, tintImage } from "crew-components/helpers";
    export let token;
    export let player = game.user;
 
@@ -7,12 +7,21 @@
    let thumb;
    (async () => {
       await updateThumb(token);
-      thumb = thumbs[token.document?.texture?.src || token?.data?.img];
+      const img = token.document?.texture?.src || token?.data?.img;
+      thumb = thumbs[img];
+
+      if (token.data.tint) {
+         const tint = await tintImage(thumb, token.data.tint);
+         thumb = tint.url;
+      }
+      if (!thumb) {
+         thumb = img;
+      }
    })();
 </script>
 
 <img
-   class="icon"
+   class="ui-h-8 ui-w-8 !ui-rounded-md"
    src={thumb}
    style:border={targeted ? `2px solid  ${player.data.color}` : "none"}
    on:click
@@ -21,11 +30,3 @@
    title={token.name || token.data.name}
    alt={token.name || token.data.name}
 />
-
-<style lang="scss">
-   .icon {
-      border-radius: 4px;
-      width: 30px;
-      height: 30px;
-   }
-</style>

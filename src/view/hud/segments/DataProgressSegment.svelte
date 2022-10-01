@@ -7,12 +7,20 @@
    let tokenStore = getContext("token");
    let doc;
    let data;
+
+   function updateData(doc) {
+      data = getProperty(doc.actor.getRollData(), path);
+   }
+
+   const unsub = Hooks.on("updateActor", () => updateData(doc));
+   onDestroy((_) => Hooks.off("updateActor", unsub));
+
    const unsubscribe = tokenStore.subscribe((value) => {
       doc = value;
       if (doc.document) {
          doc = doc.document;
       }
-      data = getProperty(doc.actor.getRollData(), path);
+      updateData(doc);
    });
    onDestroy(unsubscribe);
 </script>

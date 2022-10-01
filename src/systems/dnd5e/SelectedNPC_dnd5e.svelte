@@ -40,26 +40,39 @@
 
 <div class="ui-flex ui-flex-col ui-gap-2 ui-w-full">
    <h2 class="ui-text-center ui-font-bold">NPC</h2>
-   {#if globalThis.game.itempiles && ipEnabled}
+   <div class="ui-flex ui-flex-row ui-gap-2">
+      {#if globalThis.game.itempiles && ipEnabled}
+         <div class="ui-input-group ui-input-group-md ui-w-auto">
+            <span>Item Piles</span>
+            <div
+               class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
+            >
+               <iconify-icon icon="fa-solid:box-open" title="ItemPiles is enabled" />
+               {#if ipMerchant}
+                  <iconify-icon icon="fa6-solid:scale-balanced" title="Actor is a Merchant" />
+               {/if}
+            </div>
+         </div>
+      {/if}
+
       <div class="ui-input-group ui-input-group-md ui-w-auto">
-         <span>Item Piles</span>
+         <span>CR</span>
          <div
             class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
          >
-            <iconify-icon icon="fa-solid:box-open" title="ItemPiles is enabled" />
-            {#if ipMerchant}
-               <iconify-icon icon="fa6-solid:scale-balanced" title="Actor is a Merchant" />
-            {/if}
+            <DataSegment path="details.cr" format={formatCR} />
          </div>
       </div>
-   {/if}
 
-   <div class="ui-input-group ui-input-group-md ui-w-auto">
-      <span>CR</span>
-      <div
-         class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
-      >
-         <DataSegment path="details.cr" format={formatCR} />
+      <div class="ui-input-group ui-input-group-md ui-w-auto">
+         <span>
+            <iconify-icon icon="fa-solid:shield-alt" />
+         </span>
+         <div
+            class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
+         >
+            <DataSegment path="attributes.ac.value" />
+         </div>
       </div>
    </div>
 </div>

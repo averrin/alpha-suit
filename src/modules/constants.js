@@ -5,13 +5,9 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
-  SHOW_BROWSER: "show-browser",
   UI_SCALE: "ui-scale",
   RESOLUTION: "resolution",
-  SHOW_TREE: "show-tree",
   SHOW_TREE_TIP: "show-tree-tip",
-  SHOW_HELP: "show-help",
-  SHOW_SETTINGS: "show-settings",
   SHOW_HUD: "show-hud",
   COLLAPSED: "collapsed",
 
@@ -25,6 +21,9 @@ export const SETTINGS = {
   USE_DIRECTOR_TAGS: "use-director-tags",
   THEME: "theme",
   INVERT_CLICKS: "invert-clicks",
+  SHOW_SYSTEM_INFO: "show-system-info",
+  ICON_COLLECTION: "icon-collection",
+  SHOW_SPELLS_TAB: "show-spells-tab",
 };
 
 export const HOOKS = [

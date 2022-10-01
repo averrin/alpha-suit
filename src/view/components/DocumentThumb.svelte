@@ -2,6 +2,8 @@
    import { logger } from "crew-components/helpers";
 
    export let item;
+   export let title;
+
    export let fromCompendium = null;
    import { currentCollection } from "../../modules/stores.js";
    import { onDestroy } from "svelte";
@@ -9,7 +11,8 @@
    async function drag(e) {
       let id = $item.id;
       let type = $currentCollection.documentName;
-      let data = { type, id, data: $item.data };
+      logger.info($item);
+      let data = { type, id, data: $item.data, uuid: $item.uuid };
       let sData = { data: JSON.stringify(data) };
       e.dataTransfer.setData("text/plain", sData.data);
       if (fromCompendium) {
@@ -30,8 +33,11 @@
    onDestroy(
       item.subscribe((i) => {
          thumb = i?.thumbnail;
-         if (thumb == "icons/svg/mystery-man.svg" && (i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src)) {
-            thumb = i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src;
+         if (
+            thumb == "icons/svg/mystery-man.svg" &&
+            (i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon)
+         ) {
+            thumb = i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon;
          }
       })
    );
@@ -46,4 +52,5 @@
    on:click
    on:dragstart={drag}
    style:cursor="grab"
+   {title}
 />

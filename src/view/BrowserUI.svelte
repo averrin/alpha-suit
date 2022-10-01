@@ -1,9 +1,8 @@
 <svelte:options accessors={true} />
 
 <script>
-   import { tagsStore, system, browserMode, theme } from "../modules/stores.js";
-   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
-   import "../main.scss";
+   import AlphaShell from "./AlphaShell.svelte";
+   import { tagsStore, system, browserMode } from "../modules/stores.js";
    import { setContext } from "svelte";
    import CompendiumsMode from "./components/CompendiumsMode.svelte";
    import AdvancedMode from "./components/AdvancedMode.svelte";
@@ -21,8 +20,8 @@
    }
 </script>
 
-<ApplicationShell bind:elementRoot>
-   <main class="alpha-ui ui-flex ui-flex-col ui-container" data-theme={$theme}>
+<AlphaShell bind:elementRoot id="browser">
+   <div class="ui-flex ui-flex-col ui-w-full">
       <div class="ui-p-1">
          <div class="ui-tabs ui-tabs-boxed">
             <div class="ui-mr-2">
@@ -57,5 +56,5 @@
       {:else}
          <AdvancedMode />
       {/if}
-   </main>
-</ApplicationShell>
+   </div>
+</AlphaShell>

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.1.8 - 0.2.0](https://github.com/averrin/alpha-suit/compare/0.1.8...0.2.0)
+Fixed:
+  * Tool buttons for v10
+  * Wrong icons for copy buttons
+  * Missed Item Piles blocks features and effects lists
+
+Added:
+  * Spells list for selected actor
+  * Icons in selected actor are now draggable
+  * Titles for copy buttons contains value
+  * Tag icons are now from the Game Icons set (unfortunately, very slow)
+  * Tokens in tree view respects tint
+  * Updating tree view actor info on updateActor/deleteItem/createItem
+  * Selected item's description in the tree
+  * Scenes tab
+
 ## [0.1.7 - 0.1.8](https://github.com/averrin/alpha-suit/compare/0.1.7...0.1.8)
 Fixed:
   * I can bet that i fixed something. But i forgot.

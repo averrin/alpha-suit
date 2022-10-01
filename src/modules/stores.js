@@ -43,6 +43,14 @@ function getTree() {
   return collection.directory.tree;
 }
 
+export function addSystem(system) {
+  systems.update(s => {
+    s[system.id] = system;
+    return s;
+  })
+  logger.info(`System added: ${system.id}`);
+}
+
 async function initCompendiumTreeCF() {
   game.packs.contents.forEach(p => p.type = `${p.metadata.type} (${p.metadata.packageName})`);
   const children = game.customFolders.compendium.folders.contents.filter(f => f.id.startsWith("cfolder"));
@@ -137,7 +145,7 @@ function initActorsTree() {
 }
 
 export function filterItems(items, filter) {
-  if (filter?.filters?.length > 0) {
+  if (filter?.filters?.length > 0 || filter?.persist_filters?.length > 0) {
 
     let filtered = Object.entries(items).map(([_, v]) => { return { ...v } })
       .filter(

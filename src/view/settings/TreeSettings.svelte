@@ -29,4 +29,13 @@
       size="md"
    />
    <span class="ui-label-text ui-text-xs ui-ml-2">Disabled: left-click for select, right for open builtin sheet</span>
+
+   <ArgInput
+      type="bool"
+      label="Show system-specific widgets in tree items"
+      value={setting(SETTINGS.SHOW_SYSTEM_INFO)}
+      on:change={(e) => saveSetting(SETTINGS.SHOW_SYSTEM_INFO, e)}
+      size="md"
+   />
+   <span class="ui-label-text ui-text-xs ui-ml-2">E.g. Challange rating for DnD5e NPC actors</span>
 </div>

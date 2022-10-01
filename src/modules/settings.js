@@ -1,5 +1,6 @@
 import { moduleId, SETTINGS } from './constants.js';
 import { theme } from "./stores.js"
+import { setIconCollection } from "crew-components/specs"
 
 export let setting = key => {
   return game.settings.get(moduleId, key);
@@ -25,19 +26,6 @@ export async function migrateFromString(key) {
 
 const debouncedReload = debounce(() => window.location.reload(), 100);
 export function initSettings(app) {
-  game.settings.register(moduleId, SETTINGS.SHOW_TREE, {
-    scope: "client",
-    config: false,
-    type: Boolean,
-    default: false,
-  });
-
-  game.settings.register(moduleId, SETTINGS.SHOW_HELP, {
-    scope: "client",
-    config: false,
-    type: Boolean,
-    default: false,
-  });
 
   game.settings.register(moduleId, SETTINGS.SHOW_TREE_TIP, {
     scope: "client",
@@ -46,21 +34,7 @@ export function initSettings(app) {
     default: true,
   });
 
-  game.settings.register(moduleId, SETTINGS.SHOW_BROWSER, {
-    scope: "client",
-    config: false,
-    type: Boolean,
-    default: false,
-  });
-
   game.settings.register(moduleId, SETTINGS.SHOW_HUD, {
-    scope: "client",
-    config: false,
-    type: Boolean,
-    default: false,
-  });
-
-  game.settings.register(moduleId, SETTINGS.SHOW_SETTINGS, {
     scope: "client",
     config: false,
     type: Boolean,
@@ -175,6 +149,34 @@ export function initSettings(app) {
     scope: "client",
     config: true,
     default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.SHOW_SYSTEM_INFO, {
+    name: "Show system-specific widgets in tree items",
+    hint: "E.g. Challange rating for DnD5e NPC actors",
+    scope: "client",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.ICON_COLLECTION, {
+    name: "Icon collection for tags",
+    hint: "Examples: game-icons, mdi, material-symbols, openmoji, fa-solid. More: https://icon-sets.iconify.design",
+    scope: "client",
+    config: true,
+    default: "game-icons",
+    type: String,
+    onChange: v => setIconCollection(v)
+  });
+
+  game.settings.register(moduleId, SETTINGS.SHOW_SPELLS_TAB, {
+    name: 'Show "Spells" tab in the Tree',
+    hint: "",
+    scope: "world",
+    config: true,
+    default: true,
     type: Boolean,
   });
 }

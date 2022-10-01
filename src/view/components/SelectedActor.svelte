@@ -39,7 +39,7 @@
          </div>
       {/if}
 
-      {#if $ts && globalThis.game.itempiles}
+      {#if $ts}
          <ActorInventory item={ts} />
       {/if}
    </div>

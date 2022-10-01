@@ -10,7 +10,7 @@
    const position = application.position;
    const { height, width } = position.stores;
    let contentH = $height;
-   onDestroy(height.subscribe((h) => (contentH = h - 80)));
+   onDestroy(height.subscribe((h) => (contentH = h - 60)));
    if ($height < 600) height.set(600);
 
    const unsub = selectedBrowser.subscribe((s) => {

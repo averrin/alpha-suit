@@ -102,7 +102,8 @@ const dnd5e = new System({
     "Spells": { component: SpellsData, index: ["data.components", "data.level"] },
     "NPC": { component: NPCData, index: ["data.details.cr"] },
     "Feats": { component: FeatsData, index: ["data.requirements"] },
-    "npc": { component: NPCData }
+    "npc": { component: NPCData },
+    "spell": { component: SpellsData },
   },
 
   selectedInfo: {

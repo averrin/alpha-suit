@@ -16,7 +16,7 @@
       browserMode.subscribe((m) => {
          modeName = m?.title || "Common";
          aliases = {};
-         if ($system.aliases) {
+         if ($system?.aliases) {
             aliases = $system.aliases[modeName] || {};
          }
       })
@@ -39,7 +39,7 @@
          filter.tags?.filter((t) => !t.startsWith("sort:") && !t.startsWith("show:") && !t.match(fieldRegex)) || [];
       tags.push(...(filter.sort?.map((s) => `sort:${s.field}${s.dir == "desc" ? "!" : ""}`) || []));
       tags.push(...(filter.show?.map((s) => `show:${s.field}`) || []));
-      tags.push(...(filter.filters?.map((s) => s.field) || []));
+      tags.push(...(filter.filters?.filter((f) => !f.hidden).map((s) => s.field) || []));
       return tags;
    }
 

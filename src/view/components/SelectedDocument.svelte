@@ -124,29 +124,29 @@
          <IconButton size="xs" title="Permissions" icon="fa:share-alt" on:click={changePermissions} type="primary" />
          <CopyButton
             text={$item.data.name}
-            title="Copy name"
+            title={"Copy name: " + $item.data.name}
             notification={"Name copied!"}
             icon="icon-park-solid:edit-name"
          />
          <CopyButton
             text={$item.id}
-            title="Copy ID"
+            title={"Copy ID: " + $item.id}
             notification={"ID copied!"}
             icon="fluent-emoji-high-contrast:id-button"
          />
          {#if $item.thumbnail}
             <CopyButton
                text={$item.data.img}
-               title="Copy portrait path"
+               title={"Copy portrait path: " + $item.data.img}
                notification={"Token path copied!"}
-               icon="fa:user-circle"
+               icon="fa:image"
             />
             {#if $item.data.token || $item.data.prototypeToken}
                <CopyButton
                   text={$item.data.token.img || $item.data.prototypeToken.texture.src}
                   notification={"Portrait path copied!"}
-                  title="Copy token path"
-                  icon="fa:image"
+                  title={"Copy token path: " + ($item.data.token.img || $item.data.prototypeToken.texture.src)}
+                  icon="fa:user-circle"
                />
                <div class="ui-ml-2" />
 

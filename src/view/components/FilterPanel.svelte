@@ -114,7 +114,10 @@
    <ArgInput size="md" type="string" label="Name" on:change={(e) => setNameSearch(e)} />
 
    {#if $system && $system?.data?.sortings && $system?.data?.sortings[modeName]}
-      <div class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid" style="border-color: hsl(var(--n))">
+      <div
+         class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid ui-w-full"
+         style="border-color: hsl(var(--n))"
+      >
          <CollapsibleCard open={false}>
             <h2 slot="header">Sortings</h2>
             <div slot="body" class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-pt-2">
@@ -148,7 +151,7 @@
       <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap filters">
          {#each Object.entries($system?.data.filters[$browserMode.title]) as [cat, filters]}
             <div
-               class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid"
+               class="ui-bg-base-100 ui-rounded ui-shadow-md ui-p-2 ui-border-solid ui-w-full"
                style="border-color: hsl(var(--n))"
             >
                <CollapsibleCard open={false}>

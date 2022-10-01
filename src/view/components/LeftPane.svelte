@@ -21,14 +21,22 @@
    const availableTabs = [
       { title: "Actors", get: () => game.actors, icon: "fa-solid:users" },
       { title: "Items", get: () => game.items, icon: "fa-solid:suitcase" },
-      // { title: "Scenes", get: () => game.scenes, icon: "fa-solid:map" },
+      { title: "Scenes", get: () => game.scenes, icon: "fa-solid:map" },
    ];
+   if (setting(SETTINGS.SHOW_SPELLS_TAB)) {
+      availableTabs.push({
+         title: "Spells",
+         get: () => game.items,
+         filter: '@type == "spell"',
+         icon: "fa-solid:magic",
+      });
+   }
    let mode = availableTabs[0].title;
    function selectMode(t) {
       mode = t.title;
       $currentCollection = t.get();
       $selected = [];
-      $filter = {};
+      $filter = t.filter ? { persist_filters: [createFilter({}, t.filter, "default", true)] } : {};
    }
    let showTip = setting(SETTINGS.SHOW_TREE_TIP);
    function closeTip() {

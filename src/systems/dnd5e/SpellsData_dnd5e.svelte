@@ -1,6 +1,6 @@
 <script>
    export let item;
-   const data = item.source?.data || item.source?.system;
+   const data = item.source?.system || item.source?.data?.data || item.source?.data;
    let components = data?.components;
 </script>
 

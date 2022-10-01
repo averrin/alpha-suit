@@ -1,6 +1,8 @@
 <script>
    import { onDestroy } from "svelte";
    import SelectedActor from "./SelectedActor.svelte";
+   import SelectedItem from "./SelectedItem.svelte";
+   import SelectedScene from "./SelectedScene.svelte";
    import SelectedDocument from "./SelectedDocument.svelte";
    import SelectedMultipleActors from "./SelectedMultipleActors.svelte";
    import { writable } from "svelte/store";
@@ -18,18 +20,20 @@
    onDestroy(unsub);
 </script>
 
-{#if $selectedObjects.length == 1}
-   {#if $currentCollection.documentName == "Actor"}
-      <SelectedActor bind:item={selectedObject} />
+<div class="ui-flex ui-flex-col ui-h-full ui-overflow-auto">
+   {#if $selectedObjects.length == 1}
+      {#if $currentCollection.documentName == "Actor"}
+         <SelectedActor bind:item={selectedObject} />
+      {:else if $currentCollection.documentName == "Item"}
+         <SelectedItem bind:item={selectedObject} />
+      {:else if $currentCollection.documentName == "Scene"}
+         <SelectedScene bind:item={selectedObject} />
+      {:else}
+         <div class="ui-p-2">
+            <SelectedDocument bind:item={selectedObject} />
+         </div>
+      {/if}
    {:else}
-      <div class="ui-p-2">
-         <SelectedDocument bind:item={selectedObject} />
-      </div>
+      <SelectedMultipleActors items={selectedObjects} />
    {/if}
-{:else}
-   <SelectedMultipleActors items={selectedObjects} />
-{/if}
-<!-- {#if !$isDragging} -->
-<!-- {:else} -->
-<!--    dragging in progress -->
-<!-- {/if} -->
+</div>

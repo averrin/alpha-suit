@@ -16,14 +16,20 @@
 
    <div class="ui-input-group ui-input-group-md ui-w-auto">
       <span>System name</span>
-      <div class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1">
+      <div
+         class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1"
+         style="border-color: hsl(var(--b3)); border-style: solid;"
+      >
          {globalThis.game.system.data.title}
       </div>
    </div>
 
    <div class="ui-input-group ui-input-group-md ui-w-auto">
       <span>System supported</span>
-      <div class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1">
+      <div
+         class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1"
+         style="border-color: hsl(var(--b3)); border-style: solid;"
+      >
          {#if $system.data.id != "*"}
             <iconify-icon icon="fa:check" style="color: hsl(var(--s))" />
          {:else}
@@ -32,12 +38,12 @@
       </div>
    </div>
 
-   <!-- <ArgInput -->
-   <!--    type="bool" -->
-   <!--    label="Director's widget" -->
-   <!--    value={setting(SETTINGS.USE_DIRECTOR_TAGS)} -->
-   <!--    on:change={(e) => saveSetting(SETTINGS.USE_DIRECTOR_TAGS, e)} -->
-   <!--    size="md" -->
-   <!-- /> -->
-   <!-- <span class="ui-label-text ui-text-xs ui-ml-2">Sync tag colors between modules. Requires the Director module</span> -->
+   <ArgInput
+      type="bool"
+      label={'Show "Spells" tab in the Tree'}
+      value={setting(SETTINGS.SHOW_SPELLS_TAB)}
+      on:change={(e) => saveSetting(SETTINGS.SHOW_SPELLS_TAB, e)}
+      size="md"
+   />
+   <span class="ui-label-text ui-text-xs ui-ml-2">You can disable it if your system doesn't need it.</span>
 </div>

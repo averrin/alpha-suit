@@ -159,6 +159,6 @@
       on:select={handleSelection}
       {selected}
       showCreateButtons={true}
-      extraComponents={(_) => [TreeItemExtra]}
+      extraComponents={(_) => (setting(SETTINGS.SHOW_SYSTEM_INFO) ? [TreeItemExtra] : [])}
    />
 </div>

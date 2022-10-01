@@ -193,6 +193,9 @@
    </div>
 </div>
 
-<div class="ui-flex ui-flex-row ui-p-1 ui-min-h-8 ui-justify-center" style="border-top: 1px solid hsl(var(--b2))">
+<div
+   class="ui-flex ui-flex-row ui-p-1 ui-min-h-8 ui-items-center ui-justify-center"
+   style="border-top: 1px solid hsl(var(--b2))"
+>
    <Pagenation bind:currentPage {total} {pageSize} on:update={setContent} />
 </div>

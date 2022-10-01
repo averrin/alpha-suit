@@ -24,6 +24,7 @@
 
    const isFolder = node?.source instanceof Folder || node?.source?.depth;
    const isActor = node?.source instanceof Actor;
+   const isScene = node?.source instanceof Scene;
 
    let decorColor;
    if (isActor && node.source.type == "character") {
@@ -125,6 +126,7 @@
       on:pointerdown={onPointerDown}
       id={node.id}
       title={`${node.name}`}
+      style:background-image={isScene ? `url(${thumbnail})` : "none"}
    >
       <div class="ui-flex ui-flex-row ui-w-full ui-justify-center">
          <div class="ui-text-xs ui-font-medium ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
@@ -151,9 +153,13 @@
                   />
                {/if}
             {:else if thumbnail}
-               <div class="ui-h-8 ui-w-8">
-                  <DocumentThumb item={writable(node.source)} fromCompendium={node.compendium} />
-               </div>
+               {#if !isScene}
+                  <div class="ui-h-8 ui-w-8">
+                     <DocumentThumb item={writable(node.source)} fromCompendium={node.compendium} />
+                  </div>
+               {:else}
+                  <div class="ui-mr-1" />
+               {/if}
             {:else if node.icon}
                <iconify-icon
                   icon={node.icon}
@@ -168,6 +174,7 @@
                   class="name ui-color-base-content ui-text-base-content"
                   class:ui-underline={decorColor}
                   style:text-decoration-color={decorColor}
+                  class:ui-text-shadow-lg={isScene}
                >
                   {node.name}
                </span>
@@ -282,5 +289,10 @@
    .tree-item.selected {
       border: none !important;
       background-color: #3b82f660;
+      background-image: none !important;
+   }
+   .ui-text-shadow-lg {
+      text-shadow: 2px 2px 4px #000, 3px 5px 8px #00000088 !important;
+      color: #eee !important;
    }
 </style>

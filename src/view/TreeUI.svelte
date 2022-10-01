@@ -1,21 +1,14 @@
 <svelte:options accessors={true} />
 
 <script>
-   // import "virtual:windi.css";
-   import { selected, tagsStore, theme } from "../modules/stores.js";
-   import { ApplicationShell } from "@typhonjs-fvtt/runtime/svelte/component/core";
+   import AlphaShell from "./AlphaShell.svelte";
+   import { selected, tagsStore } from "../modules/stores.js";
    import RightPane from "./components/RightPane.svelte";
    import LeftPane from "./components/LeftPane.svelte";
    import { setContext, getContext, tick, onDestroy } from "svelte";
    import TagSettings from "crew-components/TagSettings";
    import Tag from "crew-components/tags";
    import ArgInput from "crew-components/ArgInput";
-
-   import "crew-components/styles/foundry-fixes.scss";
-   import "crew-components/styles/alpha-ui.scss";
-   import "crew-components/styles/global.scss";
-   import "crew-components/styles/themes.scss";
-   import "../main.scss";
 
    export let elementRoot;
 
@@ -34,11 +27,10 @@
 
    const { application } = getContext("external");
    const position = application.position;
-   const { height, width, maxWidth } = position.stores;
+   logger.info(position)
+   const { height, width } = position.stores;
    let contentH = $height;
-   let contentW = $width;
-   onDestroy(height.subscribe((h) => (contentH = h - 30)));
-   onDestroy(width.subscribe((w) => (contentW = w)));
+   onDestroy(height.subscribe((h) => (contentH = h - 20)));
 
    const unsub = selected.subscribe((s) => {
       tick().then(() => {
@@ -52,30 +44,25 @@
    onDestroy(unsub);
 </script>
 
-<ApplicationShell bind:elementRoot>
-   <main class="alpha-ui ui-flex ui-flex-row ui-gap-2 ui-container" data-theme={$theme}>
-      <TagSettings {editTag}>
-         <ArgInput bind:value={editTag.fav} label="Favorite" type="bool" slot="controls" />
-      </TagSettings>
+<AlphaShell id="tree" bind:elementRoot>
+   <TagSettings {editTag}>
+      <ArgInput bind:value={editTag.fav} label="Favorite" type="bool" slot="controls" />
+   </TagSettings>
+   <div
+      class="ui-flex-col ui-flex"
+      class:ui-w-[40%]={$selected.length > 0}
+      class:ui-w-full={$selected.length == 0}
+      style="height: {contentH}px;"
+   >
+      <LeftPane />
+   </div>
+   {#if $selected.length > 0}
       <div
-         class="ui-flex-col ui-flex"
-         class:ui-w-[40%]={$selected.length > 0}
-         class:ui-w-full={$selected.length == 0}
+         class="ui-bg-base ui-flex-col ui-flex"
+         class:ui-w-[60%]={$selected.length > 0}
          style="height: {contentH}px;"
       >
-         <LeftPane />
+         <RightPane />
       </div>
-      {#if $selected.length > 0}
-         <div
-            class="ui-bg-base ui-flex-col ui-flex"
-            class:ui-w-[60%]={$selected.length > 0}
-            style="height: {contentH}px;"
-         >
-            <RightPane />
-         </div>
-      {/if}
-   </main>
-</ApplicationShell>
-
-<style>
-</style>
+   {/if}
+</AlphaShell>

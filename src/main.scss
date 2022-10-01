@@ -1,13 +1,10 @@
-#alpha-tree.window-app,
-#alpha-browser.window-app,
-#alpha-settings.window-app,
-#alpha-help.window-app
+.alpha-ui.window-app
 {
     max-width: 80%;
     max-height: 90%;
     .window-content {
       padding: 0px;
       overflow-y: hidden;
-      background: var(--window-background);
+      background: hsl(var(--window-background));
     }
 }

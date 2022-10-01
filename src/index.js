@@ -1,16 +1,22 @@
-// import 'virtual:windi-devtools'
+import "crew-components/styles/foundry-fixes.scss";
+import "crew-components/styles/alpha-ui.scss";
+import "crew-components/styles/global.scss";
+import "crew-components/styles/themes.scss";
+import "./main.scss";
 
 import { initSettings } from "./modules/settings.js";
+import CreateApplication from './view/AlphaApplication.js';
 
 import { moduleId, SETTINGS, infoColor } from "./modules/constants.js";
 import initHelpers from "crew-components/helpers";
 import { logger, setting } from "crew-components/helpers";
-import TreeApplication from './view/TreeApplication.js';
-import BrowserApplication from './view/BrowserApplication.js';
-import HelpApplication from './view/HelpApplication.js';
+import BrowserUI from './view/BrowserUI.svelte';
+import TreeUI from './view/TreeUI.svelte';
+import HelpUI from './view/HelpUI.svelte';
+import SettingsUI from './view/SettingsUI.svelte';
+import FilesUI from './view/FilesUI.svelte';
 import HUDApplication from './view/HUDApplication.js';
-import SettingsApplication from './view/SettingsApplication.js';
-import { initStores, buildHelpTree, helpTree } from './modules/stores.js';
+import { initStores, buildHelpTree, helpTree, addSystem } from './modules/stores.js';
 import { addTools } from "crew-components/helpers"
 import { loadIcon } from "iconify-icon";
 import { helpContent } from "./modules/help_content.js"
@@ -20,19 +26,20 @@ import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
 
 
 initHelpers(moduleId, infoColor, SETTINGS);
-const tree = new TreeApplication();
-const browser = new BrowserApplication();
-const help = new HelpApplication();
+const tree = new (CreateApplication("tree", "Alpha Tree", TreeUI))();
+const browser = new (CreateApplication("browser", "Alpha Browser", BrowserUI))();
+const help = new (CreateApplication("help", "Alpha Help Center", HelpUI))();
+const settings = new (CreateApplication("settings", "Alpha Settings", SettingsUI))();
+const files = new (CreateApplication("files", "Alpha File Manager", FilesUI))();
 const hud = new HUDApplication();
-const settings = new SettingsApplication();
 
 import pf2e from "./systems/pf2e.js";
-browser.addSystem(pf2e);
+addSystem(pf2e);
 import dnd5e from "./systems/dnd5e.js";
-browser.addSystem(dnd5e);
+addSystem(dnd5e);
 
 import common from "./systems/common.js";
-browser.addSystem(common);
+addSystem(common);
 
 const tools = {
   name: "alpha-suit",
@@ -47,14 +54,18 @@ const tools = {
       onClick: () => {
         tree.toggle();
       },
+      toggle: true,
+      isActive: _ => setting("show-tree"),
     },
     {
       name: "alpha-browser-btn",
       title: "Toggle Browser",
       icon: "ph:books-fill",
-      onClick: () => {
-        browser.toggle();
+      onClick: async () => {
+        await browser.toggle();
       },
+      toggle: true,
+      isActive: _ => setting("show-browser"),
     },
     // {
     //   name: "alpha-hud-btn",
@@ -63,7 +74,19 @@ const tools = {
     //   onClick: () => {
     //     hud.toggle();
     //   },
+    // toggle: true,
+    // isActive: _ => setting("show-browser"),
     // },
+    {
+      name: "alpha-files",
+      title: "Alpha File Manager",
+      icon: "fa6-solid:folder",
+      onClick: () => {
+        files.toggle();
+      },
+      toggle: true,
+      isActive: _ => setting("show-files"),
+    },
     {
       name: "alpha-settings",
       title: "Settings",
@@ -71,6 +94,8 @@ const tools = {
       onClick: () => {
         settings.toggle();
       },
+      toggle: true,
+      isActive: _ => setting("show-settings"),
     },
     {
       name: "alpha-help-btn",
@@ -79,6 +104,8 @@ const tools = {
       onClick: () => {
         help.toggle();
       },
+      toggle: true,
+      isActive: _ => setting("show-help"),
     },
   ]
 }
@@ -111,25 +138,18 @@ Hooks.once('ready', async () => {
   if (game.user.isGM) {
     initStores();
     tree.start();
-    if (setting(SETTINGS.SHOW_TREE)) tree.show();
-
     browser.start();
-    if (setting(SETTINGS.SHOW_BROWSER)) browser.show();
-
     help.start();
-    if (setting(SETTINGS.SHOW_HELP)) help.show();
+    settings.start();
+    files.start();
 
     if (globalThis.game.modules.get("director")?.active) {
       hud.add(new DirectorWidget());
     }
-
     // hud.add(new CharacterWidget());
-
     hud.start();
     if (setting(SETTINGS.SHOW_HUD)) hud.show();
 
-    settings.start();
-    if (setting(SETTINGS.SHOW_SETTINGS)) settings.show();
 
     logger.info("Started!")
   }
