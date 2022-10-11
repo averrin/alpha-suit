@@ -28,7 +28,6 @@
          if (i && getTokens(i).length > 0) {
             token = getTokens(i)[0];
          }
-         logger.info(token);
          if (i) {
             ts.set(token || { actor: i });
          }
@@ -43,9 +42,9 @@
    <div class="ui-flex ui-flex-row ui-gap-2">
       {#if globalThis.game.itempiles && ipEnabled}
          <div class="ui-input-group ui-input-group-md ui-w-auto">
-            <span>Item Piles</span>
+            <span class="ui-font-bold">Item Piles</span>
             <div
-               class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
+               class="ui-pr-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
             >
                <iconify-icon icon="fa-solid:box-open" title="ItemPiles is enabled" />
                {#if ipMerchant}
@@ -56,9 +55,9 @@
       {/if}
 
       <div class="ui-input-group ui-input-group-md ui-w-auto">
-         <span>CR</span>
+         <span class="ui-font-bold">CR</span>
          <div
-            class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
+            class="ui-pr-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
          >
             <DataSegment path="details.cr" format={formatCR} />
          </div>
@@ -69,7 +68,7 @@
             <iconify-icon icon="fa-solid:shield-alt" />
          </span>
          <div
-            class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
+            class="ui-pr-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
          >
             <DataSegment path="attributes.ac.value" />
          </div>

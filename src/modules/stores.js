@@ -201,6 +201,9 @@ export function initStores() {
     sys.id = globalThis.game.system.id;
   }
   system.set(sys);
+  if (sys?.init) {
+    sys.init();
+  }
   if (globalThis.game.modules.get("director")?.active) {
     tagSource = setting(SETTINGS.USE_DIRECTOR_TAGS) ? "director" : moduleId;
   }

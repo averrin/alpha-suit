@@ -44,4 +44,20 @@
    <span class="ui-label-text ui-text-xs ui-ml-2"
       >UI scale in range [0.25, 3]. Will preview but requires refresh to apply.</span
    >
+
+   <ArgInput
+      label="Width for expanded windows"
+      value={setting(SETTINGS.WINDOW_WIDTH_EXPANDED)}
+      on:change={(e) => saveSetting(SETTINGS.WINDOW_WIDTH_EXPANDED, e)}
+      type="int"
+      size="md"
+   />
+
+   <ArgInput
+      label="Width for 'tree-only' windows"
+      value={setting(SETTINGS.WINDOW_WIDTH_COLLAPSED)}
+      on:change={(e) => saveSetting(SETTINGS.WINDOW_WIDTH_COLLAPSED, e)}
+      type="int"
+      size="md"
+   />
 </div>

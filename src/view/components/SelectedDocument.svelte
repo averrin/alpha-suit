@@ -12,6 +12,8 @@
    import { onDestroy } from "svelte";
 
    export let item;
+   let isFolder;
+
    import { selected, currentCollection } from "../../modules/stores.js";
    let isFav;
    let tags = getFlag($item, "tagger")?.tags || [];
@@ -19,6 +21,7 @@
    function onUpdate(i) {
       isFav = getFlag(i, "alpha-suit.fav");
       tags = getFlag(i, "tagger")?.tags || [];
+      isFolder = i instanceof Folder || i?.depth;
    }
 
    onDestroy(item.subscribe(onUpdate));
@@ -112,7 +115,7 @@
       <div class="ui-flex ui-flex-row ui-flex-none">
          <div class="ui-btn-group ui-btn-group-md">
             <IconButton on:click={clone} icon="fa-solid:clone" size={"md"} type="primary" />
-            {#if !$item.thumbnail}
+            {#if isFolder}
                <ArgInput type="color" value={$item.data.color} compact={true} inline={true} on:change={changeColor} />
             {/if}
             <RemoveButton on:click={remove} />

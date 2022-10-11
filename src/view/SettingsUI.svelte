@@ -11,7 +11,6 @@
    function toggleExpanded(node) {
       expanded.update((ex) => {
          const isExpanded = ex.some((i) => i == node.id);
-         logger.info(isExpanded);
          if (isExpanded) {
             return ex.filter((i) => i != node.id);
          } else {
@@ -19,7 +18,6 @@
             return ex;
          }
       });
-      logger.info($expanded);
    }
    function itemClick(e) {
       const { node, event } = e.detail;
@@ -75,6 +73,7 @@
       {:else}
          <h1>Welcome to the Settings</h1>
          <p>Please select a page from the left sidebar.</p>
+         <p>Version: {game.modules.get("alpha-suit").data.version}</p>
       {/if}
    </div>
 </TwoColUI>

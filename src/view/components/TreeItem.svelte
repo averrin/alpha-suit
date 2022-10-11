@@ -115,7 +115,7 @@
 
 {#if !isRoot}
    <div
-      class="ui-border-solid ui-border-base-300 ui-bg-base-200 ui-rounded-box ui-rounded-md
+      class="ui-bg-cover ui-border-solid ui-border-base-300 ui-bg-base-200 ui-rounded-box ui-rounded-md
    ui-flex ui-flex-col ui-items-start ui-justify-center tree-item ui-border tree-item ui-pr-2"
       style:min-height={minHeight}
       on:click={itemClick}

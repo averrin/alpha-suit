@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.2.0 - 0.2.1](https://github.com/averrin/alpha-suit/compare/0.2.0...0.2.1)
+Fixed:
+  * Auto height failed when tabbars changes height
+  * Filters don't clear
+
+Added:
+  * More system-specific info for selected documents [dnd5e]
+  * Using ProseMirror to show description in the right way [v10 only]
+  * "Environment" filter for NPCs in the Browser
+  * Search in description filter from Items/Spells/Feats in the Browser [dnd5e]
+  * Settings for windows width
+  * Tooltips with description for items in system-specific info widgets
+  * Rarity for items in Browser [dnd5e]
+
 ## [0.1.8 - 0.2.0](https://github.com/averrin/alpha-suit/compare/0.1.8...0.2.0)
 Fixed:
   * Tool buttons for v10

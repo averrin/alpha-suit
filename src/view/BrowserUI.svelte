@@ -22,8 +22,8 @@
 
 <AlphaShell bind:elementRoot id="browser">
    <div class="ui-flex ui-flex-col ui-w-full">
-      <div class="ui-p-1">
-         <div class="ui-tabs ui-tabs-boxed">
+      <div class="ui-p-1" id="browser-tab-container">
+         <div class="ui-tabs ui-tabs-boxed ui-flex ui-items-center">
             <div class="ui-mr-2">
                <Tag
                   tag={{ text: globalThis.game.system.id, color: $system.data.id != "*" ? "#5b21b6" : "#aa0000" }}

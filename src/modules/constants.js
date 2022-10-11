@@ -24,6 +24,9 @@ export const SETTINGS = {
   SHOW_SYSTEM_INFO: "show-system-info",
   ICON_COLLECTION: "icon-collection",
   SHOW_SPELLS_TAB: "show-spells-tab",
+  WINDOW_WIDTH_EXPANDED: "win-width-expanded",
+  WINDOW_WIDTH_COLLAPSED: "win-width-collapsed",
+  DEV_FEATURES: "dev-features",
 };
 
 export const HOOKS = [

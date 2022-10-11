@@ -15,6 +15,7 @@
    import InlineButton from "crew-components/InlineButton";
    import { sortContent, pageContent, filterItemPredicate, setting } from "crew-components/helpers";
    import { SETTINGS } from "../../modules/constants.js";
+   import ImportButton from "./ImportButton.svelte";
 
    let compendium;
    let children = [];
@@ -253,6 +254,7 @@
             selected={selectedBrowser}
             on:click={itemClick}
             let:node
+            extraComponents={(_) => [ImportButton]}
          >
             <div class="ui-flex ui-flex-row ui-gap-1" slot="right">
                {#each extraInfo as info}
@@ -264,7 +266,7 @@
       </div>
    </div>
 
-   <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center">
+   <div class="ui-flex ui-flex-row ui-p-1 ui-justify-center" id="browser-pagenation-container">
       <Pagenation bind:currentPage {total} {pageSize} on:update={setContent} />
    </div>
 {/if}

@@ -11,7 +11,6 @@
    function toggleExpanded(node) {
       expanded.update((ex) => {
          const isExpanded = ex.some((i) => i == node.id);
-         logger.info(isExpanded);
          if (isExpanded) {
             return ex.filter((i) => i != node.id);
          } else {
@@ -19,7 +18,6 @@
             return ex;
          }
       });
-      logger.info($expanded);
    }
    function itemClick(e) {
       const { node, event } = e.detail;
@@ -50,7 +48,6 @@
       selectedHelp.subscribe((s) => {
          helpTopic.set(s[0]);
          topic = $helpTree[s[0]];
-         logger.info(topic);
       })
    );
 </script>

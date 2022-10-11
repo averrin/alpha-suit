@@ -72,12 +72,12 @@
       </div>
    {/if}
 
-   <div class="ui-p-1">
-      <div class="ui-tabs ui-tabs-boxed">
-         <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center">
+   <div class="ui-p-1" id="tree-tab-container">
+      <div class="ui-tabs ui-tabs-boxed ui-flex ui-items-center">
+         <div class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-justify-center ui-items-center ui-flex-wrap">
             {#each availableTabs as t (t.title)}
                <a
-                  class="ui-tab ui-tab-xs ui-text-base-content"
+                  class="ui-tab ui-tab-xs ui-text-base-content ui-h-fit"
                   on:click={() => selectMode(t)}
                   class:ui-tab-active={t.title == mode}
                >
@@ -105,17 +105,21 @@
             Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
          </div>
 
-         <InlineButton
-            title="On Scene"
-            icon="fa-solid:map"
-            on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)}
-         />
+         {#if mode == "Actors"}
+            <InlineButton
+               title="On Scene"
+               icon="fa-solid:map"
+               on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)}
+            />
+         {/if}
          <InlineButton
             title="Favs"
             icon="fa-solid:star"
             on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)}
          />
-         <CreateButtons />
+         {#if !$filter?.persist_filters}
+            <CreateButtons />
+         {/if}
       </div>
 
       {#if ftags.length > 0}

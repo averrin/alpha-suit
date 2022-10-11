@@ -52,7 +52,7 @@
 
 {#if $item && effects && effects.length > 0}
    <div class="ui-input-group">
-      <span>Effects</span>
+      <span class="ui-font-bold">Effects</span>
       <div
          class="ui-border ui-flex-wrap ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
       >
@@ -65,7 +65,7 @@
 
 {#if $item && currency && currency.length > 0}
    <div class="ui-input-group ui-input-group-md">
-      <span>Currency</span>
+      <span class="ui-font-bold">Currency</span>
       <div
          class="ui-px-2 ui-border ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
       >
@@ -79,7 +79,7 @@
 
 {#if $item && items && items.length > 0}
    <div class="ui-input-group">
-      <span>Items</span>
+      <span class="ui-font-bold">Items</span>
       <div
          class="ui-border ui-flex-wrap ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
       >
@@ -92,7 +92,7 @@
 
 {#if $item && features && features.length > 0}
    <div class="ui-input-group">
-      <span>Features</span>
+      <span class="ui-font-bold">Features</span>
       <div
          class="ui-border ui-flex-wrap ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
       >
@@ -105,7 +105,7 @@
 
 {#if $item && spells && spells.length > 0}
    <div class="ui-input-group">
-      <span>Spells</span>
+      <span class="ui-font-bold">Spells</span>
       <div
          class="ui-border ui-flex-wrap ui-text-base-content ui-flex ui-flex-row ui-items-center ui-gap-1 ui-p-1 ui-bg-base-300"
       >

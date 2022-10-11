@@ -179,4 +179,31 @@ export function initSettings(app) {
     default: true,
     type: Boolean,
   });
+
+  game.settings.register(moduleId, SETTINGS.WINDOW_WIDTH_EXPANDED, {
+    name: 'Width for expanded windows',
+    hint: "This value is used for auto expanding two-pane windows",
+    scope: "client",
+    config: true,
+    default: 920,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.WINDOW_WIDTH_COLLAPSED, {
+    name: 'Width for windows in "tree-only" mode',
+    hint: "This value is used for auto collapsing two-pane windows",
+    scope: "client",
+    config: true,
+    default: 400,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.DEV_FEATURES, {
+    name: 'Show WIP features',
+    hint: "",
+    scope: "world",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
 }

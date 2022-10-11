@@ -6,7 +6,24 @@ import FeatsData from "./dnd5e/FeatsData_dnd5e.svelte";
 
 import SelectedCharacter from "./dnd5e/SelectedCharacter_dnd5e.svelte";
 import SelectedNPC from "./dnd5e/SelectedNPC_dnd5e.svelte";
+import SelectedSpell from "./dnd5e/SelectedSpell_dnd5e.svelte"
+import SelectedWeapon from "./dnd5e/SelectedWeapon_dnd5e.svelte"
+import SelectedItem from "./dnd5e/SelectedItem_dnd5e.svelte"
 
+import { damageTypes } from "./dnd5e/constants_dnd5e.js"
+
+function getFeatType(data) {
+  let type = data?.activation?.type;
+  const types = CONFIG.DND5E.abilityActivationTypes;
+  if (type === types.legendary) type = "Legendary";
+  else if (type === types.lair) type = "Lair";
+  else if (type) {
+    type = data.damage?.parts?.length ? "Attack" : "Action";
+  }
+  else type = "Passive";
+  return type;
+
+}
 
 function getDamageTypes(damage) {
   const types = damage?.parts?.map(a => a[1]) || ["none"];
@@ -16,75 +33,24 @@ function getDamageTypes(damage) {
   return types;
 }
 
-const damageTypes = [
-  {
-    "value": "\"none\"",
-    "label": "None"
-  },
-  {
-    "value": "\"acid\"",
-    "label": "Acid"
-  },
-  {
-    "value": "\"fire\"",
-    "label": "Fire"
-  },
-  {
-    "value": "\"piercing\"",
-    "label": "Piercing"
-  },
-  {
-    "value": "\"poison\"",
-    "label": "Poison"
-  },
-  {
-    "value": "\"slashing\"",
-    "label": "Slashing"
-  },
-  {
-    "value": "\"bludgeoning\"",
-    "label": "Bludgeoning"
-  },
-  {
-    "value": "\"necrotic\"",
-    "label": "Necrotic"
-  },
-  {
-    "value": "\"force\"",
-    "label": "Force"
-  },
-  {
-    "value": "\"radiant\"",
-    "label": "Radiant"
-  },
-  {
-    "value": "\"cold\"",
-    "label": "Cold"
-  },
-  {
-    "value": "\"thunder\"",
-    "label": "Thunder"
-  },
-  {
-    "value": "\"lightning\"",
-    "label": "Lightning"
-  },
-  {
-    "value": "\"psychic\"",
-    "label": "Psychic"
-  },
-  {
-    "value": "\"healing\"",
-    "label": "Healing"
-  },
-  {
-    "value": "\"temphp\"",
-    "label": "Temphp"
-  },
-];
-
+let environments = [];
 const dnd5e = new System({
   id: "dnd5e",
+  init: async () => {
+    let index;
+    if (game.version >= 10) {
+
+      index = await game.packs.get("dnd5e.monsters").getIndex({ fields: ["system.details.environment"] });
+    } else {
+
+      index = await game.packs.get("dnd5e.monsters").getIndex({ fields: ["data.details.environment"] });
+    }
+    const set = new Set(index.map(i => (i.system ?? i.data).details.environment));
+    environments = [
+      { value: ``, label: "" }, // TODO: add empty option automatically
+      ...Array.from(Array.from(set).filter(e => e).map(e => { return { label: e, value: `"${e}"` }; }))
+    ]
+  },
   tabs: [
     { title: "NPC", icon: "fa-solid:users", type: "Actor", subtypes: ["npc"] },
     {
@@ -98,18 +64,32 @@ const dnd5e = new System({
   ],
 
   extraInfo: {
-    "Items": { component: ItemsData, index: ["data.price", "data.weight", "data.armor.value"] },
+    "Items": { component: ItemsData, index: ["data.price", "data.weight", "data.armor.value", "data.rarity"] },
     "Spells": { component: SpellsData, index: ["data.components", "data.level"] },
-    "NPC": { component: NPCData, index: ["data.details.cr"] },
+    "NPC": { component: NPCData, index: ["data.details.cr", "data.attributes.ac", "data.attributes.hp"] },
     "Feats": { component: FeatsData, index: ["data.requirements"] },
     "npc": { component: NPCData },
     "spell": { component: SpellsData },
+    "equipment": { component: ItemsData, },
+    "weapon": { component: ItemsData, },
+    "consumable": { component: ItemsData, },
+    "loot": { component: ItemsData, },
+    "tool": { component: ItemsData, },
   },
 
   selectedInfo: {
     "Actor": {
       "npc": { component: SelectedNPC },
       "character": { component: SelectedCharacter },
+    },
+    "Item": {
+      "spell": { component: SelectedSpell },
+      "weapon": { component: SelectedWeapon },
+      "equipment": { component: SelectedItem },
+      "loot": { component: SelectedItem },
+      "tool": { component: SelectedItem },
+      "consumable": { component: SelectedItem },
+      "feat": { component: SelectedItem },
     }
   },
 
@@ -122,6 +102,7 @@ const dnd5e = new System({
     },
     "Feats": {
       getDamageTypes,
+      getFeatType,
     },
 
     "Items": {
@@ -183,6 +164,26 @@ const dnd5e = new System({
     "Feats": {
       "General": [
         {
+          label: "Desc",
+          control: "string",
+          attribute: "@data.description.value",
+          template: "${attribute} ~= \"${value}\"",
+        },
+        // {
+        //   label: "Type",
+        //   control: "select",
+        //   attribute: "getFeatType(@data)",
+        //   options: [
+        //     { value: ``, label: "" }, // TODO: add empty option automatically
+        //     { value: `\"Passive\"`, label: "Passive" },
+        //     { value: `\"Action\"`, label: "Action" },
+        //     { value: `\"Attack\"`, label: "Attack" },
+        //     { value: `\"Lair\"`, label: "Lair" },
+        //     { value: `\"Legendary\"`, label: "Legendary" },
+        //   ]
+        // },
+        // Strange results.
+        {
           label: "Damage Type",
           control: "multiselect",
           attribute: "getDamageTypes(@data.damage)",
@@ -196,6 +197,12 @@ const dnd5e = new System({
     },
     "Spells": {
       "General": [
+        {
+          label: "Desc",
+          control: "string",
+          attribute: "@data.description.value",
+          template: "${attribute} ~= \"${value}\"",
+        },
 
         {
           label: "Level",
@@ -308,6 +315,21 @@ const dnd5e = new System({
           attribute: "@cr"
         },
 
+        // {
+        //   label: "Feat/Spell",
+        //   control: "string",
+        //   attribute: "getItems(@item)",
+        //   template: "\"${value}\" in ${attribute}",
+        // },
+        // foundry cannot use "items" as index, so there is no way to read it sync
+
+        {
+          label: "Env",
+          control: "select",
+          attribute: "@data.details.environment",
+          options: () => environments,
+        },
+
         {
           label: "Type",
           control: "multiselect",
@@ -414,6 +436,13 @@ const dnd5e = new System({
     },
     "Items": {
       "General": [
+
+        {
+          label: "Desc",
+          control: "string",
+          attribute: "@data.description.value",
+          template: "${attribute} ~= \"${value}\"",
+        },
         {
           label: "Type",
           control: "multiselect",

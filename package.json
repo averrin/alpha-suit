@@ -7,9 +7,10 @@
   "author": "Averrin",
   "dependencies": {
     "@typhonjs-fvtt/runtime": "^0.0.19",
+    "@typhonjs-fvtt/svelte-standard": "^0.0.10",
     "class-transformer": "^0.5.1",
     "consola": "^2.15.3",
-    "crew-components": "averrin/crew-components",
+    "crew-components": "../crew-components",
     "daisyui": "^2.22.0",
     "fast-sort": "^3.2.0",
     "filtrex": "^3.0.0",
@@ -18,6 +19,7 @@
     "svelte": "^3.49.0",
     "svelte-collapsible": "^0.2.1",
     "svelte-copy-to-clipboard": "^0.2.5",
+    "sveltejs-tippy": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

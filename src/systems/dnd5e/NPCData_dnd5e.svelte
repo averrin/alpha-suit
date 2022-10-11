@@ -16,7 +16,19 @@
 </script>
 
 {#if data?.details?.cr}
-   <div class="ui-text-xs ui-text-base-content ui-font-bold ui-text-center ui-w-4 ui-mx-1">
+   <div class="ui-text-xs ui-text-base-content ui-flex ui-flex-row ui-gap-1 ui-items-center ui-whitespace-nowrap">
       {formatCR(data?.details?.cr)}
+      |
+
+      {#if data.attributes.ac.flat}
+         <iconify-icon class="ui-text-xs ui-text-base-content" icon="fa-solid:shield-alt" />
+         {data.attributes.ac.flat}
+         |
+      {/if}
+
+      {#if data.attributes.hp.value}
+         <iconify-icon class="ui-text-xs ui-text-base-content" icon="fa-solid:heart" />
+         {data.attributes.hp.value}
+      {/if}
    </div>
 {/if}

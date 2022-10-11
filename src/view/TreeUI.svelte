@@ -9,6 +9,8 @@
    import TagSettings from "crew-components/TagSettings";
    import Tag from "crew-components/tags";
    import ArgInput from "crew-components/ArgInput";
+   import { setting } from "crew-components/helpers";
+   import { SETTINGS } from "../modules/constants.js";
 
    export let elementRoot;
 
@@ -20,24 +22,31 @@
       if (!editTag) {
          editTag = new Tag(tag);
       }
-      logger.info(e, tag, editTag);
    }
 
    setContext("tagRClick", tagRClick);
 
    const { application } = getContext("external");
    const position = application.position;
-   logger.info(position)
    const { height, width } = position.stores;
    let contentH = $height;
-   onDestroy(height.subscribe((h) => (contentH = h - 20)));
+   onDestroy(
+      height.subscribe((h) => {
+         tick().then(() => {
+            const tabs = document.getElementById("tree-tab-container");
+            if (tabs) {
+               contentH = h - tabs.clientHeight - 4;
+            }
+         });
+      })
+   );
 
    const unsub = selected.subscribe((s) => {
       tick().then(() => {
          if (s.length > 0) {
-            width.set(880);
+            width.set(setting(SETTINGS.WINDOW_WIDTH_EXPANDED));
          } else {
-            width.set(400);
+            width.set(setting(SETTINGS.WINDOW_WIDTH_COLLAPSED));
          }
       });
    });
@@ -57,11 +66,7 @@
       <LeftPane />
    </div>
    {#if $selected.length > 0}
-      <div
-         class="ui-bg-base ui-flex-col ui-flex"
-         class:ui-w-[60%]={$selected.length > 0}
-         style="height: {contentH}px;"
-      >
+      <div class="ui-bg-base ui-flex-col ui-flex" class:ui-w-[60%]={$selected.length > 0} style="height: {contentH}px;">
          <RightPane />
       </div>
    {/if}

@@ -56,7 +56,7 @@
          systemExtraInfo = $system.data?.extraInfo[modeName];
       }
 
-      const f = updateFields(_fields, $filterAdvanced, systemExtraInfo);
+      const f = updateFields([_fields, ...($system.indexFields ?? [])].flat(), $filterAdvanced, systemExtraInfo);
       if (JSON.stringify(f) != JSON.stringify(fields)) {
          fields = f;
          init();
@@ -85,7 +85,7 @@
       if ($system.data?.extraInfo && $system.data?.extraInfo[modeName]) {
          systemExtraInfo = $system.data?.extraInfo[modeName];
       }
-      fields = updateFields(_fields, $filterAdvanced, systemExtraInfo);
+      fields = updateFields([_fields, ...($system.indexFields ?? [])].flat(), $filterAdvanced, systemExtraInfo);
       // debugger;
       // logger.info(fields, $filterAdvanced, modeName);
 

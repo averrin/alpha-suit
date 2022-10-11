@@ -36,6 +36,14 @@ jobs:
       # Build distribution.
       - run: npm run build
 
+      - name: Find and Replace
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          include: "index.js"
+          find: "process.env.NODE_ENV"
+          replace: '"production"'
+          regex: false
+
       # Create a zip file with all files required by the module to add to the release.
       - run: rm -rf ./module.zip
       - run: zip -r ./module.zip module.json index.js index.js.map style.css assets/ lang/ packs/ LICENSE AUTHORS

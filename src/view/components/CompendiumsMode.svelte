@@ -1,8 +1,10 @@
 <script>
    import CompendiumTreeView from "./CompendiumTreeView.svelte";
    import { compendiumTree } from "../../modules/stores.js";
-   import { selectedBrowser, tagsStore } from "../../modules/stores.js";
+   import { selectedBrowser } from "../../modules/stores.js";
    import { getContext, tick, onDestroy } from "svelte";
+   import { setting } from "crew-components/helpers";
+   import { SETTINGS } from "../../modules/constants.js";
 
    import BrowserRightPane from "./BrowserRightPane.svelte";
 
@@ -10,15 +12,24 @@
    const position = application.position;
    const { height, width } = position.stores;
    let contentH = $height;
-   onDestroy(height.subscribe((h) => (contentH = h - 60)));
+   onDestroy(
+      height.subscribe((h) => {
+         tick().then(() => {
+            const tabs = document.getElementById("browser-tab-container");
+            if (tabs) {
+               contentH = h - tabs.clientHeight - 4;
+            }
+         });
+      })
+   );
    if ($height < 600) height.set(600);
 
    const unsub = selectedBrowser.subscribe((s) => {
       tick().then(() => {
          if (s.length > 0) {
-            width.set(880);
+            width.set(setting(SETTINGS.WINDOW_WIDTH_EXPANDED));
          } else {
-            width.set(400);
+            width.set(setting(SETTINGS.WINDOW_WIDTH_COLLAPSED));
          }
       });
    });
@@ -47,7 +58,7 @@
       <div
          class="ui-bg-base-100 ui-flex-col ui-flex"
          class:ui-w-[60%]={$selectedBrowser.length > 0}
-         style="height: {contentH}px;"
+         style="height: {contentH + 8 - document.getElementById('browser-pagenation-container')?.clientHeight}px;"
       >
          {#if $selectedBrowser.length > 0}
             <BrowserRightPane />

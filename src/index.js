@@ -67,26 +67,6 @@ const tools = {
       toggle: true,
       isActive: _ => setting("show-browser"),
     },
-    // {
-    //   name: "alpha-hud-btn",
-    //   title: "Toggle Alpha HUD",
-    //   icon: "ic:twotone-widgets",
-    //   onClick: () => {
-    //     hud.toggle();
-    //   },
-    // toggle: true,
-    // isActive: _ => setting("show-browser"),
-    // },
-    {
-      name: "alpha-files",
-      title: "Alpha File Manager",
-      icon: "fa6-solid:folder",
-      onClick: () => {
-        files.toggle();
-      },
-      toggle: true,
-      isActive: _ => setting("show-files"),
-    },
     {
       name: "alpha-settings",
       title: "Settings",
@@ -151,7 +131,32 @@ Hooks.once('ready', async () => {
     if (setting(SETTINGS.SHOW_HUD)) hud.show();
 
 
-    logger.info("Started!")
+    logger.info(`Started! Version: ${game.modules.get("alpha-suit").data.version}`)
+
+    if (setting(SETTINGS.DEV_FEATURES)) {
+      tools.tools.push(...[
+        {
+          name: "alpha-hud-btn",
+          title: "Toggle Alpha HUD",
+          icon: "ic:twotone-widgets",
+          onClick: () => {
+            hud.toggle();
+          },
+          toggle: true,
+          isActive: _ => setting("show-hud"),
+        },
+        {
+          name: "alpha-files",
+          title: "Alpha File Manager",
+          icon: "fa6-solid:folder",
+          onClick: () => {
+            files.toggle();
+          },
+          toggle: true,
+          isActive: _ => setting("show-files"),
+        },
+      ])
+    }
   }
 }
 );

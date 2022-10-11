@@ -27,13 +27,14 @@
    );
 
    function addFilter(filter, e) {
-      logger.info(filter, e.detail);
+      logger.info(filter, "|", e.detail);
       let val = e.detail;
-      if (!val) return;
+      if (val === undefined) return;
       cache[filter.label] = val;
       filterAdvanced.update((f) => {
          f.filters = f.filters || [];
          f.filters = f.filters.filter((f) => f.id != filter.label);
+         if (!val) return f;
          if (filter.control == "multiselect") {
             val = val.map((v) => filter.options.find((o) => o.label == v));
             let filters = val
@@ -59,7 +60,16 @@
             }
             val = `${filter.attribute} ${val[0].value} ${val[1]}`;
          } else if (filter.control == "select" && filter.attribute) {
+            if (typeof filter.options === "function") {
+               filter.options = filter.options();
+            }
             val = `${filter.attribute} == ${val}`;
+         } else if (filter.control == "string" && filter.attribute) {
+            if (filter.template) {
+               val = filter.template.replaceAll("${value}", val).replaceAll("${attribute}", filter.attribute);
+            } else {
+               val = `${filter.attribute} == ${val}`;
+            }
          }
          if (val != "") {
             f.filters.push(createFilter(aliases, val, filter.label));
