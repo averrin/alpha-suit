@@ -29,7 +29,7 @@ export class TreeItem {
     item.name = source.title || source.name || source.folder?.name;
     item.source = source;
     item.thumbnail = source.thumbnail;
-    item.icon = source.icon;
+    item.icon = source._icon ?? source.icon;
     item.component = source.component;
     item.content = source.content;
     item.expandable = source.expandable;

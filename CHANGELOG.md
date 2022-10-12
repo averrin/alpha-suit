@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.2.1 - 0.2.2](https://github.com/averrin/alpha-suit/compare/0.2.1...0.2.2)
+Fixed:
+  * Compendium folders icons are broken
+
 ## [0.2.0 - 0.2.1](https://github.com/averrin/alpha-suit/compare/0.2.0...0.2.1)
 Fixed:
   * Auto height failed when tabbars changes height

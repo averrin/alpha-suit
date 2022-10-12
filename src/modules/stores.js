@@ -56,7 +56,6 @@ async function initCompendiumTreeCF() {
   const children = game.customFolders.compendium.folders.contents.filter(f => f.id.startsWith("cfolder"));
   const content = game.customFolders.compendium.folders.get("default")?.content || [];
 
-  // children.forEach(p => p.icon = "fa-solid:folder");
   const ignored = setting(SETTINGS.IGNORED_PACKS);
 
   compendiumTree.set(buildTree({ content: content, children }, undefined, (item, source) => {
@@ -79,7 +78,7 @@ async function initCompendiumTreeCF() {
     }
     return item;
   }, (c) => {
-    c.icon = "fa-solid:folder"
+    c._icon = "fa-solid:folder"
     if (c.color == "#000000") {
       c.color = undefined;
     }
