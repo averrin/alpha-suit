@@ -31,6 +31,7 @@ export const SETTINGS = {
   FILES_IMAGE_HEIGHT: "files-height",
   FILES_IMAGE_HEIGHT_BIG: "files-height-big",
   FILES_DROP_GRID: "files-grid-size",
+  FILES_USE_THUMBS: "files-use-thumbs",
 };
 
 export const HOOKS = [

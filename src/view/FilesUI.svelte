@@ -33,6 +33,7 @@
    let nameFilter = "";
    let mode = "tiles";
    let favs = writable(setting(SETTINGS.FILES_FAV_PATH));
+   let useThumbs = setting(SETTINGS.FILES_USE_THUMBS);
 
    function getPadding() {
       let p = 40;
@@ -224,18 +225,41 @@
 
    async function setImageThumb(f) {
       if (!isImage(f.id)) return;
-      const thumb = await ImageHelper.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
-      document.getElementById(`file--${f.id}`).style.backgroundImage = `url(${thumb.thumb})`;
+      const el = document.getElementById(`file--${f.id}`);
+      if (el) {
+         return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = async function () {
+               // logger.info(f.id, this.height);
+               if (this.height / 2 <= imageHeightBig) {
+                  el.style.backgroundImage = `url(${f.id})`;
+               } else {
+                  const thumb = await ImageHelper.createThumbnail(f.id, {
+                     height: imageHeightBig,
+                     width: imageHeightBig,
+                  });
+                  el.style.backgroundImage = `url(${thumb.thumb})`;
+               }
+               resolve();
+            };
+            img.src = f.id;
+         });
+      }
    }
    async function setVideoThumb(f) {
       if (!isVideo(f.id)) return;
-      const thumb = await game.video.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
-      document.getElementById(`video--${f.id}`).setAttribute("poster", thumb);
+      const el = document.getElementById(`video--${f.id}`);
+      if (el) {
+         const thumb = await game.video.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
+         el.setAttribute("poster", thumb);
+      }
    }
    async function setThumbsSync() {
       for (const f of files) {
          await setVideoThumb(f);
-         await setImageThumb(f);
+         if (useThumbs) {
+            await setImageThumb(f);
+         }
       }
    }
 
@@ -494,7 +518,9 @@
                         style:height={`${imageHeight}px`}
                         style:min-width={mode == "big" ? `100%` : `${imageHeight}px`}
                         style:background-image={isImage(file.id)
-                           ? `url(modules/alpha-suit/assets/question.svg)`
+                           ? useThumbs
+                              ? `url(modules/alpha-suit/assets/question.svg)`
+                              : `url(${file.id})`
                            : "unset"}
                         alt={file.name}
                         title={file.name}

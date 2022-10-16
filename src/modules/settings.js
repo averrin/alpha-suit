@@ -243,4 +243,13 @@ export function initSettings(app) {
     default: 100,
     type: Number,
   });
+
+  game.settings.register(moduleId, SETTINGS.FILES_USE_THUMBS, {
+    name: 'Use thumbs for images',
+    hint: "It should increase performance, but looks not that fancy",
+    scope: "client",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
 }

@@ -38,4 +38,15 @@
       size="md"
    />
    <span class="ui-label-text ui-text-xs ui-ml-2">Grid size for dropping files from the File Manager</span>
+
+   <ArgInput
+      type="bool"
+      label="Use thumbs for images"
+      value={setting(SETTINGS.FILES_USE_THUMBS)}
+      on:change={(e) => saveSetting(SETTINGS.FILES_USE_THUMBS, e)}
+      size="md"
+   />
+   <span class="ui-label-text ui-text-xs ui-ml-2"
+      >It should increase performance for big images, but looks clunky for smaller ones</span
+   >
 </div>
