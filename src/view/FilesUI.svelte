@@ -222,14 +222,20 @@
       openFolder(node.id, true, true);
    }
 
-   async function setThumb(f) {
+   async function setImageThumb(f) {
+      if (!isImage(f.id)) return;
+      const thumb = await ImageHelper.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
+      document.getElementById(`file--${f.id}`).style.backgroundImage = `url(${thumb.thumb})`;
+   }
+   async function setVideoThumb(f) {
       if (!isVideo(f.id)) return;
       const thumb = await game.video.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
       document.getElementById(`video--${f.id}`).setAttribute("poster", thumb);
    }
    async function setThumbsSync() {
       for (const f of files) {
-         await setThumb(f);
+         await setVideoThumb(f);
+         await setImageThumb(f);
       }
    }
 
@@ -373,11 +379,11 @@
 
    setContext("tagsStore", favs);
 
-   async function openMMM() {
-      const session = new M3Session();
-      await session.startSession({ configureDialog: false });
-      session.openWorkshop(new FilePicker());
-   }
+   // async function openMMM() {
+   //    const session = new M3Session();
+   //    await session.startSession({ configureDialog: false });
+   //    session.openWorkshop(new FilePicker());
+   // }
 </script>
 
 <TwoColUI bind:elementRoot id="files" {paddingTop}>
@@ -389,9 +395,9 @@
                <Tags {onTagClick} tags={$favs.map((f) => f.text)} disable={true} />
             </div>
             <div class="ui-flex-none ui-group-xs">
-               {#if M3Session}
-                  <IconButton icon="fa-solid:paint-brush" title="Browse from Melvin's Workshop" on:click={openMMM} />
-               {/if}
+               <!-- {#if M3Session} -->
+               <!--    <IconButton icon="fa-solid:paint-brush" title="Browse from Melvin's Workshop" on:click={openMMM} /> -->
+               <!-- {/if} -->
             </div>
          </div>
       {/if}
@@ -482,11 +488,14 @@
                {#if topic?.source?.files}
                   {#each files as file (file.id)}
                      <div
+                        id={`file--${file.id}`}
                         class="ui-rounded-md ui-cursor-pointer ui-bg-base-300 ui-flex ui-flex-row ui-items-center ui-p-2"
                         class:zoom-container={mode == "tiles" && (isImage(file.id) || isVideo(file.id))}
                         style:height={`${imageHeight}px`}
                         style:min-width={mode == "big" ? `100%` : `${imageHeight}px`}
-                        style:background-image={`url(${file.id})`}
+                        style:background-image={isImage(file.id)
+                           ? `url(modules/alpha-suit/assets/question.svg)`
+                           : "unset"}
                         alt={file.name}
                         title={file.name}
                         style="background-size: contain; background-repeat: no-repeat;"
@@ -519,7 +528,7 @@
                               <source src={file.id} type="video/webm" />
                            </video>
                            <!-- <iconify-icon class="seq-icon" icon="fa6-solid:database" title="Sequencer" /> -->
-                           {#if Sequencer && Sequencer.Database.inverseFlattenedEntries.get(file.id)}
+                           {#if Sequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
                               <CopyButton
                                  size="xs"
                                  icon="fa6-solid:database"
