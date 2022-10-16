@@ -30,7 +30,7 @@ const tree = new (CreateApplication("tree", "Alpha Tree", TreeUI))();
 const browser = new (CreateApplication("browser", "Alpha Browser", BrowserUI))();
 const help = new (CreateApplication("help", "Alpha Help Center", HelpUI))();
 const settings = new (CreateApplication("settings", "Alpha Settings", SettingsUI))();
-const files = new (CreateApplication("files", "Alpha File Manager", FilesUI))();
+const files = new (CreateApplication("files", "Alpha File Manager [BETA]", FilesUI))();
 const hud = new HUDApplication();
 
 import pf2e from "./systems/pf2e.js";
@@ -76,6 +76,16 @@ const tools = {
       },
       toggle: true,
       isActive: _ => setting("show-settings"),
+    },
+    {
+      name: "alpha-files",
+      title: "Alpha File Manager",
+      icon: "fa6-solid:folder",
+      onClick: () => {
+        files.toggle();
+      },
+      toggle: true,
+      isActive: _ => setting("show-files"),
     },
     {
       name: "alpha-help-btn",
@@ -144,16 +154,6 @@ Hooks.once('ready', async () => {
           },
           toggle: true,
           isActive: _ => setting("show-hud"),
-        },
-        {
-          name: "alpha-files",
-          title: "Alpha File Manager",
-          icon: "fa6-solid:folder",
-          onClick: () => {
-            files.toggle();
-          },
-          toggle: true,
-          isActive: _ => setting("show-files"),
         },
       ])
     }

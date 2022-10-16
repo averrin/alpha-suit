@@ -30,13 +30,26 @@
    onDestroy((_) => Hooks.off("updateActor", unsub));
    const unsub1 = Hooks.on("updateItem", onUpdate);
    onDestroy((_) => Hooks.off("updateItem", unsub1));
+   // setPortraitImg
+   async function setPortraitImg() {
+      const data = await navigator.clipboard.read();
+      let path = data.find((i) => i.types.includes("text/plain"))?.getType("text/plain");
+      if (path) {
+         path = await (await path).text();
+         if ($item.data.img) {
+            $item.update({ img: path });
+         }
+         item.set($item);
+         Hooks.call("updateActor", $item);
+         Hooks.call("updateItem", $item);
+         // $item.data.img || $item.data.prototypeToken.texture.src
+      }
+   }
 
    async function setTokenImg() {
       const data = await navigator.clipboard.read();
-      logger.info(data);
       let path = data.find((i) => i.types.includes("text/plain"))?.getType("text/plain");
       if (path) {
-         logger.info(path);
          path = await (await path).text();
          if ($item.data.token?.img) {
             $item.update({ "token.img": path });
@@ -44,6 +57,7 @@
             $item.update({ "prototypeToken.texture.src": path });
          }
          item.set($item);
+         Hooks.call("updateActor", $item);
          // $item.data.img || $item.data.prototypeToken.texture.src
       }
    }
@@ -141,18 +155,30 @@
             <CopyButton
                text={$item.data.img}
                title={"Copy portrait path: " + $item.data.img}
-               notification={"Token path copied!"}
-               icon="fa:image"
+               notification={"Portrait path copied!"}
+               icon="fa-solid:image"
             />
+
             {#if $item.data.token || $item.data.prototypeToken}
                <CopyButton
                   text={$item.data.token.img || $item.data.prototypeToken.texture.src}
-                  notification={"Portrait path copied!"}
+                  notification={"Token path copied!"}
                   title={"Copy token path: " + ($item.data.token.img || $item.data.prototypeToken.texture.src)}
                   icon="fa:user-circle"
                />
-               <div class="ui-ml-2" />
+            {/if}
 
+            <div class="ui-ml-2" />
+
+            <IconButton
+               size="xs"
+               icon="fa:image"
+               title="Set portrait img path from clipboard"
+               on:click={setPortraitImg}
+               type="primary"
+            />
+
+            {#if $item.data.token || $item.data.prototypeToken}
                <IconButton
                   size="xs"
                   icon="fa:user-circle-o"
@@ -162,6 +188,7 @@
                />
             {/if}
          {/if}
+         <div class="ui-ml-2" />
          <IconButton
             size="xs"
             type="primary"

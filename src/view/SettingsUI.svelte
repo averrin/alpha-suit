@@ -5,6 +5,7 @@
    import TwoColUI from "./TwoColUI.svelte";
    import { settingsTopic, settingsTree, expanded, selectedSetting, theme } from "../modules/stores.js";
    import { onDestroy } from "svelte";
+   import Intro from "./components/Intro.svelte";
 
    export let elementRoot;
 
@@ -73,7 +74,7 @@
       {:else}
          <h1>Welcome to the Settings</h1>
          <p>Please select a page from the left sidebar.</p>
-         <p>Version: {game.modules.get("alpha-suit").data.version}</p>
+         <Intro />
       {/if}
    </div>
 </TwoColUI>

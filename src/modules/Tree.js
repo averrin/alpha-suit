@@ -34,6 +34,7 @@ export class TreeItem {
     item.content = source.content;
     item.expandable = source.expandable;
     item.parent = source.parent;
+    item.extraIcons = source.extraIcons;
     return item;
   }
 }

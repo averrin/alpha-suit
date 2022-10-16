@@ -150,7 +150,6 @@
          range: [1, 1],
          id: item._id,
       }));
-      logger.info(fc);
       await table.update({
          results: citems,
       });

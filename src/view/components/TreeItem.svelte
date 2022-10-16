@@ -263,7 +263,7 @@
          <div
             class="ui-pl-4 ui-flex ui-flex-row ui-h-6 ui-text-zinc-400 ui-border-dashed ui-border ui-rounded ui-bg-base-200"
          >
-            <div class="ui-flex ui-flex-1 ui-w-full">empty</div>
+            <div class="ui-flex ui-flex-1 ui-w-full">{node.source.emptyText ?? "empty"}</div>
             {#if showCreateButtons}
                <div class="ui-flex ui-flex-0">
                   <CreateButtons parent={node.source} />

@@ -13,11 +13,14 @@ This module is useful if you want to organize large trees of actors and items or
 - System-agnostic
 - Extensible system-specific features. You can add support for your favorite system in declarative way.
 - Compendium Folders integration
+- Light and Dark themes
+- [NEW] File manager with video previews and Sequencer Integration
 
 ## Images
 ![tree](/assets/tree-main.png)
 ![browser main](/assets/browser-main.png)
 ![browser advanced](/assets/browser-advanced.png)
+![file manager](/assets/file-manager.png)
 
 ## Plans
 - [ ] Documentation

@@ -47,7 +47,7 @@
 </script>
 
 <ApplicationShell bind:elementRoot>
-   <main class="alpha-ui ui-flex ui-flex-row ui-gap-2 ui-container ui-text-base-content" data-theme={$theme}>
+   <main class="alpha-ui ui-flex ui-flex-col ui-container ui-text-base-content" data-theme={$theme}>
       <slot />
    </main>
 </ApplicationShell>

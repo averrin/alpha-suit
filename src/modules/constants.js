@@ -27,6 +27,10 @@ export const SETTINGS = {
   WINDOW_WIDTH_EXPANDED: "win-width-expanded",
   WINDOW_WIDTH_COLLAPSED: "win-width-collapsed",
   DEV_FEATURES: "dev-features",
+  FILES_FAV_PATH: "files-fav-path",
+  FILES_IMAGE_HEIGHT: "files-height",
+  FILES_IMAGE_HEIGHT_BIG: "files-height-big",
+  FILES_DROP_GRID: "files-grid-size",
 };
 
 export const HOOKS = [

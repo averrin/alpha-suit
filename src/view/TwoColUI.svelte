@@ -18,14 +18,18 @@
 </script>
 
 <AlphaShell bind:elementRoot {id}>
-   <div class="ui-bg-base-100 ui-flex-col ui-flex" style="width: {left}%; height: {contentH}px;">
-      <div class="ui-h-full ui-overflow-y-auto">
-         <slot name="left" />
+   <slot name="top" />
+   <div class="ui-flex ui-flex-row ui-gap-2">
+      <div class="ui-bg-base-100 ui-flex-col ui-flex" style="width: {left}%; height: {contentH}px;">
+         <div class="ui-h-full ui-overflow-y-auto">
+            <slot name="left" />
+         </div>
       </div>
-   </div>
-   <div class="ui-bg-base-100 ui-flex-col ui-flex ui-p-2" style="width: {right}%; height: {contentH}px;">
-      <div class="ui-h-full ui-overflow-y-auto">
-         <slot name="right" />
+      <div class="ui-bg-base-100 ui-flex-col ui-flex" style="width: {right}%; height: {contentH}px;">
+         <div class="ui-h-full ui-overflow-y-auto ui-p-2">
+            <slot name="right" />
+         </div>
+         <slot name="right-bottom" />
       </div>
    </div>
 </AlphaShell>

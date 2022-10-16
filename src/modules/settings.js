@@ -206,4 +206,41 @@ export function initSettings(app) {
     default: false,
     type: Boolean,
   });
+
+  game.settings.register(moduleId, SETTINGS.FILES_FAV_PATH, {
+    name: 'Fav pathes',
+    hint: "",
+    scope: "world",
+    config: false,
+    default: [],
+    type: Array,
+  });
+
+
+  game.settings.register(moduleId, SETTINGS.FILES_IMAGE_HEIGHT, {
+    name: 'File height [Tiles]',
+    hint: "File thumb size for the File Manager in the Tiles mode",
+    scope: "client",
+    config: true,
+    default: 64,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_IMAGE_HEIGHT_BIG, {
+    name: 'File height [Preview]',
+    hint: "File thumb size for the File Manager in the Preview mode",
+    scope: "client",
+    config: true,
+    default: 256,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_DROP_GRID, {
+    name: 'Asset grid size',
+    hint: "Grid size for dropping files from the File Manager",
+    scope: "client",
+    config: true,
+    default: 100,
+    type: Number,
+  });
 }

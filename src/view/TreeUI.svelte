@@ -57,17 +57,24 @@
    <TagSettings {editTag}>
       <ArgInput bind:value={editTag.fav} label="Favorite" type="bool" slot="controls" />
    </TagSettings>
-   <div
-      class="ui-flex-col ui-flex"
-      class:ui-w-[40%]={$selected.length > 0}
-      class:ui-w-full={$selected.length == 0}
-      style="height: {contentH}px;"
-   >
-      <LeftPane />
-   </div>
-   {#if $selected.length > 0}
-      <div class="ui-bg-base ui-flex-col ui-flex" class:ui-w-[60%]={$selected.length > 0} style="height: {contentH}px;">
-         <RightPane />
+
+   <div class="ui-flex ui-flex-row ui-gap-2">
+      <div
+         class="ui-flex-col ui-flex"
+         class:ui-w-[40%]={$selected.length > 0}
+         class:ui-w-full={$selected.length == 0}
+         style="height: {contentH}px;"
+      >
+         <LeftPane />
       </div>
-   {/if}
+      {#if $selected.length > 0}
+         <div
+            class="ui-bg-base ui-flex-col ui-flex"
+            class:ui-w-[60%]={$selected.length > 0}
+            style="height: {contentH}px;"
+         >
+            <RightPane />
+         </div>
+      {/if}
+   </div>
 </AlphaShell>

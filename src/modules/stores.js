@@ -226,6 +226,7 @@ export function initStores() {
 
 export function addTree(tree, parent, transform, folderTransform) {
   let items = [];
+  tree = tree.model ?? tree;
   const item = TreeItem.from(tree);
   item.color = tree.color || tree.data?.color || tree.folder?.color;;
   let content = tree.content || tree.contents || tree.documents || [];

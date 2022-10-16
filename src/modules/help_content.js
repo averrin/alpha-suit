@@ -3,6 +3,7 @@ import HelpFilters from "../view/help/HelpFilters.svelte"
 import HelpTags from "../view/help/HelpTags.svelte"
 import HelpBrowserFilters from "../view/help/HelpBrowserFilters.svelte"
 import HelpBrowserSettings from "../view/help/HelpBrowserSettings.svelte"
+import HelpFilesControls from "../view/help/HelpFilesControls.svelte"
 
 export const helpContent = {
   content: [], children: [
@@ -48,6 +49,20 @@ export const helpContent = {
           name: "Settings",
           icon: "fa6-solid:gears",
           component: HelpBrowserSettings
+        },
+      ], children: [],
+    },
+
+    {
+      id: "h-alpha-files",
+      name: "Alpha File Manager",
+      icon: "fa6-solid:folder",
+      content: [
+        {
+          id: "h-alpha-files-controls",
+          name: "Controls",
+          icon: "wpf:cursor",
+          component: HelpFilesControls,
         },
       ], children: [],
     },

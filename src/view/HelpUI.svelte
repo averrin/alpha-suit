@@ -5,6 +5,7 @@
    import TwoColUI from "./TwoColUI.svelte";
    import { helpTopic, helpTree, expanded, selectedHelp, theme } from "../modules/stores.js";
    import { onDestroy } from "svelte";
+   import Intro from "./components/Intro.svelte";
 
    export let elementRoot;
 
@@ -72,6 +73,7 @@
       {:else}
          <h1>Welcome to the Help Center</h1>
          <p>Please select a page from the left sidebar.</p>
+         <Intro />
       {/if}
    </div>
 </TwoColUI>

@@ -28,23 +28,49 @@
    }
    let thumb;
 
-   //TODO: update on updateActor / updateToken
+   function getThumb(i) {
+      let thumb = i?.thumbnail;
+      if (
+         thumb == "icons/svg/mystery-man.svg" &&
+         (i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon)
+      ) {
+         thumb = i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon;
+      }
+      return thumb;
+   }
+
+   function onUpdate(i) {
+      const thumbNew = getThumb(i);
+      if (thumb != thumbNew) {
+         thumb = thumbNew;
+      }
+   }
+
+   const unsub = Hooks.on("updateActor", (i) => {
+      if (i.id != $item.id) return;
+      onUpdate(i);
+   });
+   const unsub2 = Hooks.on("updateToken", (i) => {
+      if (i.id != $item.id) return;
+      onUpdate(i);
+   });
+   const unsub3 = Hooks.on("updateItem", (i) => {
+      if (i.id != $item.id) return;
+      onUpdate(i);
+   });
+   onDestroy((_) => Hooks.off("updateActor", unsub));
+   onDestroy((_) => Hooks.off("updateToken", unsub2));
+   onDestroy((_) => Hooks.off("updateItem", unsub3));
 
    onDestroy(
       item.subscribe((i) => {
-         thumb = i?.thumbnail;
-         if (
-            thumb == "icons/svg/mystery-man.svg" &&
-            (i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon)
-         ) {
-            thumb = i?.data?.token?.img || i?.data?.prototypeToken?.texture?.src || i?.data?.icon;
-         }
+         onUpdate(i);
       })
    );
 </script>
 
 <div
-   class="ui-w-full ui-h-full ui-border-none ui-rounded-md ui-bg-contain ui-bg-no-repeat"
+   class="zoom-container ui-w-full ui-h-full ui-border-none ui-rounded-md ui-bg-contain ui-bg-no-repeat"
    style:background-image="url({thumb})"
    alt=""
    draggable={true}
@@ -54,3 +80,13 @@
    style:cursor="grab"
    {title}
 />
+
+<style>
+   .zoom-container {
+      transition: 0.4s ease;
+   }
+   .zoom-container:hover {
+      transform: scale(1.4);
+      z-index: 1000;
+   }
+</style>

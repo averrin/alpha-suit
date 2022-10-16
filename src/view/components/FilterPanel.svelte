@@ -27,7 +27,7 @@
    );
 
    function addFilter(filter, e) {
-      logger.info(filter, "|", e.detail);
+      // logger.info(filter, "|", e.detail);
       let val = e.detail;
       if (val === undefined) return;
       cache[filter.label] = val;

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.2.2 - 0.3.0](https://github.com/averrin/alpha-suit/compare/0.2.2...0.3.0)
+Fixed:
+  * Tool button duplication (I hope. Still cannot reproduce)
+
+Added:
+  * File Manager beta release
+
 ## [0.2.1 - 0.2.2](https://github.com/averrin/alpha-suit/compare/0.2.1...0.2.2)
 Fixed:
   * Compendium folders icons are broken

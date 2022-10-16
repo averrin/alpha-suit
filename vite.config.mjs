@@ -36,7 +36,7 @@ export default () => {
     base: '/modules/alpha-suit/',    // Base module path that 30001 / served dev directory.
     publicDir: false,                         // No public resources to copy.
     cacheDir: '../.vite-cache',               // Relative from root directory.
-    assetInclude: ["./assets/**/*", "./view/help/**/*"],
+    assetInclude: ["./assets/*", "./view/help/**/*"],
 
     resolve: { conditions: ['import', 'browser'] },
 
@@ -71,6 +71,7 @@ export default () => {
       proxy: {
         '^(/modules/alpha-suit/lang)': 'http://localhost:30000',
         '^(?!/modules/alpha-suit/)': 'http://localhost:30000',
+        '/modules/alpha-suit/assets': 'http://localhost:30000',
         '/socket.io': { target: 'ws://localhost:30000', ws: true }
       },
       fs: {
