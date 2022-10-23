@@ -1,5 +1,22 @@
 # Alpha Suit
 
+<div style="display: flex; flex-direction: row; gap: 0.5rem; justify-content: space-between; align-items: center;">
+   <a href="https://www.patreon.com/averrin" target="_blank">
+      <img
+         width="300px"
+         alt="Become a Patron"
+         src="https://raw.githubusercontent.com/averrin/alpha-suit/master/assets/patreon.svg"
+      />
+   </a>
+
+   <a class="ui-flex" href="https://discord.com/channels/772596237605011466/1018495228543516722" target="_blank">
+      <img
+         src="https://discordapp.com/api/guilds/772596237605011466/widget.png?style=banner2"
+      />
+   </a>
+</div>
+
+
 ## Alpha version
 
 This module is useful if you want to organize large trees of actors and items or for dealing with compendiums.
