@@ -10,7 +10,7 @@
     "@typhonjs-fvtt/svelte-standard": "^0.0.10",
     "class-transformer": "^0.5.1",
     "consola": "^2.15.3",
-    "crew-components": "../crew-components",
+    "crew-components": "averrin/crew-components",
     "daisyui": "^2.22.0",
     "fast-sort": "^3.2.0",
     "filtrex": "^3.0.0",

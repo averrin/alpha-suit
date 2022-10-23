@@ -22,7 +22,7 @@
    </div>
 
    {#if isPremium()}
-      <div class="ui-text-xl">Thank you very much for your support!</div>
+      <div class="ui-text-xl ui-w-full ui-text-center">Thank you very much for your support!</div>
    {:else}
       <a href="https://www.patreon.com/averrin" target="_blank">
          <img
@@ -35,4 +35,11 @@
          />
       </a>
    {/if}
+
+   <h1 class="ui-mt-6">Premium features</h1>
+   <ul>
+      <li>File tagging</li>
+      <li>"Copy image to clipboard" button</li>
+      <li>Option to hide Indexing Status widget</li>
+   </ul>
 </div>
