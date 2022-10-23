@@ -1,7 +1,7 @@
 <h1>Alpha File Manager controls</h1>
 <ul class="ui-text-base-content">
    <li>
-      <kbd class="ui-kbd">left-click</kbd> is for nothing yet.
+      <kbd class="ui-kbd">left-click</kbd> is for selecting file.
    </li>
 
    <li>

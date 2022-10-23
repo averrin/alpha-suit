@@ -20,6 +20,7 @@ import { initStores, buildHelpTree, helpTree, addSystem } from './modules/stores
 import { addTools } from "crew-components/helpers"
 import { loadIcon } from "iconify-icon";
 import { helpContent } from "./modules/help_content.js"
+import NotificationsApp from "./view/Notifications.js"
 
 import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
 // import CharacterWidget from "./view/hud/widgets/CharactersWidget.js"
@@ -39,6 +40,8 @@ import dnd5e from "./systems/dnd5e.js";
 addSystem(dnd5e);
 
 import common from "./systems/common.js";
+import { rebuildIndex } from "./modules/file_index";
+import { notify } from "./modules/notify";
 addSystem(common);
 
 const tools = {
@@ -67,16 +70,7 @@ const tools = {
       toggle: true,
       isActive: _ => setting("show-browser"),
     },
-    {
-      name: "alpha-settings",
-      title: "Settings",
-      icon: "fa6-solid:gears",
-      onClick: () => {
-        settings.toggle();
-      },
-      toggle: true,
-      isActive: _ => setting("show-settings"),
-    },
+
     {
       name: "alpha-files",
       title: "Alpha File Manager",
@@ -86,6 +80,16 @@ const tools = {
       },
       toggle: true,
       isActive: _ => setting("show-files"),
+    },
+    {
+      name: "alpha-settings",
+      title: "Settings",
+      icon: "fa6-solid:gears",
+      onClick: () => {
+        settings.toggle();
+      },
+      toggle: true,
+      isActive: _ => setting("show-settings"),
     },
     {
       name: "alpha-help-btn",
@@ -141,6 +145,7 @@ Hooks.once('ready', async () => {
     if (setting(SETTINGS.SHOW_HUD)) hud.show();
 
 
+    new NotificationsApp().render(true);
     logger.info(`Started! Version: ${game.modules.get("alpha-suit").data.version}`)
 
     if (setting(SETTINGS.DEV_FEATURES)) {
@@ -156,6 +161,14 @@ Hooks.once('ready', async () => {
           isActive: _ => setting("show-hud"),
         },
       ])
+    }
+
+    if (!setting(SETTINGS.FILES_DISABLE_SEARCH)) {
+      const delay = setting(SETTINGS.FILES_INDEX_DELAY);
+      if (delay >= 0) {
+        notify.info(`Indexing will start in ${delay} seconds.`)
+        setTimeout(rebuildIndex, delay * 1000)
+      }
     }
   }
 }

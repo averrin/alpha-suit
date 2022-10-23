@@ -4,6 +4,7 @@ import HelpTags from "../view/help/HelpTags.svelte"
 import HelpBrowserFilters from "../view/help/HelpBrowserFilters.svelte"
 import HelpBrowserSettings from "../view/help/HelpBrowserSettings.svelte"
 import HelpFilesControls from "../view/help/HelpFilesControls.svelte"
+import SupportSettings from "../view/settings/SupportSettings.svelte";
 
 export const helpContent = {
   content: [], children: [
@@ -65,6 +66,14 @@ export const helpContent = {
           component: HelpFilesControls,
         },
       ], children: [],
+    },
+
+    {
+      id: "h-alpha-patreon",
+      name: "Support",
+      icon: "fa6-brands:patreon",
+      component: SupportSettings,
+      content: [], children: [],
     },
   ]
 };

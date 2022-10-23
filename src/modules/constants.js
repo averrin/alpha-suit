@@ -14,6 +14,7 @@ export const SETTINGS = {
   KEY_SHOW: "key-show",
   KEY_COLLAPSE: "key-collapsed",
   TAGS: "tags",
+  FILES_TAGS: "files-tags",
 
   PAGE_SIZE: "browser-page-size",
   IGNORED_PACKS: "ignored-packs",
@@ -32,6 +33,16 @@ export const SETTINGS = {
   FILES_IMAGE_HEIGHT_BIG: "files-height-big",
   FILES_DROP_GRID: "files-grid-size",
   FILES_USE_THUMBS: "files-use-thumbs",
+
+  FILES_DISABLE_SEARCH: "files-disable-search",
+  FILES_DEPTH_LIMIT: "files-depth-limit",
+  FILES_EXCLUDE_SOURCES: "files-exclude-sources",
+  FILES_EXCLUDE_FOLDERS: "files-exclude-folders",
+  FILES_INDEX_ONLY_ASSETS: "files-index-only-assets",
+  FILES_INDEX_COUNT: "files-index-count",
+  FILES_SEARCH_LIMIT: "files-search-limit",
+  FILES_INDEX_DELAY: "files-indes-delay",
+  FILES_SHOW_INDEX_STATUS: "files-show-index-status",
 };
 
 export const HOOKS = [

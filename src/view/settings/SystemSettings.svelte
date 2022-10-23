@@ -1,14 +1,7 @@
 <script>
+   import { SETTINGS } from "../../modules/constants.js";
+   import SettingsInput from "./SettingsInput.svelte";
    import { system } from "../../modules/stores.js";
-
-   import ArgInput from "crew-components/ArgInput";
-   import { logger, setting } from "crew-components/helpers";
-   import { moduleId, SETTINGS } from "../../modules/constants.js";
-
-   function saveSetting(key, e) {
-      logger.info(key, e.detail);
-      globalThis.game.settings.set(moduleId, key, e.detail);
-   }
 </script>
 
 <div class="ui-bg-base ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2 ui-h-full">
@@ -38,12 +31,5 @@
       </div>
    </div>
 
-   <ArgInput
-      type="bool"
-      label={'Show "Spells" tab in the Tree'}
-      value={setting(SETTINGS.SHOW_SPELLS_TAB)}
-      on:change={(e) => saveSetting(SETTINGS.SHOW_SPELLS_TAB, e)}
-      size="md"
-   />
-   <span class="ui-label-text ui-text-xs ui-ml-2">You can disable it if your system doesn't need it.</span>
+   <SettingsInput key={SETTINGS.SHOW_SPELLS_TAB} />
 </div>

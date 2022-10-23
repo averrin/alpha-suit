@@ -16,6 +16,11 @@ This module is useful if you want to organize large trees of actors and items or
 - Light and Dark themes
 - [NEW] File manager with video previews and Sequencer Integration
 
+### Premium features (Patreon-only)
+- File tagging
+- "Copy image to clipboard" button.
+- Option to hide Indexing Status widget
+
 ## Images
 ![tree](/assets/tree-main.png)
 ![browser main](/assets/browser-main.png)

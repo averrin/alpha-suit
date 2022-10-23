@@ -51,7 +51,7 @@ export function initSettings(app) {
 
   game.settings.register(moduleId, SETTINGS.UI_SCALE, {
     name: 'UI scale',
-    hint: 'If ui are too big or too small for your display. Requires refresh.',
+    hint: 'UI scale in range [0.25, 3]. Will preview but requires refresh to apply.',
     config: false,
     type: Number,
     default: 1,
@@ -127,6 +127,13 @@ export function initSettings(app) {
     config: false,
     type: Array,
     default: [],
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_TAGS, {
+    scope: "world",
+    config: false,
+    type: Object,
+    default: {},
   });
 
   game.settings.register(moduleId, SETTINGS.THEME, {
@@ -246,9 +253,90 @@ export function initSettings(app) {
 
   game.settings.register(moduleId, SETTINGS.FILES_USE_THUMBS, {
     name: 'Use thumbs for images',
-    hint: "It should increase performance, but looks not that fancy",
+    hint: "It should increase performance for big images, but looks clunky for smaller ones",
     scope: "client",
     config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_DISABLE_SEARCH, {
+    name: 'Disable file indexing and search',
+    hint: "Completely disabling indexing. Can dramaticaly decrease memory usage",
+    scope: "client",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_DEPTH_LIMIT, {
+    name: 'Indexing depth limit',
+    hint: "Decreasing can exclude some files, but improve performance.",
+    scope: "client",
+    config: true,
+    default: 10,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_EXCLUDE_SOURCES, {
+    name: 'Excluded storages',
+    hint: "E.g. you can exclude 'Data' to prevent 'modules' folders indexing",
+    scope: "client",
+    config: false,
+    default: ["Forge-bazaar"],
+    type: Array,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_EXCLUDE_FOLDERS, {
+    name: 'Excluded folders',
+    hint: "Regexp to exclude folders from indexing. E.g. 'icons/svg'",
+    scope: "client",
+    config: false,
+    default: ["node_modules", "src", "modules/_", "scripts/"],
+    type: Array,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_INDEX_ONLY_ASSETS, {
+    name: 'Index only images and videos',
+    hint: "More compact index, but slower process and you cannot search for text files",
+    scope: "client",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_INDEX_COUNT, {
+    name: 'Max files in index',
+    hint: "The worst way to limit indexing time and memory consumption",
+    scope: "client",
+    config: true,
+    default: 100000,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_SEARCH_LIMIT, {
+    name: 'Max files in search',
+    hint: "Faster search. Clarify search term to find what you want",
+    scope: "client",
+    config: true,
+    default: 1000,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_INDEX_DELAY, {
+    name: 'Delay between foundry ready and indexing start',
+    hint: "In seconds. -1 for manual triggering, 0 for no delay",
+    scope: "client",
+    config: true,
+    default: 10,
+    type: Number,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_SHOW_INDEX_STATUS, {
+    name: 'Show indexing status widget',
+    hint: "It's annoying if you have a lot of files",
+    scope: "client",
+    config: false,
     default: true,
     type: Boolean,
   });

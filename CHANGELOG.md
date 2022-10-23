@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.3.1 - 0.4.0](https://github.com/averrin/alpha-suit/compare/0.3.1...0.4.0)
+Added:
+  * File search. Yes among all your files. Yes, indexing takes time. Yeah, you can disable it.
+  * Better notification system (not fully supported yet)
+  * File selecting. For now its just a bit more robust way to see a preview and copy path
+  * [Premium] File tagging. Global search also looks into tags.
+  * [Premium] "Copy image to clipboard" button.
+
 ## [0.3.0 - 0.3.1](https://github.com/averrin/alpha-suit/compare/0.3.0...0.3.1)
 Fixed:
   * `Sequencer.Database.inverseFlattenedEntries` isnt present in v9

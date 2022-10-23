@@ -1,6 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
+   import { notify } from "../modules/notify.js";
    import Tags from "crew-components/Tags";
    import TagSettings from "crew-components/TagSettings";
    import TreeItemComponent from "./components/TreeItem.svelte";
@@ -9,40 +10,43 @@
    // import { filesTopic, filesTree, expanded, selectedFolder } from "../modules/stores.js";
    import { expanded, addTree } from "../modules/stores.js";
    import { onDestroy, tick, setContext, getContext } from "svelte";
-   import { capitalize, logger, smartCaseFind } from "crew-components/helpers";
+   import { capitalize, logger, smartCaseFind, setting } from "crew-components/helpers";
    import { writable, get } from "svelte/store";
-   import LeftPane from "./components/LeftPane.svelte";
-   import { TreeItem } from "../modules/Tree.js";
    import TreeModel from "tree-model";
    import IconButton from "crew-components/IconButton";
-   import InlineButton from "crew-components/InlineButton";
+   // import InlineButton from "crew-components/InlineButton";
    import CopyButton from "crew-components/CopyButton";
-   import { setting } from "crew-components/helpers";
    import { SETTINGS } from "../modules/constants.js";
    import Tag from "crew-components/tags";
    import Intro from "./components/Intro.svelte";
    import HelpFilesControls from "../view/help/HelpFilesControls.svelte";
+   import { fileIndex, indexInProcess } from "../modules/file_index.js";
+   import SelectedFiles from "./components/SelectedFiles.svelte";
+   import { isImage, isVideo, showFile } from "crew-components/helpers";
+
+   import tippy from "sveltejs-tippy";
 
    const { application } = getContext("external");
    const position = application.position;
    const { height } = position.stores;
 
    export let elementRoot;
-   const imgExt = new FilePicker()._getExtensions("image");
    let topic;
    let nameFilter = "";
    let mode = "tiles";
    let favs = writable(setting(SETTINGS.FILES_FAV_PATH));
    let useThumbs = setting(SETTINGS.FILES_USE_THUMBS);
+   let selectedFiles = writable([]);
 
    function getPadding() {
-      let p = 40;
+      let p = document.getElementById("alpha-files-topbar")?.clientHeight ?? 40;
       if ($favs.length > 0) {
-         p += 40;
+         p += document.getElementById("alpha-files-favbar")?.clientHeight ?? 40;
       }
       if (topic) {
-         p += 40;
+         p += document.getElementById("alpha-files-folderbar")?.clientHeight ?? 40;
       }
+      p -= 12;
       return p;
    }
    let paddingTop = getPadding();
@@ -55,14 +59,6 @@
 
    function findPoster(file) {
       return "icons/svg/video.svg";
-   }
-
-   function isImage(path) {
-      const ext = "." + path.split(".")[path.split(".").length - 1];
-      return imgExt.includes(ext);
-   }
-   function isVideo(path) {
-      return VideoHelper.hasVideoExtension(path);
    }
 
    function onTagClick(_, tag) {
@@ -83,19 +79,23 @@
       }
    }
 
-   function showFile(file) {
-      if (isImage(file.name)) {
-         new ImagePopout(file.id, { title: file.name }).render(true);
-      }
-   }
-
    function onFileClick(e, file) {
       if (e.button == 2) {
          showFile(file);
       } else if (e.button == 1) {
          navigator.clipboard.writeText(file.id);
-         ui.notifications.info(`Copied: ${file.id}`);
+         notify.info(`Copied: ${file.id}`);
       } else {
+         selectedFiles.update((sf) => {
+            return [file];
+            if (sf.includes(file)) {
+               sf = sf.filter((f) => f != file);
+            } else {
+               sf.push(file);
+            }
+            logger.info(sf);
+            return sf;
+         });
       }
    }
 
@@ -109,7 +109,7 @@
    }
 
    const tree = new TreeModel();
-   let storages = globalThis.game.data.files.storages;
+   let storages = [...globalThis.game.data.files.storages];
 
    if (location.host.includes("forge-vtt")) {
       storages.push("forge-bazaar", "forgevtt");
@@ -168,13 +168,14 @@
                   content: [],
                   title: base,
                   name: base,
+                  store: store,
                   icon: "fa6-solid:folder",
                   expandable: true,
                };
             }),
             files: res.files.sort().map((f) => {
                const p = f.split("/");
-               return { id: f, name: p[p.length - 1] };
+               return { id: f, name: p[p.length - 1], store: store };
             }),
          };
       });
@@ -234,11 +235,15 @@
                if (this.height / 2 <= imageHeightBig) {
                   el.style.backgroundImage = `url(${f.id})`;
                } else {
-                  const thumb = await ImageHelper.createThumbnail(f.id, {
-                     height: imageHeightBig,
-                     width: imageHeightBig,
-                  });
-                  el.style.backgroundImage = `url(${thumb.thumb})`;
+                  try {
+                     const thumb = await ImageHelper.createThumbnail(f.id, {
+                        height: imageHeightBig,
+                        width: imageHeightBig,
+                     });
+                     el.style.backgroundImage = `url(${thumb.thumb})`;
+                  } catch (error) {
+                     logger.error(error);
+                  }
                }
                resolve();
             };
@@ -250,8 +255,12 @@
       if (!isVideo(f.id)) return;
       const el = document.getElementById(`video--${f.id}`);
       if (el) {
-         const thumb = await game.video.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
-         el.setAttribute("poster", thumb);
+         try {
+            const thumb = await game.video.createThumbnail(f.id, { height: imageHeightBig, width: imageHeightBig });
+            el.setAttribute("poster", thumb);
+         } catch (error) {
+            logger.error(error);
+         }
       }
    }
    async function setThumbsSync() {
@@ -278,6 +287,7 @@
    let isFav = false;
    onDestroy(
       selectedFolder.subscribe((s) => {
+         selectedFiles.set([]);
          nameFilter = "";
          filesTopic.set(s[0]);
          topic = $filesTree[s[0]];
@@ -408,13 +418,82 @@
    //    await session.startSession({ configureDialog: false });
    //    session.openWorkshop(new FilePicker());
    // }
+
+   let search = "";
+   let searchStatus = "";
+   const ff = foundry.utils.debounce(filterFiles, 5);
+   const searchLimit = setting(SETTINGS.FILES_SEARCH_LIMIT);
+   function searchFile() {
+      if (search.length >= 3) {
+         selectedFiles.set([]);
+         searchStatus = "Searching...";
+         files = [];
+         topic = { id: "Search", source: { files } };
+         filterFiles();
+         // tick().then((_) => {
+         $fileIndex.forEach((f) => {
+            // tick().then((_) => {
+            const name = f.split("/")[f.split("/").length - 1];
+            const store = f.split("/")[0];
+            f = f.replace(store + "/", "");
+            if (topic.source.files.length >= searchLimit) return;
+            if (smartCaseFind(search, name)) {
+               topic.source.files.push({ id: f, name, store });
+               ff();
+            }
+            // resolve();
+            // });
+         });
+         let fileTags = setting(SETTINGS.FILES_TAGS);
+         for (let [f, t] of Object.entries(fileTags)) {
+            logger.info(f, t);
+            if (t?.includes(search)) {
+               const name = f.split("/")[f.split("/").length - 1];
+               const store = f.split("/")[0];
+               f = f.replace(store + "/", "");
+               topic.source.files.push({ id: f, name, store });
+               ff();
+            }
+         }
+         // });
+
+         searchStatus = `Found ${topic.source.files.length} files.`;
+      } else {
+         topic = null;
+      }
+   }
+
+   function togglePreviews() {
+      useThumbs = !useThumbs;
+      setting(SETTINGS.FILES_USE_THUMBS, useThumbs);
+      openFolder(topic.id);
+   }
+
+   function openFileFolder(e) {
+      const file = e.detail;
+      openFolder(file.store + "/" + file.id.replace("/" + file.name, ""));
+   }
 </script>
 
 <TwoColUI bind:elementRoot id="files" {paddingTop}>
    <svelte:fragment slot="top">
       <TagSettings {editTag} />
-      {#if $favs.length > 0}
-         <div id="alpha-files-favbar" class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-1 ui-bg-base-300">
+      {#if $favs.length > 0 || !setting(SETTINGS.FILES_DISABLE_SEARCH)}
+         <div id="alpha-files-favbar" class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-1 ui-bg-base-200">
+            {#if !setting(SETTINGS.FILES_DISABLE_SEARCH)}
+               <!-- <IconButton loading={$indexInProcess} icon="octicon:cache-16" size="xs" on:click={rebuildIndex} /> -->
+               <ArgInput
+                  label="Search"
+                  type="string"
+                  bind:value={search}
+                  disabled={$fileIndex.length == 0 || $indexInProcess}
+                  size="xs"
+                  width="18rem"
+                  on:change={foundry.utils.debounce(searchFile, 500)}
+                  clearable={true}
+               />
+            {/if}
+
             <div class="ui-flex ui-flex-1 ui-w-full">
                <Tags {onTagClick} tags={$favs.map((f) => f.text)} disable={true} />
             </div>
@@ -422,6 +501,7 @@
                <!-- {#if M3Session} -->
                <!--    <IconButton icon="fa-solid:paint-brush" title="Browse from Melvin's Workshop" on:click={openMMM} /> -->
                <!-- {/if} -->
+               <IconButton icon="clarity:help-solid" on:click={AlphaSuit.showHelp} />
             </div>
          </div>
       {/if}
@@ -429,13 +509,14 @@
       {#if topic}
          <div
             id="alpha-files-topbar"
-            class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-2 ui-bg-base-300"
+            class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-2 ui-bg-base-200"
             class:ui-pt-0={$favs.length != 0}
          >
             <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
                <div class="ui-btn-group ui-btn-group-md">
-                  <IconButton icon="fa-solid:arrow-left" on:click={back} disabled={$navIndex == 0} />
+                  <IconButton title="Back" icon="fa-solid:arrow-left" on:click={back} disabled={$navIndex == 0} />
                   <IconButton
+                     title="Forward"
                      icon="fa-solid:arrow-right"
                      on:click={forward}
                      disabled={$navIndex >= $navHistory.length - 1}
@@ -445,12 +526,19 @@
 
                {#each topic.id.split("/") as segment, i}
                   <span class="ui-flex ui-flex-row ui-items-center ui-gap-1">
-                     {#if i > 0}
-                        <iconify-icon icon="fa6-solid:folder" />
-                        <a class="ui-link" on:click={(e) => selectFolder(e, topic, i)}>{truncateString(segment, 25)}</a>
+                     {#if segment != "Search"}
+                        {#if i > 0}
+                           <iconify-icon icon="fa6-solid:folder" />
+                           <a class="ui-link" on:click={(e) => selectFolder(e, topic, i)}
+                              >{truncateString(segment, 25)}</a
+                           >
+                        {:else}
+                           <iconify-icon icon="bi:server" />
+                           <a class="ui-link" on:click={(e) => selectFolder(e, topic, i)}>{capitalize(segment)}</a>
+                        {/if}
                      {:else}
-                        <iconify-icon icon="bi:server" />
-                        <a class="ui-link" on:click={(e) => selectFolder(e, topic, i)}>{capitalize(segment)}</a>
+                        <iconify-icon icon="mdi:folder-search" />
+                        {segment}
                      {/if}
                   </span>
                   <!-- <iconify-icon icon="mdi:slash-forward" /> -->
@@ -474,7 +562,7 @@
                {topic.source.dirs?.length ?? 0}
                /
                <iconify-icon icon="fa6-solid:file" />
-               {topic.source.files?.length ?? 0}
+               {files.length ?? 0}
             </div>
          </div>
       {/if}
@@ -496,6 +584,10 @@
       {#if topic}
          <div class="ui-flex ui-flex-col ui-gap-3">
             <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap">
+               {#if !topic?.source?.dirs && files.length == 0 && search.length >= 3}
+                  <div class="ui-p-3 ui-text-center ui-w-full ui-text-lg">{searchStatus}</div>
+               {/if}
+
                {#if topic?.source?.dirs}
                   {#each dirs as dir (dir.id)}
                      <div
@@ -510,7 +602,7 @@
                   <div class="break" />
                {/if}
                {#if topic?.source?.files}
-                  {#each files as file (file.id)}
+                  {#each files as file, i (file.id)}
                      <div
                         id={`file--${file.id}`}
                         class="ui-rounded-md ui-cursor-pointer ui-bg-base-300 ui-flex ui-flex-row ui-items-center ui-p-2"
@@ -531,6 +623,15 @@
                         class:ui-w-full={mode == "list"}
                         style:background-position={mode == "list" ? "left" : "center"}
                         class:file-video={mode != "list" && isVideo(file.name)}
+                        class:selected-file={$selectedFiles.find((f) => f.id == file.id)}
+                        use:tippy={{
+                           content: () => {
+                              let content = `<div class="alpha-file-tooltip">${file.name}</div>`;
+                              return content;
+                           },
+                           placement: "bottom",
+                           allowHTML: true,
+                        }}
                      >
                         {#if isVideo(file.name)}
                            <video
@@ -591,49 +692,71 @@
    <svelte:fragment slot="right-bottom">
       {#if topic}
          <div
-            class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-rounded-md ui-p-2"
+            class="ui-flex ui-flex-row ui-gap-2 ui-flex-wrap ui-p-2"
             style:background-color="hsl(var(--b2))"
+            id="alpha-files-folderbar"
          >
-            <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
-               <ArgInput
-                  label="Filter"
-                  type="string"
-                  bind:value={nameFilter}
-                  size="xs"
-                  width="18rem"
-                  on:change={filterFiles}
-                  clearable={true}
-               />
-               <ArgInput label="Size" type="int" bind:value={imageHeight} size="xs" width="8rem" />
-               <!-- <ArgInput label="p" type="int" bind:value={$paddingTop} size="xs" width="10rem" /> -->
-            </div>
-            <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-none ui-items-center">
-               <div class="ui-btn-group ui-btn-group-xs">
-                  <IconButton
-                     icon="fa6-solid:list"
-                     type={mode == "list" ? "primary" : "outline"}
-                     on:click={(_) => {
-                        mode = "list";
-                        imageHeight = imageHeightGrid;
-                     }}
-                  />
-                  <IconButton
-                     icon="bi:grid-3x2-gap-fill"
-                     type={mode == "tiles" ? "primary" : "outline"}
-                     on:click={(_) => {
-                        mode = "tiles";
-                        imageHeight = imageHeightGrid;
-                     }}
-                  />
-                  <IconButton
-                     icon="bxs:image"
-                     type={mode == "big" ? "primary" : "outline"}
-                     on:click={(_) => {
-                        mode = "big";
-                        imageHeight = imageHeightBig;
-                     }}
-                  />
+            <div class="ui-flex ui-flex-col ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
+               <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
+                  <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
+                     <ArgInput
+                        label="Filter"
+                        type="string"
+                        bind:value={nameFilter}
+                        size="xs"
+                        width="16rem"
+                        on:change={filterFiles}
+                        clearable={true}
+                     />
+                     <ArgInput label="Size" type="int" bind:value={imageHeight} size="xs" width="8rem" />
+                  </div>
+                  <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-none ui-items-center">
+                     <IconButton
+                        icon="ic:baseline-preview"
+                        size="xs"
+                        on:click={togglePreviews}
+                        type={useThumbs ? "primary" : "outline"}
+                        title="Toggle resized thumbs. Enabled: good for big files. Disabled: good for small files."
+                     />
+
+                     <div class="ui-btn-group ui-btn-group-xs">
+                        <IconButton
+                           title="List view"
+                           icon="fa6-solid:list"
+                           type={mode == "list" ? "primary" : "outline"}
+                           on:click={(_) => {
+                              mode = "list";
+                              imageHeight = imageHeightGrid;
+                           }}
+                        />
+                        <IconButton
+                           icon="bi:grid-3x2-gap-fill"
+                           type={mode == "tiles" ? "primary" : "outline"}
+                           title="Tiles view"
+                           on:click={(_) => {
+                              mode = "tiles";
+                              imageHeight = imageHeightGrid;
+                           }}
+                        />
+                        <IconButton
+                           title="Previews view"
+                           icon="bxs:image"
+                           type={mode == "big" ? "primary" : "outline"}
+                           on:click={(_) => {
+                              mode = "big";
+                              imageHeight = imageHeightBig;
+                           }}
+                        />
+                     </div>
+                  </div>
                </div>
+               {#if $selectedFiles.length > 0}
+                  <SelectedFiles
+                     on:openFileFolder={openFileFolder}
+                     selectedFiles={$selectedFiles}
+                     isSearch={topic.id == "Search"}
+                  />
+               {/if}
             </div>
          </div>
       {/if}
@@ -653,6 +776,14 @@
    }
    .zoom-container:hover {
       transform: scale(2);
-      z-index: 1000;
+   }
+
+   .selected-file {
+      border: solid 3px indianred;
+      transform: scale(1.2);
+   }
+
+   :global(.alpha-file-tooltip) {
+      font-size: 1.2rem;
    }
 </style>
