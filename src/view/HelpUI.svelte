@@ -3,7 +3,7 @@
 <script>
    import TreeItemComponent from "./components/TreeItem.svelte";
    import TwoColUI from "./TwoColUI.svelte";
-   import { helpTopic, helpTree, expanded, selectedHelp, theme } from "../modules/stores.js";
+   import { helpTopic, helpTree, expanded, selectedHelp } from "../modules/stores.js";
    import { onDestroy } from "svelte";
    import Intro from "./components/Intro.svelte";
 

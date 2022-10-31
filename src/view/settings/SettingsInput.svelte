@@ -61,6 +61,11 @@
          options,
       };
    } else if (type == "select") {
+      if (settingSpec.choices) {
+         options = Object.entries(settingSpec.choices).map((pair) => {
+            return { value: pair[0], label: pair[1] };
+         });
+      }
       spec = {
          control: "select",
          options,

@@ -5,6 +5,7 @@ import Tag from "crew-components/tags";
 import { moduleId, SETTINGS } from "./constants.js";
 import { setting } from './settings.js';
 import { filterItemPredicate } from "crew-components/helpers";
+import { isPremium } from "crew-components/premium";
 import { helpContent } from "./help_content.js"
 import { settingsContent } from "./settings_content.js"
 let tagSource = moduleId;
@@ -32,7 +33,6 @@ export const settingsTree = writable({});
 export const tagsStore = writable([]);
 export const systems = writable({});
 export const system = writable(null);
-export const theme = writable("light");
 
 export const directorActionsStore = writable([]);
 export const charactersStore = writable([]);
@@ -193,8 +193,40 @@ export function buildTree(tree, filter, transform, folderTransform) {
   return items;
 }
 
+function updateDropHandlers(sheet) {
+  if (!setting(SETTINGS.DND_ENABLE_NATIVE_SHEETS)) return;
+  // logger.info(sheet.document, sheet.element[0].querySelectorAll(".profile"));
+  const selectors = [".profile", ".profile-img", ".player-image"];
+  for (const selector of selectors) {
+    sheet.element[0].querySelectorAll(selector).forEach((e) => {
+      e.ondrop = (event) => {
+        const data = TextEditor.getDragEventData(event);
+        if (data.type != "Tile") return;
+        if (isPremium() && sheet.actor) {
+          const mode = setting(SETTINGS.DND_ACTOR_MODE);
+          logger.info(sheet, mode)
+          if (mode == "portrait" || mode == "both") {
+            sheet.document.update({ img: data.texture.src });
+          }
+          if (mode == "token" || mode == "both") {
+            logger.info(sheet);
+            sheet.document.update({
+              "prototypeToken.texture.src": data.texture.src,
+              "token.texture.src": data.texture.src
+            });
+            sheet.token?.update({
+              "texture.src": data.texture.src
+            });
+          }
+        } else {
+          sheet.document.update({ img: data.texture.src });
+        }
+      }
+    });
+  }
+}
+
 export function initStores() {
-  theme.set(game.settings.get(moduleId, SETTINGS.THEME));
   let sys = get(systems)[globalThis.game.system.id] || get(systems)["*"];
   if (sys.id == "*") {
     sys.id = globalThis.game.system.id;
@@ -222,6 +254,10 @@ export function initStores() {
   Hooks.on("renderCompendiumFolderDirectory", () => {
     initCompendiumTree();
   });
+
+  if (!setting(SETTINGS.DND_ENABLE_NATIVE_SHEETS)) return;
+  Hooks.on("renderItemSheet", (sheet) => updateDropHandlers(sheet));
+  Hooks.on("renderActorSheet", (sheet) => updateDropHandlers(sheet));
 }
 
 export function addTree(tree, parent, transform, folderTransform) {

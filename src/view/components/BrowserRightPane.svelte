@@ -88,6 +88,7 @@
       }
 
       setContent();
+      content.forEach((i) => (i.compendium = compendium));
    }
 
    onDestroy(

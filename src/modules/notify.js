@@ -1,6 +1,6 @@
 import toast from 'svelte-french-toast';
 import { get } from 'svelte/store';
-import { theme } from "./stores.js"
+import { theme } from "crew-components/stores"
 
 const styles = {
   light: "",

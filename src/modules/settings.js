@@ -1,5 +1,5 @@
 import { moduleId, SETTINGS } from './constants.js';
-import { theme } from "./stores.js"
+import { theme } from "crew-components/stores"
 import { setIconCollection } from "crew-components/specs"
 
 export let setting = key => {
@@ -68,7 +68,7 @@ export function initSettings(app) {
     name: "Selected image resolution",
     hint: "Higher is better quality but slower",
     scope: "world",
-    config: true,
+    config: false,
     range: {
       min: 30,
       max: 600,
@@ -83,7 +83,7 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.PAGE_SIZE, {
     name: 'Browser page size',
     hint: "Count of items on browser's paged lists",
-    config: true,
+    config: false,
     type: Number,
     default: 20,
     onChange: value => {
@@ -98,14 +98,14 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.ADVANCED_MODE, {
     name: 'Browser advanced mode',
     hint: "Shows controls to make filters more flexible",
-    config: true,
+    config: false,
     type: Boolean,
     default: false,
   });
   game.settings.register(moduleId, SETTINGS.USE_DIRECTOR_TAGS, {
     name: "Use Director's tags",
     hint: "Sync tag colors between modules. Requires the Director module",
-    config: true,
+    config: false,
     type: Boolean,
     default: false,
     onChange: value => {
@@ -140,7 +140,7 @@ export function initSettings(app) {
     name: "UI theme",
     hint: "",
     scope: "client",
-    config: true,
+    config: false,
     choices: {
       'light': "Light",
       'dark': "Dark",
@@ -154,7 +154,7 @@ export function initSettings(app) {
     name: "Invert clicks in the Tree",
     hint: "Disabled: left-click for select, right for open builtin sheet",
     scope: "client",
-    config: true,
+    config: false,
     default: false,
     type: Boolean,
   });
@@ -163,7 +163,7 @@ export function initSettings(app) {
     name: "Show system-specific widgets in tree items",
     hint: "E.g. Challange rating for DnD5e NPC actors",
     scope: "client",
-    config: true,
+    config: false,
     default: true,
     type: Boolean,
   });
@@ -172,7 +172,7 @@ export function initSettings(app) {
     name: "Icon collection for tags",
     hint: "Examples: game-icons, mdi, material-symbols, openmoji, fa-solid. More: https://icon-sets.iconify.design",
     scope: "client",
-    config: true,
+    config: false,
     default: "game-icons",
     type: String,
     onChange: v => setIconCollection(v)
@@ -182,7 +182,7 @@ export function initSettings(app) {
     name: 'Show "Spells" tab in the Tree',
     hint: "",
     scope: "world",
-    config: true,
+    config: false,
     default: true,
     type: Boolean,
   });
@@ -191,7 +191,7 @@ export function initSettings(app) {
     name: 'Width for expanded windows',
     hint: "This value is used for auto expanding two-pane windows",
     scope: "client",
-    config: true,
+    config: false,
     default: 920,
     type: Number,
   });
@@ -200,7 +200,7 @@ export function initSettings(app) {
     name: 'Width for windows in "tree-only" mode',
     hint: "This value is used for auto collapsing two-pane windows",
     scope: "client",
-    config: true,
+    config: false,
     default: 400,
     type: Number,
   });
@@ -228,7 +228,7 @@ export function initSettings(app) {
     name: 'File height [Tiles]',
     hint: "File thumb size for the File Manager in the Tiles mode",
     scope: "client",
-    config: true,
+    config: false,
     default: 64,
     type: Number,
   });
@@ -237,7 +237,7 @@ export function initSettings(app) {
     name: 'File height [Preview]',
     hint: "File thumb size for the File Manager in the Preview mode",
     scope: "client",
-    config: true,
+    config: false,
     default: 256,
     type: Number,
   });
@@ -246,7 +246,7 @@ export function initSettings(app) {
     name: 'Asset grid size',
     hint: "Grid size for dropping files from the File Manager",
     scope: "client",
-    config: true,
+    config: false,
     default: 100,
     type: Number,
   });
@@ -255,7 +255,7 @@ export function initSettings(app) {
     name: 'Use thumbs for images',
     hint: "It should increase performance for big images, but looks clunky for smaller ones",
     scope: "client",
-    config: true,
+    config: false,
     default: true,
     type: Boolean,
   });
@@ -264,7 +264,7 @@ export function initSettings(app) {
     name: 'Disable file indexing and search',
     hint: "Completely disabling indexing. Can dramaticaly decrease memory usage",
     scope: "client",
-    config: true,
+    config: false,
     default: false,
     type: Boolean,
   });
@@ -273,7 +273,7 @@ export function initSettings(app) {
     name: 'Indexing depth limit',
     hint: "Decreasing can exclude some files, but improve performance.",
     scope: "client",
-    config: true,
+    config: false,
     default: 10,
     type: Number,
   });
@@ -300,7 +300,7 @@ export function initSettings(app) {
     name: 'Index only images and videos',
     hint: "More compact index, but slower process and you cannot search for text files",
     scope: "client",
-    config: true,
+    config: false,
     default: true,
     type: Boolean,
   });
@@ -309,7 +309,7 @@ export function initSettings(app) {
     name: 'Max files in index',
     hint: "The worst way to limit indexing time and memory consumption",
     scope: "client",
-    config: true,
+    config: false,
     default: 100000,
     type: Number,
   });
@@ -318,7 +318,7 @@ export function initSettings(app) {
     name: 'Max files in search',
     hint: "Faster search. Clarify search term to find what you want",
     scope: "client",
-    config: true,
+    config: false,
     default: 1000,
     type: Number,
   });
@@ -327,7 +327,7 @@ export function initSettings(app) {
     name: 'Delay between foundry ready and indexing start',
     hint: "In seconds. -1 for manual triggering, 0 for no delay",
     scope: "client",
-    config: true,
+    config: false,
     default: 10,
     type: Number,
   });
@@ -339,5 +339,28 @@ export function initSettings(app) {
     config: false,
     default: true,
     type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.DND_ENABLE_NATIVE_SHEETS, {
+    name: 'Enable Drag and Drop images on native sheets',
+    hint: 'You can drop image on the "profile" pic in item/actor sheet to change it',
+    scope: "client",
+    config: false,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.DND_ACTOR_MODE, {
+    name: "When dropping image on actor, change:",
+    hint: "You can change the portrait art, the token, or both.",
+    scope: "client",
+    config: false,
+    choices: {
+      'portrait': "Portrait",
+      'token': "Token",
+      'both': "Both",
+    },
+    default: "portrait",
+    type: String,
   });
 }

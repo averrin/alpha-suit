@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-   import AlphaShell from "./AlphaShell.svelte";
+   import AlphaShell from "crew-components/AlphaShell";
    import { selected, tagsStore } from "../modules/stores.js";
    import RightPane from "./components/RightPane.svelte";
    import LeftPane from "./components/LeftPane.svelte";

@@ -5,6 +5,8 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  DND_ACTOR_MODE: "dnd-actor-mode",
+
   UI_SCALE: "ui-scale",
   RESOLUTION: "resolution",
   SHOW_TREE_TIP: "show-tree-tip",
@@ -43,6 +45,7 @@ export const SETTINGS = {
   FILES_SEARCH_LIMIT: "files-search-limit",
   FILES_INDEX_DELAY: "files-indes-delay",
   FILES_SHOW_INDEX_STATUS: "files-show-index-status",
+  DND_ENABLE_NATIVE_SHEETS: "dnd-enable-native-sheets",
 };
 
 export const HOOKS = [

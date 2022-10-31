@@ -5,6 +5,7 @@ import HelpBrowserFilters from "../view/help/HelpBrowserFilters.svelte"
 import HelpBrowserSettings from "../view/help/HelpBrowserSettings.svelte"
 import HelpFilesControls from "../view/help/HelpFilesControls.svelte"
 import SupportSettings from "../view/settings/SupportSettings.svelte";
+import HelpDND from "../view/help/HelpDND.svelte"
 
 export const helpContent = {
   content: [], children: [
@@ -64,6 +65,12 @@ export const helpContent = {
           name: "Controls",
           icon: "wpf:cursor",
           component: HelpFilesControls,
+        },
+        {
+          id: "h-alpha-files-dnd",
+          name: "Drag & Drop",
+          icon: "ri:drag-drop-line",
+          component: HelpDND,
         },
       ], children: [],
     },

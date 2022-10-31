@@ -37,6 +37,7 @@ This module is useful if you want to organize large trees of actors and items or
 - File tagging
 - "Copy image to clipboard" button.
 - Option to hide Indexing Status widget
+- Changing token art by dropping image file
 
 ## Images
 ![tree](/assets/tree-main.png)

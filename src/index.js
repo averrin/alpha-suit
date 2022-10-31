@@ -5,7 +5,7 @@ import "crew-components/styles/themes.scss";
 import "./main.scss";
 
 import { initSettings } from "./modules/settings.js";
-import CreateApplication from './view/AlphaApplication.js';
+import CreateApplication from 'crew-components/AlphaApplication';
 
 import { moduleId, SETTINGS, infoColor } from "./modules/constants.js";
 import initHelpers from "crew-components/helpers";
@@ -21,6 +21,7 @@ import { addTools } from "crew-components/helpers"
 import { loadIcon } from "iconify-icon";
 import { helpContent } from "./modules/help_content.js"
 import NotificationsApp from "./view/Notifications.js"
+import { initStores as helperStores } from "crew-components/stores";
 
 import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
 // import CharacterWidget from "./view/hud/widgets/CharactersWidget.js"
@@ -107,6 +108,7 @@ const tools = {
 
 window.AlphaSuit = {
   showHelp: help.show.bind(help),
+  showSettings: settings.show.bind(settings),
   addTool: (tool) => {
     tools.tools.push(tool);
   },
@@ -118,6 +120,14 @@ window.AlphaSuit = {
 
 Hooks.once('init', async () => {
   initSettings(tree);
+
+  game.settings.registerMenu(moduleId, "configure-settings", {
+    name: "",
+    label: "Alpha Settings",
+    icon: "fas fa-cog",
+    type: settings.makeShim(),
+    restricted: false
+  });
 });
 
 Hooks.on('renderSceneControls', (_) => {
@@ -130,6 +140,7 @@ Hooks.on('renderSceneControls', (_) => {
 
 Hooks.once('ready', async () => {
   if (game.user.isGM) {
+    helperStores()
     initStores();
     tree.start();
     browser.start();

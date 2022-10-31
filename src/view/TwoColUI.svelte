@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-   import AlphaShell from "./AlphaShell.svelte";
+   import AlphaShell from "crew-components/AlphaShell";
    import { onDestroy, getContext } from "svelte";
    export let paddingTop = 30;
    export let left = 30;

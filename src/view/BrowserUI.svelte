@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-   import AlphaShell from "./AlphaShell.svelte";
+   import AlphaShell from "crew-components/AlphaShell";
    import { tagsStore, system, browserMode } from "../modules/stores.js";
    import { setContext } from "svelte";
    import CompendiumsMode from "./components/CompendiumsMode.svelte";

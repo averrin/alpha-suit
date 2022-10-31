@@ -1,12 +1,14 @@
 <script>
-   import { logger } from "crew-components/helpers";
+   import { logger, setting } from "crew-components/helpers";
+   import { isPremium } from "crew-components/premium";
+   import { SETTINGS } from "../../modules/constants.js";
 
    export let item;
    export let title;
 
    export let fromCompendium = null;
    import { currentCollection } from "../../modules/stores.js";
-   import { onDestroy } from "svelte";
+   import { onDestroy, tick } from "svelte";
 
    async function drag(e) {
       let id = $item.id;
@@ -67,6 +69,38 @@
          onUpdate(i);
       })
    );
+
+   async function handleDrop(event) {
+      const data = TextEditor.getDragEventData(event);
+      let i;
+      if (!$item.document && $item.compendium) {
+         i = await $item.compendium.getDocument($item._id);
+         $item.thumbnail = data.texture.src;
+      } else {
+         i = $item;
+      }
+      if (data.type != "Tile") return;
+
+      if (isPremium() && i.documentName == "Actor") {
+         const mode = setting(SETTINGS.DND_ACTOR_MODE);
+         if (mode == "portrait" || mode == "both") {
+            i.update({ img: data.texture.src });
+         }
+         if (mode == "token" || mode == "both") {
+            i.update({
+               "prototypeToken.texture.src": data.texture.src,
+               "token.texture.src": data.texture.src,
+            });
+         }
+      } else {
+         i.update({ img: data.texture.src });
+      }
+
+      // i.update({ img: data.texture.src });
+      tick().then((_) => {
+         onUpdate($item);
+      });
+   }
 </script>
 
 <div
@@ -79,6 +113,7 @@
    on:dragstart={drag}
    style:cursor="grab"
    {title}
+   on:drop={handleDrop}
 />
 
 <style>

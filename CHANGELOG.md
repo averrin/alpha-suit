@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.0 - 0.4.1](https://github.com/averrin/alpha-suit/compare/0.4.0...0.4.1)
+Fixed:
+  * Notifications block ESC menu
+  * Broken tokens layout if there are a lot
+
+Added:
+  * Dropping images onto thumbs in the tree changing them
+  * Dropping images onto thumbs in the browser changing them if compendium is unlocked
+  * You also can drop images onto "profile" pics in actor/item sheets
+  * [Premium] For actors you also can change token/prototypeToken art
+
 ## [0.3.1 - 0.4.0](https://github.com/averrin/alpha-suit/compare/0.3.1...0.4.0)
 Added:
   * File search. Yes among all your files. Yes, indexing takes time. Yeah, you can disable it.

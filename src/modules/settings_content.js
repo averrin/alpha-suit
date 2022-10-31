@@ -7,6 +7,7 @@ import FilesSearchSettings from "../view/settings/FilesSearchSettings.svelte";
 import SystemSettings from "../view/settings/SystemSettings.svelte";
 import PremiumSettings from "../view/settings/PremiumSettings.svelte";
 import SupportSettings from "../view/settings/SupportSettings.svelte";
+import DNDSettings from "../view/settings/DNDSettings.svelte";
 
 export const settingsContent = {
   content: [], children: [
@@ -51,6 +52,15 @@ export const settingsContent = {
           name: "Search",
           icon: "mdi:folder-search",
           component: FilesSearchSettings,
+          content: [], children: [
+
+          ],
+        },
+        {
+          id: "s-alpha-files-dnd",
+          name: "Drag & Drop",
+          icon: "ri:drag-drop-line",
+          component: DNDSettings,
           content: [], children: [
 
           ],
