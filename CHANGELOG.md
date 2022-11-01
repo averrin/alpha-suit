@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.1 - 0.4.2](https://github.com/averrin/alpha-suit/compare/0.4.1...0.4.2)
+Fixed:
+  * Notifications block ESC menu (again =) )
+
+Added:
+  * Settings page for Director
+  * [Premium] Default path for the File Manager
+
 ## [0.4.0 - 0.4.1](https://github.com/averrin/alpha-suit/compare/0.4.0...0.4.1)
 Fixed:
   * Notifications block ESC menu

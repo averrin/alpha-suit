@@ -48,7 +48,7 @@ export function addSystem(system) {
     s[system.id] = system;
     return s;
   })
-  logger.info(`System added: ${system.id}`);
+  // logger.info(`System added: ${system.id}`);
 }
 
 async function initCompendiumTreeCF() {
@@ -195,7 +195,6 @@ export function buildTree(tree, filter, transform, folderTransform) {
 
 function updateDropHandlers(sheet) {
   if (!setting(SETTINGS.DND_ENABLE_NATIVE_SHEETS)) return;
-  // logger.info(sheet.document, sheet.element[0].querySelectorAll(".profile"));
   const selectors = [".profile", ".profile-img", ".player-image"];
   for (const selector of selectors) {
     sheet.element[0].querySelectorAll(selector).forEach((e) => {
@@ -204,12 +203,10 @@ function updateDropHandlers(sheet) {
         if (data.type != "Tile") return;
         if (isPremium() && sheet.actor) {
           const mode = setting(SETTINGS.DND_ACTOR_MODE);
-          logger.info(sheet, mode)
           if (mode == "portrait" || mode == "both") {
             sheet.document.update({ img: data.texture.src });
           }
           if (mode == "token" || mode == "both") {
-            logger.info(sheet);
             sheet.document.update({
               "prototypeToken.texture.src": data.texture.src,
               "token.texture.src": data.texture.src

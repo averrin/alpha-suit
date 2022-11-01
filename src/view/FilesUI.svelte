@@ -25,6 +25,7 @@
    import { isImage, isVideo, showFile } from "crew-components/helpers";
 
    import tippy from "sveltejs-tippy";
+   import { isPremium } from "crew-components/premium";
 
    const { application } = getContext("external");
    const position = application.position;
@@ -93,7 +94,6 @@
             } else {
                sf.push(file);
             }
-            logger.info(sf);
             return sf;
          });
       }
@@ -231,7 +231,6 @@
          return new Promise((resolve) => {
             const img = new Image();
             img.onload = async function () {
-               // logger.info(f.id, this.height);
                if (this.height / 2 <= imageHeightBig) {
                   el.style.backgroundImage = `url(${f.id})`;
                } else {
@@ -325,6 +324,12 @@
 
    function openFolder(path, record = true, soft = false) {
       logger.info("open folder", path, record);
+      const storage = path.split("/")[0];
+      if (!storages.includes(storage)) {
+         logger.error("Storage isnt specified!", path, storages);
+         return;
+      }
+
       if (!$filesTree[path]) {
          // logger.error("path isnt loaded yet", path);
          const chain = path.split("/").map((s, i) =>
@@ -446,7 +451,6 @@
          });
          let fileTags = setting(SETTINGS.FILES_TAGS);
          for (let [f, t] of Object.entries(fileTags)) {
-            logger.info(f, t);
             if (t?.includes(search)) {
                const name = f.split("/")[f.split("/").length - 1];
                const store = f.split("/")[0];
@@ -473,6 +477,15 @@
       const file = e.detail;
       openFolder(file.store + "/" + file.id.replace("/" + file.name, ""));
    }
+
+   tick().then((_) => {
+      if (isPremium()) {
+         const dp = setting(SETTINGS.FILES_DEFAULT_PATH);
+         if (dp != "") {
+            openFolder(dp);
+         }
+      }
+   });
 </script>
 
 <TwoColUI bind:elementRoot id="files" {paddingTop}>

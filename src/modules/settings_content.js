@@ -43,27 +43,18 @@ export const settingsContent = {
           name: "General",
           icon: "fa6-solid:gears",
           component: FilesSettings,
-          content: [], children: [
-
-          ],
         },
         {
           id: "s-alpha-files-search",
           name: "Search",
           icon: "mdi:folder-search",
           component: FilesSearchSettings,
-          content: [], children: [
-
-          ],
         },
         {
           id: "s-alpha-files-dnd",
           name: "Drag & Drop",
           icon: "ri:drag-drop-line",
           component: DNDSettings,
-          content: [], children: [
-
-          ],
         },
       ],
     },
@@ -72,7 +63,6 @@ export const settingsContent = {
       name: "Game System",
       icon: "fa6-solid:dice-d20",
       component: SystemSettings,
-      content: [], children: [],
     },
 
     {

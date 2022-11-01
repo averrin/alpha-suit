@@ -5,7 +5,6 @@
    export let item;
 
    function activate() {
-      logger.info($item);
       $item.activate();
    }
    let active = $item.active;

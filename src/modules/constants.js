@@ -6,6 +6,7 @@ export const FLAGS = {
 
 export const SETTINGS = {
   DND_ACTOR_MODE: "dnd-actor-mode",
+  FILES_DEFAULT_PATH: "files-default-path",
 
   UI_SCALE: "ui-scale",
   RESOLUTION: "resolution",

@@ -24,6 +24,7 @@ import NotificationsApp from "./view/Notifications.js"
 import { initStores as helperStores } from "crew-components/stores";
 
 import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
+import DirectorSettings from "./view/settings/DirectorSettings.svelte";
 // import CharacterWidget from "./view/hud/widgets/CharactersWidget.js"
 
 
@@ -43,6 +44,7 @@ addSystem(dnd5e);
 import common from "./systems/common.js";
 import { rebuildIndex } from "./modules/file_index";
 import { notify } from "./modules/notify";
+import { settingsContent } from "./modules/settings_content";
 addSystem(common);
 
 const tools = {
@@ -120,6 +122,16 @@ window.AlphaSuit = {
 
 Hooks.once('init', async () => {
   initSettings(tree);
+
+  if (game.modules.get("director")?.active) {
+    settingsContent.children.splice(5, 0, {
+
+      id: "s-director",
+      name: "Director",
+      icon: "twemoji:clapper-board",
+      component: DirectorSettings,
+    })
+  }
 
   game.settings.registerMenu(moduleId, "configure-settings", {
     name: "",

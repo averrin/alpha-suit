@@ -24,7 +24,7 @@
          spells = i?.actor?.items?.filter((it) => it.type == "spell");
          spells = spells?.sort((a, b) => a.data?.level - b.data?.level);
          effects = i?.actor?.effects?.contents;
-         logger.info(items);
+         // logger.info(items);
       }
    }
 

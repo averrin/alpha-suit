@@ -363,4 +363,13 @@ export function initSettings(app) {
     default: "portrait",
     type: String,
   });
+
+  game.settings.register(moduleId, SETTINGS.FILES_DEFAULT_PATH, {
+    name: "Default path",
+    hint: "This path will be opened every time your start the file manager. Do not forget specify a storage. For example: 'data/modules/jb2a_patreon/Library' instead of 'modules/jb2a_patreon/Library'",
+    scope: "client",
+    config: false,
+    default: "",
+    type: String,
+  });
 }

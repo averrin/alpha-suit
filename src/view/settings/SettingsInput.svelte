@@ -1,9 +1,9 @@
 <script>
    import ArgInput from "crew-components/ArgInput";
-   import { capitalize, logger, setting } from "crew-components/helpers";
+   import { capitalize, logger } from "crew-components/helpers";
    import { moduleId, SETTINGS } from "../../modules/constants.js";
    import { isPremium } from "crew-components/premium";
-   import { createEventDispatcher } from "svelte";
+   import { createEventDispatcher, getContext } from "svelte";
    const dispatch = createEventDispatcher();
 
    export let key;
@@ -15,20 +15,25 @@
    export let onlyAutocomplete = true;
    export let premium = false;
 
+   let mid = getContext("moduleId") ?? moduleId;
+
    function saveSetting(key, e) {
       if (premium && !isPremium()) return;
       logger.info(key, e.detail);
-      globalThis.game.settings.set(moduleId, key, e.detail);
+      globalThis.game.settings.set(mid, key, e.detail);
       dispatch("change", { key, value: e.detail });
    }
 
-   let settingSpec = game.settings.settings.get(`${moduleId}.${key}`);
+   let settingSpec = game.settings.settings.get(`${mid}.${key}`);
    if (!type) {
       if (settingSpec.type === Boolean) {
          type = "bool";
       }
       if (settingSpec.type === Number) {
          type = "int";
+      }
+      if (settingSpec.type === String) {
+         type = "string";
       }
       if (!type) {
          logger.error("Please specify settings input type", key);
@@ -71,6 +76,7 @@
          options,
       };
    }
+   let value = globalThis.game.settings.get(mid, key);
 </script>
 
 <ArgInput
@@ -79,12 +85,15 @@
    {spec}
    {onlyAutocomplete}
    resettable={true}
-   value={setting(key)}
+   bind:value
    {defaultValue}
    on:change={(e) => saveSetting(key, e)}
    size="md"
    heightAuto={key == SETTINGS.FILES_EXCLUDE_FOLDERS}
    disabled={premium && !isPremium()}
+   min={settingSpec.range?.min}
+   max={settingSpec.range?.max}
+   step={settingSpec.range?.step}
 >
    <svelte:fragment slot="right">
       {#if premium && !isPremium()}

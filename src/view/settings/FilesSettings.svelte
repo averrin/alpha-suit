@@ -18,4 +18,6 @@
    <SettingsInput key={SETTINGS.FILES_DROP_GRID} />
    <SettingsInput key={SETTINGS.FILES_USE_THUMBS} />
    <SettingsInput key={SETTINGS.FILES_SEARCH_LIMIT} />
+
+   <SettingsInput key={SETTINGS.FILES_DEFAULT_PATH} premium={true} />
 </div>
