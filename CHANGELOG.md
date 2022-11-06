@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.2 - 0.4.3](https://github.com/averrin/alpha-suit/compare/0.4.2...0.4.3)
+Added:
+  * Files & Director integration
+  * More Director settings
+
+Fixed:
+  * File indexing stuck at Forge
+
 ## [0.4.1 - 0.4.2](https://github.com/averrin/alpha-suit/compare/0.4.1...0.4.2)
 Fixed:
   * Notifications block ESC menu (again =) )

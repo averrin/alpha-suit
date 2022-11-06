@@ -100,10 +100,14 @@
    }
 
    function onDragStart(event, file) {
+      if (!isImage(file.name) && !isVideo(file.name)) return;
       const dragData = {
          type: "Tile",
          texture: { src: file.id },
          tileSize: setting(SETTINGS.FILES_DROP_GRID),
+         blockDirector: event.ctrlKey && !event.altKey,
+         temp: event.ctrlKey,
+         instant: event.altKey,
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
    }

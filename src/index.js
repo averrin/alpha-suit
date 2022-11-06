@@ -25,6 +25,7 @@ import { initStores as helperStores } from "crew-components/stores";
 
 import DirectorWidget from "./view/hud/widgets/DirectorWidget.js"
 import DirectorSettings from "./view/settings/DirectorSettings.svelte";
+import EffectEditorSettings from "./view/settings/EffectEditorSettings.svelte";
 // import CharacterWidget from "./view/hud/widgets/CharactersWidget.js"
 
 
@@ -129,7 +130,21 @@ Hooks.once('init', async () => {
       id: "s-director",
       name: "Director",
       icon: "twemoji:clapper-board",
-      component: DirectorSettings,
+      children: [
+        {
+          id: "s-director-general",
+          name: "General",
+          icon: "twemoji:clapper-board",
+          component: DirectorSettings,
+        },
+
+        {
+          id: "s-director-effects",
+          name: "Effect Editor",
+          icon: "material-symbols:magic-button",
+          component: EffectEditorSettings,
+        }
+      ]
     })
   }
 

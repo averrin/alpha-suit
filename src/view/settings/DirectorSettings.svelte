@@ -4,7 +4,7 @@
 
    import { setContext } from "svelte";
 
-   setContext("moduleId", "director");
+   setContext("moduleId", Director.moduleId);
 </script>
 
 <div class="ui-bg-base ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2 ui-h-full">
@@ -27,7 +27,7 @@
       }}
    />
 
-   <SettingsInput type="float" key={"resolution"} />
-   <SettingsInput type="select" key={"warpgate-mode"} />
-   <SettingsInput key={"hide-import"} />
+   <SettingsInput type="float" key={Director.SETTINGS.RESOLUTION} />
+   <SettingsInput type="select" key={Director.SETTINGS.MANUAL_MODE} />
+   <SettingsInput key={Director.SETTINGS.HIDE_IMPORT} />
 </div>

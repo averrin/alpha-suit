@@ -67,6 +67,7 @@ export async function startCache() {
       getChildren(node, nodeResult) {
         if (get(stopFileIndex)) return [];
         return picker.browse(source, node).then((res) => {
+          if (res.error) return [];
           res.files = res.files.map(p => source + "/" + p);
           if (get(stopFileIndex)) return [];
           if (setting(SETTINGS.FILES_INDEX_ONLY_ASSETS)) {
@@ -76,7 +77,7 @@ export async function startCache() {
           }
           fileIndex.set(index);
           return res.dirs;
-        });
+        }).catch(_ => []);
       },
       leave(node) {
         if (firstLevel.includes(node)) {

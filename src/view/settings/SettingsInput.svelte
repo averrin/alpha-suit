@@ -80,6 +80,7 @@
 </script>
 
 <ArgInput
+   icon={settingSpec.scope == "world" ? "el:globe" : null}
    {type}
    {label}
    {spec}
