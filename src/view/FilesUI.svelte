@@ -152,6 +152,12 @@
    function fetchFolder(node) {
       if (!node) return;
       const store = node.id.split("/")[0];
+     const options = {};
+     let bucket;
+     if (store == "s3" && node.id.split("/").length > 1) {
+      bucket = node.id.split("/")[1];
+       options.bucket = bucket;
+     }
       let path = ".";
       let picker = FilePicker;
       if (location.host.includes("forge-vtt")) {
@@ -159,9 +165,23 @@
          picker = ForgeVTT_FilePicker;
       }
       if (node.id != store) {
-         path = path + "/" + node.id.replace(store + "/", "");
+       let rest = node.id.replace(store + "/", "")
+       logger.info(rest, bucket)
+       if (bucket) {
+         if (node.id.split("/").length == 2) {
+         rest = rest.replace(bucket,"")
+         } else {
+         rest = rest.replace(bucket+"/","")
+         }
+       }
+       if (store == "s3") {
+        path = rest
+       } else {
+         path = path + "/" + rest;
+       }
+       logger.info("resulting path", path)
       }
-      return picker.browse(store, path).then((res) => {
+      return picker.browse(store, path, options).then((res) => {
          return {
             dirs: res.dirs.sort().map((id) => {
                let base = id.split("/");

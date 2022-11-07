@@ -42,5 +42,6 @@
       <li>"Copy image to clipboard" button</li>
       <li>Option to hide Indexing Status widget</li>
       <li>Changing token art by dropping image file</li>
+      <li>Default path setting for File Manager</li>
    </ul>
 </div>

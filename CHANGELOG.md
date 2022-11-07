@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.3 - 0.4.4](https://github.com/averrin/alpha-suit/compare/0.4.3...0.4.4)
+Fixed:
+  * Broken s3 in the File Manager 
+  * Wrong Discord links
+
+Added:
+  * The first supporter in the Support Tab!
+
 ## [0.4.2 - 0.4.3](https://github.com/averrin/alpha-suit/compare/0.4.2...0.4.3)
 Added:
   * Files & Director integration
