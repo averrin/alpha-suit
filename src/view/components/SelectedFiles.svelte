@@ -12,6 +12,7 @@
    const dispatch = createEventDispatcher();
 
    let fileTags = writable(setting(SETTINGS.FILES_TAGS));
+   const isSequencer = game.modules.get("sequencer")?.active;
 
    // style:width={`${Math.max(100 / selectedFiles.length, 30)}%`}
    // style:height={`${100 / Math.round(selectedFiles.length / 3 + 1)}%`}
@@ -88,7 +89,7 @@
                <input type="text" class="ui-input ui-w-full" value={file.id} readonly />
                <CopyButton icon="fa6-solid:copy" text={file.id} title="Copy path" />
                {#if isVideo(file.name)}
-                  {#if Sequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
+                  {#if isSequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
                      <CopyButton
                         icon="fa6-solid:database"
                         title={"Copy Sequencer path: " + Sequencer.Database.inverseFlattenedEntries.get(file.id)}

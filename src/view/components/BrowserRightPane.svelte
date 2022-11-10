@@ -88,6 +88,7 @@
       }
 
       setContent();
+      content = content.filter((i) => i.name); //Im trying to fix som weird situation blindfolded
       content.forEach((i) => (i.compendium = compendium));
    }
 

@@ -54,10 +54,10 @@
             f.filters.push(...filters);
             return f;
          } else if (filter.control == "compare-int") {
-            if (val.length != 2 || !val[1]) {
+            if (val.length != 2 || !val[0] || !val[1]) {
                return f;
             }
-            val = `${filter.attribute} ${val[0].value} ${val[1]}`;
+            val = `${filter.attribute} ${val[0]?.value} ${val[1]}`;
          } else if (filter.control == "select" && filter.attribute) {
             if (typeof filter.options === "function") {
                filter.options = filter.options();

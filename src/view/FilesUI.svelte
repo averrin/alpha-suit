@@ -22,10 +22,12 @@
    import HelpFilesControls from "../view/help/HelpFilesControls.svelte";
    import { fileIndex, indexInProcess, rebuildIndex } from "../modules/file_index.js";
    import SelectedFiles from "./components/SelectedFiles.svelte";
-   import { isImage, isVideo, showFile } from "crew-components/helpers";
+   import { isImage,isSound, isVideo, showFile } from "crew-components/helpers";
 
    import tippy from "sveltejs-tippy";
    import { isPremium } from "crew-components/premium";
+
+   const isSequencer = game.modules.get("sequencer")?.active;
 
    const { application } = getContext("external");
    const position = application.position;
@@ -59,7 +61,8 @@
    let navIndex = writable(0);
 
    function findPoster(file) {
-      return "icons/svg/video.svg";
+     if (isVideo(file.name)) return "icons/svg/video.svg";
+     return "icons/svg/sound.svg"
    }
 
    function onTagClick(_, tag) {
@@ -178,28 +181,39 @@
             path = path + "/" + rest;
          }
       }
-      return picker.browse(store, path, options).then((res) => {
-         return {
-            dirs: res.dirs.sort().map((id) => {
-               let base = id.split("/");
-               base = base[base.length - 1];
+      try {
+         return picker
+            .browse(store, path, options)
+            .then((res) => {
                return {
-                  id: `${node.id}/${base}`,
-                  children: [],
-                  content: [],
-                  title: base,
-                  name: base,
-                  store: store,
-                  icon: "fa6-solid:folder",
-                  expandable: true,
+                  dirs: res.dirs.sort().map((id) => {
+                     let base = id.split("/");
+                     base = base[base.length - 1];
+                     return {
+                        id: `${node.id}/${base}`,
+                        children: [],
+                        content: [],
+                        title: base,
+                        name: base,
+                        store: store,
+                        icon: "fa6-solid:folder",
+                        expandable: true,
+                     };
+                  }),
+                  files: res.files.sort().map((f) => {
+                     const p = f.split("/");
+                     return { id: f, name: p[p.length - 1], store: store };
+                  }),
                };
-            }),
-            files: res.files.sort().map((f) => {
-               const p = f.split("/");
-               return { id: f, name: p[p.length - 1], store: store };
-            }),
-         };
-      });
+            })
+            .catch((e) => {
+               logger.error(e);
+               return { dirs: [], files: [] };
+            });
+      } catch (e) {
+         logger.error(e);
+         return { dirs: [], files: [] };
+      }
    }
 
    function toggleExpanded(node, force = false) {
@@ -658,7 +672,7 @@
                         on:dragstart={(e) => onDragStart(e, file)}
                         class:ui-w-full={mode == "list"}
                         style:background-position={mode == "list" ? "left" : "center"}
-                        class:file-video={mode != "list" && isVideo(file.name)}
+                        class:file-video={mode != "list" && (isVideo(file.name) || isSound(file.name))}
                         class:selected-file={$selectedFiles.find((f) => f.id == file.id)}
                         use:tippy={{
                            content: () => {
@@ -669,12 +683,12 @@
                            allowHTML: true,
                         }}
                      >
-                        {#if isVideo(file.name)}
+                        {#if isVideo(file.name) || isSound(file.name)}
                            <video
                               id={`video--${file.id}`}
                               class="ui-rounded-md"
                               class:file-video={mode == "list"}
-                              poster={findPoster(file.id)}
+                              poster={findPoster(file)}
                               preload="none"
                               disablePictureInPicture
                               style="height: 100%;"
@@ -691,7 +705,7 @@
                               <source src={file.id} type="video/webm" />
                            </video>
                            <!-- <iconify-icon class="seq-icon" icon="fa6-solid:database" title="Sequencer" /> -->
-                           {#if Sequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
+                           {#if isSequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
                               <CopyButton
                                  size="xs"
                                  icon="fa6-solid:database"
@@ -704,7 +718,7 @@
                            {/if}
                         {/if}
 
-                        {#if (!isImage(file.name) && !isVideo(file.name)) || mode == "list"}
+                        {#if (!isImage(file.name) && !isVideo(file.name) && !isSound(file.name)) || mode == "list"}
                            <div
                               class="ui-text-base-content ui-w-full"
                               style:text-align={mode == "list" ? `center` : "left"}

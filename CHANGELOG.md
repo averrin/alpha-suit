@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.5 - 0.4.6](https://github.com/averrin/alpha-suit/compare/0.4.5...0.4.6)
+Fixed:
+  * Pagination in some cases cannot navigate to the last page
+  * Incorrect test for installed Sequencer
+  * Missed handlers for some possible errors
+  * Audio files with extensions like "mp3" (non-video) dont treat like media
+
 ## [0.4.4 - 0.4.5](https://github.com/averrin/alpha-suit/compare/0.4.4...0.4.5)
 Fixed:
   * Tokens layout is broken if they dont fit into one line

@@ -69,7 +69,7 @@
          aliases
       );
       total = fc.length;
-      if (total < currentPage * pageSize) {
+      if (total < (currentPage + 1) * pageSize) {
          currentPage = 1;
       }
       content = pageContent(fc, currentPage, pageSize).map((i) => {
@@ -86,8 +86,6 @@
          systemExtraInfo = $system.data?.extraInfo[modeName];
       }
       fields = updateFields([_fields, ...($system.indexFields ?? [])].flat(), $filterAdvanced, systemExtraInfo);
-      // debugger;
-      // logger.info(fields, $filterAdvanced, modeName);
 
       total = 0;
       content = [];
