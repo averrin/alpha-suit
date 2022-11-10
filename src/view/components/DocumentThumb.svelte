@@ -13,7 +13,6 @@
    async function drag(e) {
       let id = $item.id;
       let type = $currentCollection.documentName;
-      logger.info($item);
       let data = { type, id, data: $item.data, uuid: $item.uuid };
       let sData = { data: JSON.stringify(data) };
       e.dataTransfer.setData("text/plain", sData.data);
@@ -25,7 +24,6 @@
          sData.data = JSON.stringify({ type, id });
          ui.notifications.info(`Imported: ${doc.name}`);
          e.dataTransfer.setData("text/plain", sData.data);
-         logger.info("imported", sData, e.dataTransfer);
       }
    }
    let thumb;

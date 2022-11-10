@@ -94,13 +94,11 @@ export async function startCache() {
         if (isGood) {
           indexPath.set(`${source}/${node}`);
         } else {
-          // logger.info(node, "filtered")
         }
         return isGood;
       },
     });
     // n = 1;
-    // logger.info(`${source} Indexed`);
     console.timeEnd("Alpha | Indexing " + source);
   }
   logger.info(`Indexed: ${index.length} files. Depth: ${depthLimit}`);

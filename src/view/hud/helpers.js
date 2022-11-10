@@ -43,7 +43,6 @@ export function isLiving(token) {
 }
 
 export function findItems(token, itemsToFind) {
-  // logger.info(`find items for: ${token.data.name}`, token, itemsToFind);
   const items = [];
   const i1 = token?.document?.actor?.items.filter(i => itemsToFind.some(itf => itf == i.name || itf == i.id));
   items.push(...i1);

@@ -49,7 +49,6 @@
       selectedSetting.subscribe((s) => {
          settingsTopic.set(s[0]);
          topic = $settingsTree[s[0]];
-         logger.info(topic);
       })
    );
 </script>

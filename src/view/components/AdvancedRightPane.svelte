@@ -122,7 +122,6 @@
 
    async function itemClick(e) {
       const { node, event } = e.detail;
-      logger.info(node);
       const item = await node.compendium.getDocument(node.source._id);
       item.sheet.render(true);
    }

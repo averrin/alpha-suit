@@ -48,7 +48,6 @@ export function addSystem(system) {
     s[system.id] = system;
     return s;
   })
-  // logger.info(`System added: ${system.id}`);
 }
 
 async function initCompendiumTreeCF() {

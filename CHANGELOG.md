@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.4 - 0.4.5](https://github.com/averrin/alpha-suit/compare/0.4.4...0.4.5)
+Fixed:
+  * Tokens layout is broken if they dont fit into one line
+
+Added:
+  * Button for starting file indexing right next to the search field
+  * A little color tweak for the light theme
+
+
 ## [0.4.3 - 0.4.4](https://github.com/averrin/alpha-suit/compare/0.4.3...0.4.4)
 Fixed:
   * Broken s3 in the File Manager 

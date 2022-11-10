@@ -20,7 +20,7 @@
    import Tag from "crew-components/tags";
    import Intro from "./components/Intro.svelte";
    import HelpFilesControls from "../view/help/HelpFilesControls.svelte";
-   import { fileIndex, indexInProcess } from "../modules/file_index.js";
+   import { fileIndex, indexInProcess, rebuildIndex } from "../modules/file_index.js";
    import SelectedFiles from "./components/SelectedFiles.svelte";
    import { isImage, isVideo, showFile } from "crew-components/helpers";
 
@@ -64,7 +64,6 @@
 
    function onTagClick(_, tag) {
       const fav = $favs.find((f) => f.text == tag);
-      // logger.info(fav);
       openFolder(fav.data);
    }
 
@@ -152,12 +151,12 @@
    function fetchFolder(node) {
       if (!node) return;
       const store = node.id.split("/")[0];
-     const options = {};
-     let bucket;
-     if (store == "s3" && node.id.split("/").length > 1) {
-      bucket = node.id.split("/")[1];
-       options.bucket = bucket;
-     }
+      const options = {};
+      let bucket;
+      if (store == "s3" && node.id.split("/").length > 1) {
+         bucket = node.id.split("/")[1];
+         options.bucket = bucket;
+      }
       let path = ".";
       let picker = FilePicker;
       if (location.host.includes("forge-vtt")) {
@@ -165,21 +164,19 @@
          picker = ForgeVTT_FilePicker;
       }
       if (node.id != store) {
-       let rest = node.id.replace(store + "/", "")
-       logger.info(rest, bucket)
-       if (bucket) {
-         if (node.id.split("/").length == 2) {
-         rest = rest.replace(bucket,"")
-         } else {
-         rest = rest.replace(bucket+"/","")
+         let rest = node.id.replace(store + "/", "");
+         if (bucket) {
+            if (node.id.split("/").length == 2) {
+               rest = rest.replace(bucket, "");
+            } else {
+               rest = rest.replace(bucket + "/", "");
+            }
          }
-       }
-       if (store == "s3") {
-        path = rest
-       } else {
-         path = path + "/" + rest;
-       }
-       logger.info("resulting path", path)
+         if (store == "s3") {
+            path = rest;
+         } else {
+            path = path + "/" + rest;
+         }
       }
       return picker.browse(store, path, options).then((res) => {
          return {
@@ -347,7 +344,7 @@
    }
 
    function openFolder(path, record = true, soft = false) {
-      logger.info("open folder", path, record);
+      // logger.info("open folder", path, record);
       const storage = path.split("/")[0];
       if (!storages.includes(storage)) {
          logger.error("Storage isnt specified!", path, storages);
@@ -355,7 +352,6 @@
       }
 
       if (!$filesTree[path]) {
-         // logger.error("path isnt loaded yet", path);
          const chain = path.split("/").map((s, i) =>
             path
                .split("/")
@@ -380,9 +376,6 @@
          });
       }
 
-      // tick().then((_) => {
-      //    logger.info($navHistory, $navIndex);
-      // });
       return toggleExpanded($filesTree[path], !soft);
    }
 
@@ -528,7 +521,13 @@
                   width="18rem"
                   on:change={foundry.utils.debounce(searchFile, 500)}
                   clearable={true}
-               />
+               >
+                  <svelte:fragment slot="right">
+                     {#if $fileIndex.length == 0}
+                        <IconButton icon="mdi:database" on:click={rebuildIndex} type="primary" title="Start indexing" />
+                     {/if}
+                  </svelte:fragment>
+               </ArgInput>
             {/if}
 
             <div class="ui-flex ui-flex-1 ui-w-full">

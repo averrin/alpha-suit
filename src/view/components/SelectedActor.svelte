@@ -20,7 +20,6 @@
          if (i && getTokens(i).length > 0) {
             token = getTokens(i)[0];
          }
-         logger.info(token);
          if (i) {
             ts.set(token || { actor: i });
          }

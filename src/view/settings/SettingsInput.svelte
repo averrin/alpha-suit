@@ -19,7 +19,6 @@
 
    function saveSetting(key, e) {
       if (premium && !isPremium()) return;
-      logger.info(key, e.detail);
       globalThis.game.settings.set(mid, key, e.detail);
       dispatch("change", { key, value: e.detail });
    }

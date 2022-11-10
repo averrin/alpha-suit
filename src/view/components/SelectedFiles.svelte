@@ -39,7 +39,6 @@
             height: img.height,
             quality: 1,
          });
-         logger.info(i);
          await navigator.clipboard.write([
             new ClipboardItem({
                "image/png": dataURItoBlob(i.thumb),

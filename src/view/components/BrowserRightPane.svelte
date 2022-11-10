@@ -202,7 +202,6 @@
       const { node, event } = e.detail;
       const isFolder = node.source.contents;
       if (!isFolder) {
-         logger.info(node);
          const item = await compendium.getDocument(node.source._id);
          item.sheet.render(true);
       } else {
