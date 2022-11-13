@@ -383,7 +383,7 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.FILE_CACHE_STATS, {
     scope: "world",
     config: false,
-    default: {},
+    default: null,
     type: Object,
   });
 

@@ -3,7 +3,7 @@ import { breadth, depth } from "treeverse";
 import toast from "svelte-french-toast";
 import { writable, get } from "svelte/store";
 import { setting, logger, capitalize, isVideo, isImage, isSound, formatBytes } from "crew-components/helpers"
-import { SETTINGS } from "../modules/constants.js";
+import { SETTINGS, moduleId } from "../modules/constants.js";
 import IndexStatus from "../view/components/IndexStatus.svelte"
 import { isPremium } from "crew-components/premium";
 
@@ -15,16 +15,16 @@ export let stopFileIndex = writable(false);
 
 export async function saveIndex() {
   const index = get(fileIndex);
-  await setting(SETTINGS.FILE_CACHE, index);
-  await setting(SETTINGS.FILE_CACHE_STATS, {
+  await game.settings.set(moduleId, SETTINGS.FILE_CACHE, index);
+  await game.settings.set(moduleId, SETTINGS.FILE_CACHE_STATS, {
     count: index.length,
     size: formatBytes(new Blob(index).size),
   });
 }
 
 export async function clearSavedIndex() {
-  await setting(SETTINGS.FILE_CACHE, null);
-  await setting(SETTINGS.FILE_CACHE_STATS, null)
+  await game.settings.set(moduleId, SETTINGS.FILE_CACHE, null);
+  await game.settings.set(moduleId, SETTINGS.FILE_CACHE_STATS, null)
 }
 
 export async function startCache() {

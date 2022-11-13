@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.7 - 0.4.8](https://github.com/averrin/alpha-suit/compare/0.4.7...0.4.8)
+Fixed:
+  * Stored index stats update
+  * Minor UI issues
+  * Browser filter with zero value (e.g. spell level for cantrips)
+
+Added:
+  * A link to the page with the Unlocker module
+
 ## [0.4.6 - 0.4.7](https://github.com/averrin/alpha-suit/compare/0.4.6...0.4.7)
 Fixed:
   * Compendium folders aren't sorted

@@ -9,6 +9,7 @@
   <ul>
     <li>iotech</li>
     <li>Christopher Allbritton</li>
+    <li>Gage Eakins</li>
   </ul>
 
   <h1>Special Thanks</h1>

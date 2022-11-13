@@ -54,7 +54,7 @@
             f.filters.push(...filters);
             return f;
          } else if (filter.control == "compare-int") {
-            if (val.length != 2 || !val[0] || !val[1]) {
+            if (val.length != 2 || val[0] === undefined || val[0] == null || val[1] === undefined) {
                return f;
             }
             val = `${filter.attribute} ${val[0]?.value} ${val[1]}`;

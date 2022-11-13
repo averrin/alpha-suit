@@ -28,7 +28,7 @@
    function updateSaved() {
       setTimeout((_) => {
          const stats = setting(SETTINGS.FILE_CACHE_STATS);
-         if (stats) {
+         if (stats && stats.count) {
             savedStats.set(`<b>${stats.count}</b> / <b>${stats.size}</b>`);
          } else {
             savedStats.set("<b style='color: red'>NONE</b>");

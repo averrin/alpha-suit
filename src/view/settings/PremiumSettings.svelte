@@ -34,6 +34,10 @@
             src="modules/alpha-suit/assets/patreon.svg"
          />
       </a>
+
+      <p>
+      If you already have the Patreon Subscription, please install the Unlocker module from <a href="https://www.patreon.com/posts/73639802" class="ui-link ui-font-bold" target="_blank">HERE</a>
+    </p>
    {/if}
 
    <h1 class="ui-mt-6">Premium features</h1>
