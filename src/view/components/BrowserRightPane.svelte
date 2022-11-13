@@ -77,7 +77,9 @@
          Promise.all([game.CF.FICFolderAPI.loadFolders(packCode), updateIndex()]).then(() => {
             game.customFolders.fic.folders.contents.forEach((f) => (f.icon = "fa-solid:folder"));
             fic = game.customFolders.fic.folders.contents;
-            children = game.customFolders.fic.folders.contents.filter((f) => f.packCode == packCode && !f.parent);
+            children = game.customFolders.fic.folders.contents
+               .filter((f) => f.packCode == packCode && !f.parent)
+               .sort((a, b) => a.name.localeCompare(b.name));
             if (children && children.length > 0) {
                content = [];
             }
@@ -109,7 +111,7 @@
    function folderFilter(folder) {
       folder.contents = folder.contents.filter(itemFilter);
       let ch = fic.filter((f) => folder.children.includes(f.data.id));
-      ch = ch.filter(folderFilter);
+      ch = ch.filter(folderFilter).sort((a, b) => a.name.localeCompare(b.name));
       folder.children = ch.map((f) => f.data.id);
       return folder.contents.length > 0 || folder.children.length > 0;
    }
@@ -137,7 +139,8 @@
          }
       } else {
          if (fic && children?.length > 0) {
-            content = children[0]?.contents || [];
+            // content = children[0]?.contents || [];
+            content = [];
             total = content.length;
          } else {
             total = content.length;
@@ -208,20 +211,6 @@
       } else {
          toggleExpanded(node);
       }
-   }
-
-   function setPage(d) {
-      currentPage = currentPage + d;
-      if (currentPage <= 0) {
-         currentPage = 1;
-         return;
-      }
-      const max = Math.ceil(total / pageSize);
-      if (currentPage >= max) {
-         currentPage = max;
-         return;
-      }
-      setContent();
    }
 
    async function importItem(e, item) {

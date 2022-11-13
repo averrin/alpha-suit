@@ -372,4 +372,41 @@ export function initSettings(app) {
     default: "",
     type: String,
   });
+
+
+  game.settings.register(moduleId, SETTINGS.FILE_CACHE, {
+    scope: "world",
+    config: false,
+    default: [],
+    type: Array,
+  });
+  game.settings.register(moduleId, SETTINGS.FILE_CACHE_STATS, {
+    scope: "world",
+    config: false,
+    default: {},
+    type: Object,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_INDEX_MODE, {
+    name: "File indexing mode",
+    hint: "Changing this setting can help if you are don't need fresh file index every launch.",
+    scope: "client",
+    config: false,
+    choices: {
+      'auto': "Automatic",
+      'persist': "Stored index",
+      'manual': "Manual",
+    },
+    default: "auto",
+    type: String,
+  });
+
+  game.settings.register(moduleId, SETTINGS.FILES_FUZZY, {
+    name: "Fuzzy search",
+    hint: "By default file search uses SamrtCase/Regexp matching. But you can switch it to the fuzzy one.",
+    scope: "client",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
 }

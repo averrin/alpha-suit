@@ -34,6 +34,9 @@
       if (settingSpec.type === String) {
          type = "string";
       }
+      if (settingSpec.choices?.length > 0) {
+         type = "select";
+      }
       if (!type) {
          logger.error("Please specify settings input type", key);
       }

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.6 - 0.4.7](https://github.com/averrin/alpha-suit/compare/0.4.6...0.4.7)
+Fixed:
+  * Compendium folders aren't sorted
+  * Extra compendium items in its root
+  * Custom compendiums created in v9 ignored by filters
+
+Added:
+  * [Premium] "Stored index" mode. You can index your files once and use this index for searching even after page refresh
+  * [Premium] Fuzzy search for files
+
 ## [0.4.5 - 0.4.6](https://github.com/averrin/alpha-suit/compare/0.4.5...0.4.6)
 Fixed:
   * Pagination in some cases cannot navigate to the last page

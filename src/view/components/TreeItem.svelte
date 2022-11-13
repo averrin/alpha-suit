@@ -121,7 +121,7 @@
       on:click={itemClick}
       class:selected={isSelected}
       class:ui-ring={isSelected}
-      style:color={node.color}
+      style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
       style:border-color={node.color != "#232323" ? node.color : "hsl(var(--b3))"}
       on:pointerdown={onPointerDown}
       id={node.id}
@@ -136,20 +136,20 @@
                      <iconify-icon
                         icon="fa-solid:folder-plus"
                         class="ui-ml-2 ui-text-lg ui-text-base-content"
-                        style:color={node.color}
+                        style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
                      />
                   {:else}
                      <iconify-icon
                         icon="fa-solid:folder-minus"
                         class="ui-ml-2 ui-text-lg ui-text-base-content"
-                        style:color={node.color}
+                        style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
                      />
                   {/if}
                {:else}
                   <iconify-icon
                      icon="fa-solid:folder-open"
                      class="ui-ml-2 ui-text-lg ui-text-base-content"
-                     style:color={node.color}
+                     style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
                   />
                {/if}
             {:else if thumbnail}
@@ -164,7 +164,7 @@
                <iconify-icon
                   icon={node.icon}
                   class="ui-ml-2 ui-text-lg ui-text-base-content"
-                  style:color={node.color}
+                  style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
                />
             {:else}
                <div class="ui-mr-1" />

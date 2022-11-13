@@ -5,6 +5,10 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  FILES_FUZZY: "files-fuzzy",
+  FILES_INDEX_MODE: "files-index-mode",
+  FILE_CACHE: "file-cache",
+  FILE_CACHE_STATS: "file-cache-stats",
   DND_ACTOR_MODE: "dnd-actor-mode",
   FILES_DEFAULT_PATH: "files-default-path",
 

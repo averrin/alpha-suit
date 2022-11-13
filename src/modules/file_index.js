@@ -2,25 +2,49 @@ import { notify } from "../modules/notify.js";
 import { breadth, depth } from "treeverse";
 import toast from "svelte-french-toast";
 import { writable, get } from "svelte/store";
-import { setting, logger, capitalize } from "crew-components/helpers"
+import { setting, logger, capitalize, isVideo, isImage, isSound, formatBytes } from "crew-components/helpers"
 import { SETTINGS } from "../modules/constants.js";
 import IndexStatus from "../view/components/IndexStatus.svelte"
-
-function isImage(path) {
-  const imgExt = new FilePicker()._getExtensions("image");
-  const ext = "." + path.split(".")[path.split(".").length - 1];
-  return imgExt.includes(ext);
-}
-function isVideo(path) {
-  return VideoHelper.hasVideoExtension(path);
-}
+import { isPremium } from "crew-components/premium";
 
 export let fileIndex = writable([]);
 export let indexInProcess = writable(false);
 export let indexPercents = writable(0);
 export let indexPath = writable("");
 export let stopFileIndex = writable(false);
+
+export async function saveIndex() {
+  const index = get(fileIndex);
+  await setting(SETTINGS.FILE_CACHE, index);
+  await setting(SETTINGS.FILE_CACHE_STATS, {
+    count: index.length,
+    size: formatBytes(new Blob(index).size),
+  });
+}
+
+export async function clearSavedIndex() {
+  await setting(SETTINGS.FILE_CACHE, null);
+  await setting(SETTINGS.FILE_CACHE_STATS, null)
+}
+
 export async function startCache() {
+  const mode = setting(SETTINGS.FILES_INDEX_MODE);
+  if (mode == "persist") {
+
+    if (isPremium()) {
+      const saved = setting(SETTINGS.FILE_CACHE);
+      if (saved) {
+        fileIndex.set(saved);
+        notify.info(`Persistent index loaded: ${saved.length} files`);
+        return;
+      }
+    } else {
+      setting(SETTINGS.FILES_INDEX_MODE, "auto");
+      clearSavedIndex()
+    }
+
+  }
+
   stopFileIndex.set(false);
 
   indexPercents.set(0)
@@ -71,7 +95,7 @@ export async function startCache() {
           res.files = res.files.map(p => source + "/" + p);
           if (get(stopFileIndex)) return [];
           if (setting(SETTINGS.FILES_INDEX_ONLY_ASSETS)) {
-            index.push(...res.files.filter((f) => isImage(f) || isVideo(f)));
+            index.push(...res.files.filter((f) => isImage(f) || isVideo(f) || isSound(f)));
           } else {
             index.push(...res.files);
           }

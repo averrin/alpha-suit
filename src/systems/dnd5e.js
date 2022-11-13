@@ -106,7 +106,6 @@ const dnd5e = new System({
     },
 
     "Items": {
-      "@price": "float(@data.price)",
       "@weight": "@data.weight",
       "@rarity": "@data.rarity",
 
@@ -134,7 +133,7 @@ const dnd5e = new System({
       },
       {
         label: "price",
-        query: "@price",
+        query: "float(@data.price)",
         show: false,
         asc: true, desc: true,
       },
@@ -599,7 +598,7 @@ const dnd5e = new System({
         {
           label: "Price",
           control: "compare-int",
-          attribute: "@price"
+          attribute: "float(@data.price)"
         },
       ]
     }

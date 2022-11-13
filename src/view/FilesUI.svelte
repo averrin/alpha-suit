@@ -10,7 +10,7 @@
    // import { filesTopic, filesTree, expanded, selectedFolder } from "../modules/stores.js";
    import { expanded, addTree } from "../modules/stores.js";
    import { onDestroy, tick, setContext, getContext } from "svelte";
-   import { capitalize, logger, smartCaseFind, setting } from "crew-components/helpers";
+   import { capitalize, logger, smartCaseFind, setting, fuzzyFindInList } from "crew-components/helpers";
    import { writable, get } from "svelte/store";
    import TreeModel from "tree-model";
    import IconButton from "crew-components/IconButton";
@@ -22,7 +22,7 @@
    import HelpFilesControls from "../view/help/HelpFilesControls.svelte";
    import { fileIndex, indexInProcess, rebuildIndex } from "../modules/file_index.js";
    import SelectedFiles from "./components/SelectedFiles.svelte";
-   import { isImage,isSound, isVideo, showFile } from "crew-components/helpers";
+   import { isImage, isSound, isVideo, showFile } from "crew-components/helpers";
 
    import tippy from "sveltejs-tippy";
    import { isPremium } from "crew-components/premium";
@@ -61,8 +61,8 @@
    let navIndex = writable(0);
 
    function findPoster(file) {
-     if (isVideo(file.name)) return "icons/svg/video.svg";
-     return "icons/svg/sound.svg"
+      if (isVideo(file.name)) return "icons/svg/video.svg";
+      return "icons/svg/sound.svg";
    }
 
    function onTagClick(_, tag) {
@@ -459,6 +459,7 @@
    let searchStatus = "";
    const ff = foundry.utils.debounce(filterFiles, 5);
    const searchLimit = setting(SETTINGS.FILES_SEARCH_LIMIT);
+   const fuzzy = setting(SETTINGS.FILES_FUZZY) && isPremium();
    function searchFile() {
       if (search.length >= 3) {
          selectedFiles.set([]);
@@ -466,20 +467,31 @@
          files = [];
          topic = { id: "Search", source: { files } };
          filterFiles();
-         // tick().then((_) => {
-         $fileIndex.forEach((f) => {
-            // tick().then((_) => {
-            const name = f.split("/")[f.split("/").length - 1];
-            const store = f.split("/")[0];
-            f = f.replace(store + "/", "");
-            if (topic.source.files.length >= searchLimit) return;
-            if (smartCaseFind(search, name)) {
-               topic.source.files.push({ id: f, name, store });
-               ff();
-            }
-            // resolve();
-            // });
-         });
+         if (!fuzzy) {
+            $fileIndex.forEach((f) => {
+               const name = f.split("/")[f.split("/").length - 1];
+               const store = f.split("/")[0];
+               f = f.replace(store + "/", "");
+               if (topic.source.files.length >= searchLimit) return;
+               if (smartCaseFind(search, name)) {
+                  topic.source.files.push({ id: f, name, store });
+                  ff();
+               }
+            });
+         } else {
+            const result = fuzzyFindInList(
+               search,
+               $fileIndex.map((f) => {
+                  const name = f.split("/")[f.split("/").length - 1];
+                  const store = f.split("/")[0];
+                  f = f.replace(store + "/", "");
+                  return { name, store, id: f };
+               }),
+               ["name"]
+            );
+            topic.source.files.push(...result.slice(0, searchLimit).map(r => r.item));
+            filterFiles();
+         }
          let fileTags = setting(SETTINGS.FILES_TAGS);
          for (let [f, t] of Object.entries(fileTags)) {
             if (t?.includes(search)) {

@@ -1,19 +1,9 @@
 <script>
    import { fileIndex, indexInProcess, rebuildIndex, indexPath, indexPercents } from "../../modules/file_index.js";
    import toast_ from "svelte-french-toast";
+   import {formatBytes} from "crew-components/helpers"
 
    export let toast;
-   function formatBytes(bytes, decimals = 2) {
-      if (!+bytes) return "0 Bytes";
-
-      const k = 1024;
-      const dm = decimals < 0 ? 0 : decimals;
-      const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-      return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-   }
 </script>
 
 <div class="ui-w-full ui-overflow-hidden" style="overflow-wrap: break-word;">

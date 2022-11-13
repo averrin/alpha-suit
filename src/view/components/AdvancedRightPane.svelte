@@ -69,7 +69,7 @@
          aliases
       );
       total = fc.length;
-      if (total < (currentPage + 1) * pageSize) {
+      if (total < (currentPage-1) * pageSize) {
          currentPage = 1;
       }
       content = pageContent(fc, currentPage, pageSize).map((i) => {

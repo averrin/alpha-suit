@@ -201,10 +201,13 @@ Hooks.once('ready', async () => {
       ])
     }
 
-    if (!setting(SETTINGS.FILES_DISABLE_SEARCH)) {
-      const delay = setting(SETTINGS.FILES_INDEX_DELAY);
+    const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
+    if (indexMode != "manual") {
+      const delay = indexMode == "auto" ? setting(SETTINGS.FILES_INDEX_DELAY) : 0;
       if (delay >= 0) {
-        notify.info(`Indexing will start in ${delay} seconds.`)
+        if (delay != 0) {
+          notify.info(`Indexing will start in ${delay} seconds.`)
+        }
         setTimeout(rebuildIndex, delay * 1000)
       }
     }
