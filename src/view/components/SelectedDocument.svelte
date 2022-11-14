@@ -15,6 +15,7 @@
    let isFolder;
 
    import { selected, currentCollection } from "../../modules/stores.js";
+   import InspectButton from "./InspectButton.svelte";
    let isFav;
    let tags = getFlag($item, "tagger")?.tags || [];
 
@@ -199,6 +200,10 @@
                item.set($item);
             }}
          />
+
+         {#if !($item instanceof Scene) && game.modules.get("data-inspector")?.api}
+            <InspectButton item={$item} />
+         {/if}
 
          {#if $item?.data?.permission}
             <div class="ui-mx-2 ui-flex ui-items-center">

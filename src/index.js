@@ -118,7 +118,8 @@ window.AlphaSuit = {
   addHelp: (data) => {
     helpContent.children.push(data);
     helpTree.set(buildHelpTree())
-  }
+  },
+  notify,
 }
 
 Hooks.once('init', async () => {

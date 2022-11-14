@@ -3,6 +3,7 @@
    import { onDestroy } from "svelte";
    import { system, browserMode } from "../../modules/stores.js";
    import ImportButton from "./ImportButton.svelte";
+   import InspectButton from "./InspectButton.svelte";
    export let item;
    let modeName;
 
@@ -13,6 +14,7 @@
          modeName = m.title || "Common";
       })
    );
+
 </script>
 
 <div class="ui-flex ui-flex-row ui-gap-1 ui-items-center">
@@ -25,3 +27,6 @@
    {/each}
 </div>
 <ImportButton {item} />
+{#if globalThis.game.modules.get("data-inspector")?.api}
+  <InspectButton {item} />
+{/if}

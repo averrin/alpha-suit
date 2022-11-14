@@ -16,6 +16,7 @@
    import { sortContent, pageContent, filterItemPredicate, setting } from "crew-components/helpers";
    import { SETTINGS } from "../../modules/constants.js";
    import ImportButton from "./ImportButton.svelte";
+   import InspectButton from "./InspectButton.svelte";
 
    let compendium;
    let children = [];
@@ -37,6 +38,14 @@
       aliases = $system?.aliases["Common"] || {};
    }
    let extraInfo = [];
+
+   function extraComponents(item) {
+      const res = [ImportButton];
+      if (game.modules.get("data-inspector")?.api && ["Actor", "Item"].includes(item.compendium?.metadata?.type)) {
+         res.push(InspectButton);
+      }
+      return res;
+   }
 
    function updateFields() {
       let fields = [..._fields];
@@ -244,7 +253,7 @@
             selected={selectedBrowser}
             on:click={itemClick}
             let:node
-            extraComponents={(_) => [ImportButton]}
+            {extraComponents}
          >
             <div class="ui-flex ui-flex-row ui-gap-1" slot="right">
                {#each extraInfo as info}

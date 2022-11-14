@@ -35,6 +35,10 @@
          f.filters = f.filters.filter((f) => f.id != filter.label);
          if (!val) return f;
          if (filter.control == "multiselect") {
+            if (typeof filter.options === "function") {
+               filter.options = filter.options();
+            }
+
             val = val.map((v) => filter.options.find((o) => o.label == v));
             let filters = val
                .filter((v) => v)
