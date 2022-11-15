@@ -8,6 +8,7 @@ import { filterItemPredicate } from "crew-components/helpers";
 import { isPremium } from "crew-components/premium";
 import { helpContent } from "./help_content.js"
 import { settingsContent } from "./settings_content.js"
+import { tick } from "svelte";
 let tagSource = moduleId;
 
 
@@ -222,7 +223,42 @@ function updateDropHandlers(sheet) {
   }
 }
 
+async function importDoc(data) {
+  const pack = game.packs.get(data.compendium);
+  const doc = await pack.getDocument(data._id);
+  let newDoc = await doc.collection.importFromCompendium(pack, doc.id);
+  data.id = newDoc.id;
+  data.uuid = newDoc.uuid;
+  return data;
+}
+
+function initDropHandler() {
+  Hooks.on("dropCanvasData", (canvas, data) => {
+    if (data.type == "Actor" && data.compendium) {
+      tick().then(async _ => {
+        data = await importDoc(data);
+        canvas.tokens._onDropActorData({ altKey: false, preventDefault: _ => { } }, data);
+      })
+      return false;
+    }
+    return true;
+  })
+
+  Hooks.on("dropActorSheetData", (actor, sheet, data) => {
+    if (data.type == "Item" && data.compendium) {
+      tick().then(async _ => {
+        data = await importDoc(data);
+        sheet._onDropItem({ altKey: false, preventDefault: _ => { } }, data);
+      })
+      return false;
+    }
+    return true;
+  })
+}
+
 export function initStores() {
+  initDropHandler()
+
   let sys = get(systems)[globalThis.game.system.id] || get(systems)["*"];
   if (sys.id == "*") {
     sys.id = globalThis.game.system.id;

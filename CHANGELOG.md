@@ -3,13 +3,18 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.9 - 0.4.10](https://github.com/averrin/alpha-suit/compare/0.4.9...0.4.10)
+Fixed:
+  * Ui Scale doenst apply
+  * Drag and drop actors & items from Browser doesn't work (fixed actor to canvas and items to an actor sheet)
+
 ## [0.4.8 - 0.4.9](https://github.com/averrin/alpha-suit/compare/0.4.8...0.4.9)
 Fixed:
   * Doraco UI breaks notification style
 
 Added:
-  * Kobaldworks Data Inspector integration
-  * Better pf2e support
+  * Koboldworks Data Inspector integration
+  * Better pf2e support (Browser filters and tabs)
 
 ## [0.4.7 - 0.4.8](https://github.com/averrin/alpha-suit/compare/0.4.7...0.4.8)
 Fixed:

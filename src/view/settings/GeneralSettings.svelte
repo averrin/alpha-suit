@@ -1,10 +1,6 @@
 <script>
    import { SETTINGS } from "../../modules/constants.js";
    import SettingsInput from "./SettingsInput.svelte";
-
-   import { getContext } from "svelte";
-   const { application } = getContext("external");
-   const { scale } = application.position.stores;
 </script>
 
 <div class="ui-bg-base ui-p-2 browser-settings ui-flex ui-flex-col ui-gap-2 ui-h-full">
@@ -22,10 +18,6 @@
    <SettingsInput
       type="float"
       key={SETTINGS.UI_SCALE}
-      on:change={(e) => {
-         if (e.detail < 0.25 || e.detail > 3) return;
-         scale.set(e.detail.value);
-      }}
    />
 
    <SettingsInput key={SETTINGS.WINDOW_WIDTH_EXPANDED} />

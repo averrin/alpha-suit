@@ -12,19 +12,10 @@
 
    async function drag(e) {
       let id = $item.id;
-      let type = $currentCollection.documentName;
-      let data = { type, id, data: $item.data, uuid: $item.uuid };
+      let type = $item?.compendium?.metadata?.type ?? $currentCollection.documentName;
+      let data = { type, id, data: $item.data, uuid: $item.uuid, compendium: fromCompendium?.metadata?.id, _id: $item._id };
       let sData = { data: JSON.stringify(data) };
       e.dataTransfer.setData("text/plain", sData.data);
-      if (fromCompendium) {
-         const doc = await fromCompendium.getDocument($item._id);
-         let newDoc = await doc.collection.importFromCompendium(fromCompendium, doc.id);
-         type = doc.collection.documentName;
-         id = newDoc.id;
-         sData.data = JSON.stringify({ type, id });
-         ui.notifications.info(`Imported: ${doc.name}`);
-         e.dataTransfer.setData("text/plain", sData.data);
-      }
    }
    let thumb;
 

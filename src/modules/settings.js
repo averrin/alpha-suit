@@ -51,13 +51,10 @@ export function initSettings(app) {
 
   game.settings.register(moduleId, SETTINGS.UI_SCALE, {
     name: 'UI scale',
-    hint: 'UI scale in range [0.25, 3]. Will preview but requires refresh to apply.',
+    hint: 'You can use a scroll wheel for fine tuning.',
     config: false,
     type: Number,
     default: 1,
-    onChange: value => {
-      // debouncedReload();
-    },
     range: {
       min: 0.1,
       max: 2,
@@ -192,7 +189,7 @@ export function initSettings(app) {
     hint: "This value is used for auto expanding two-pane windows",
     scope: "client",
     config: false,
-    default: 920,
+    default: 1000,
     type: Number,
   });
 
