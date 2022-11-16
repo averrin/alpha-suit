@@ -78,6 +78,7 @@ export default () => {
         allow: [
           searchForWorkspaceRoot(process.cwd()),
           '/home/averrin/projects/crew-components/',
+          '/home/averrin/projects/svelte-grid/',
         ]
       }
     },

@@ -2,6 +2,7 @@
    import tippy from "sveltejs-tippy";
 
    export let item;
+   export let maximize = false;
 
    async function drag(e) {
       let type = "Item";
@@ -52,7 +53,10 @@
 
 {#if tooltip}
    <div
-      class="ui-w-full ui-h-full ui-border-none !ui-rounded-md ui-bg-contain ui-bg-no-repeat ui-w-8 ui-h-8"
+      class="ui-w-full ui-h-full ui-border-none !ui-rounded-md ui-bg-contain ui-bg-no-repeat"
+      class:ui-w-8={!maximize}
+      class:ui-h-8={!maximize}
+      class:ui-bg-cover={maximize}
       style:background-image="url({thumb})"
       style:border={highlight}
       alt=""

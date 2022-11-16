@@ -257,19 +257,11 @@ export function initSettings(app) {
     type: Boolean,
   });
 
-  game.settings.register(moduleId, SETTINGS.FILES_DISABLE_SEARCH, {
-    name: 'Disable file indexing and search',
-    hint: "Completely disabling indexing. Can dramaticaly decrease memory usage",
-    scope: "client",
-    config: false,
-    default: false,
-    type: Boolean,
-  });
 
   game.settings.register(moduleId, SETTINGS.FILES_DEPTH_LIMIT, {
     name: 'Indexing depth limit',
     hint: "Decreasing can exclude some files, but improve performance.",
-    scope: "client",
+    scope: "world",
     config: false,
     default: 10,
     type: Number,
@@ -278,7 +270,7 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.FILES_EXCLUDE_SOURCES, {
     name: 'Excluded storages',
     hint: "E.g. you can exclude 'Data' to prevent 'modules' folders indexing",
-    scope: "client",
+    scope: "world",
     config: false,
     default: ["Forge-bazaar"],
     type: Array,
@@ -287,7 +279,7 @@ export function initSettings(app) {
   game.settings.register(moduleId, SETTINGS.FILES_EXCLUDE_FOLDERS, {
     name: 'Excluded folders',
     hint: "Regexp to exclude folders from indexing. E.g. 'icons/svg'",
-    scope: "client",
+    scope: "world",
     config: false,
     default: ["node_modules", "src", "modules/_", "scripts/"],
     type: Array,
