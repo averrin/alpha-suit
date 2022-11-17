@@ -534,9 +534,8 @@
 <TwoColUI bind:elementRoot id="files" {paddingTop}>
    <svelte:fragment slot="top">
       <TagSettings {editTag} />
-      {#if $favs.length > 0 || !setting(SETTINGS.FILES_DISABLE_SEARCH)}
+      {#if $favs.length > 0}
          <div id="alpha-files-favbar" class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-1 ui-bg-base-200">
-            {#if !setting(SETTINGS.FILES_DISABLE_SEARCH)}
                <!-- <IconButton loading={$indexInProcess} icon="octicon:cache-16" size="xs" on:click={rebuildIndex} /> -->
                <ArgInput
                   label="Search"
@@ -554,7 +553,6 @@
                      {/if}
                   </svelte:fragment>
                </ArgInput>
-            {/if}
 
             <div class="ui-flex ui-flex-1 ui-w-full">
                <Tags {onTagClick} tags={$favs.map((f) => f.text)} disable={true} />

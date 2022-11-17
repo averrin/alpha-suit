@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.11 - 0.4.12](https://github.com/averrin/alpha-suit/compare/0.4.11...0.4.12)
+Fixed:
+  * File manager doesn't launch
+  * ArgInputs' autocomplete preventing fails
+
 ## [0.4.10 - 0.4.11](https://github.com/averrin/alpha-suit/compare/0.4.10...0.4.11)
 Changed:
   * File index settings like "excluded folders" switched from "client" to "world". IMPORTANT: check these settings if you changed them

@@ -10,6 +10,8 @@
     <li>iotech</li>
     <li>Christopher Allbritton</li>
     <li>Gage Eakins</li>
+    <li>Thomakaze</li>
+    <li>Oshy</li>
   </ul>
 
   <h1>Special Thanks</h1>

@@ -257,7 +257,6 @@ export function initSettings(app) {
     type: Boolean,
   });
 
-
   game.settings.register(moduleId, SETTINGS.FILES_DEPTH_LIMIT, {
     name: 'Indexing depth limit',
     hint: "Decreasing can exclude some files, but improve performance.",
