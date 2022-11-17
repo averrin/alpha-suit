@@ -1,4 +1,4 @@
-# Alpha Suit
+# Alpha Suit [![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Daverrin%26type%3Dpatrons&style=for-the-badge)](https://patreon.com/averrin) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dfor-the-badge%26url%3Dhttps%3A%2F%2Fgithub.com%2Faverrin%2Falpha-suit%2Freleases%2Fdownload%2F0.4.12%2Fmodule.json)
 
 <div style="display: flex; flex-direction: row; gap: 0.5rem; justify-content: space-between; align-items: center;">
    <a href="https://www.patreon.com/averrin" target="_blank">
