@@ -29,6 +29,7 @@ export async function clearSavedIndex() {
 
 export async function startCache() {
   const mode = setting(SETTINGS.FILES_INDEX_MODE);
+  const whiteList = setting(SETTINGS.FILES_WHITE_LIST);
   if (mode == "persist") {
 
     if (isPremium()) {
@@ -76,54 +77,65 @@ export async function startCache() {
   let indexLimit = setting(SETTINGS.FILES_INDEX_COUNT);
   let firstLevel = [];
   let n = 0;
-  for (const source of sources) {
-    path = source.startsWith("forge") ? "" : ".";
-    await picker.browse(source, path).then((res) => {
-      firstLevel.push(...res.dirs);
-    });
+  if (whiteList?.length > 0) {
+    firstLevel = whiteList
+    sources = sources.filter(s => whiteList?.find(p => p.startsWith(s)));
+  } else {
+    for (const source of sources) {
+      path = source.startsWith("forge") ? "" : ".";
+      await picker.browse(source, path).then((res) => {
+        firstLevel.push(...res.dirs);
+      });
+    }
   }
   for (const source of sources) {
-    path = source.startsWith("forge") ? "" : ".";
+    let pathes = [source.startsWith("forge") ? "" : "."];
+    if (whiteList?.length > 0) {
+      pathes = whiteList.filter(p => p.startsWith(source)).map(p => p.replace(source + "/", ""));
+    }
     // await breadth({
+
     console.time("indexing " + source);
-    await depth({
-      tree: path,
-      getChildren(node, nodeResult) {
-        if (get(stopFileIndex)) return [];
-        return picker.browse(source, node).then((res) => {
-          if (res.error) return [];
-          res.files = res.files.map(p => source + "/" + p);
+    for (const path of pathes) {
+      await depth({
+        tree: path,
+        getChildren(node, _) {
           if (get(stopFileIndex)) return [];
-          if (setting(SETTINGS.FILES_INDEX_ONLY_ASSETS)) {
-            index.push(...res.files.filter((f) => isImage(f) || isVideo(f) || isSound(f)));
-          } else {
-            index.push(...res.files);
+          return picker.browse(source, node).then((res) => {
+            if (res.error) return [];
+            res.files = res.files.map(p => source + "/" + p);
+            if (get(stopFileIndex)) return [];
+            if (setting(SETTINGS.FILES_INDEX_ONLY_ASSETS)) {
+              index.push(...res.files.filter((f) => isImage(f) || isVideo(f) || isSound(f)));
+            } else {
+              index.push(...res.files);
+            }
+            fileIndex.set(index);
+            return res.dirs;
+          }).catch(_ => []);
+        },
+        leave(node) {
+          if (firstLevel.includes(node)) {
+            const per = Math.round((n / firstLevel.length) * 100);
+            indexPercents.set(per)
+            n++;
           }
-          fileIndex.set(index);
-          return res.dirs;
-        }).catch(_ => []);
-      },
-      leave(node) {
-        if (firstLevel.includes(node)) {
-          const per = Math.round((n / firstLevel.length) * 100);
-          indexPercents.set(per)
-          n++;
-        }
-        return new Promise((r) => r(node));
-      },
-      filter(node) {
-        if (get(stopFileIndex)) return false;
-        if (index.length >= indexLimit) return false;
-        const isGood = node.split("/").length < depthLimit && !excludedFolders.some((p) => node.match(new RegExp(p)));
-        if (isGood) {
-          indexPath.set(`${source}/${node}`);
-        } else {
-        }
-        return isGood;
-      },
-    });
-    // n = 1;
-    console.timeEnd("Alpha | Indexing " + source);
+          return new Promise((r) => r(node));
+        },
+        filter(node) {
+          if (get(stopFileIndex)) return false;
+          if (index.length >= indexLimit) return false;
+          const isGood = node.split("/").length < depthLimit && !excludedFolders.some((p) => node.match(new RegExp(p)));
+          if (isGood) {
+            indexPath.set(`${source}/${node}`);
+          } else {
+          }
+          return isGood;
+        },
+      });
+      // n = 1;
+      console.timeEnd("Alpha | Indexing " + source);
+    }
   }
   logger.info(`Indexed: ${index.length} files. Depth: ${depthLimit}`);
   console.timeEnd("indexing");

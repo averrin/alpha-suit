@@ -11,7 +11,7 @@ import { tick } from "svelte";
 
 import { moduleId, SETTINGS, infoColor } from "./constants.js";
 import initHelpers from "crew-components/helpers";
-import { userSettingStore } from 'crew-components/stores';
+import { userFlagStore } from 'crew-components/stores';
 initHelpers(moduleId, infoColor, SETTINGS);
 let tagSource = moduleId;
 
@@ -263,12 +263,7 @@ function initDropHandler() {
 export let gridLayout = writable([]);
 
 export function initStores() {
-  gridLayout = userSettingStore(SETTINGS.GRID_LAYOUT, {
-    scope: "world",
-    config: false,
-    default: [],
-    type: Array,
-  })
+  gridLayout = userFlagStore(SETTINGS.GRID_LAYOUT, [])
 
   initDropHandler()
 

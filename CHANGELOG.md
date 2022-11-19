@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.13 - 0.4.14](https://github.com/averrin/alpha-suit/compare/0.4.13...0.4.14)
+Added:
+  * "Folders white list" option for the File Manager. Only these folders will be indexed.
+  * "On demand" mode for file indexing. Starts the process only on a window opening.
+
 ## [0.4.12 - 0.4.13](https://github.com/averrin/alpha-suit/compare/0.4.12...0.4.13)
 Fixed: 
   * File search input is hidden when there is no favs

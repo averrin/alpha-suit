@@ -29,6 +29,11 @@
    const position = application.position;
    const { height } = position.stores;
 
+   const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
+   if (indexMode == "ondemand" && $fileIndex.length == 0) {
+      tick().then(rebuildIndex);
+   }
+
    export let elementRoot;
    let topic;
    let nameFilter = "";

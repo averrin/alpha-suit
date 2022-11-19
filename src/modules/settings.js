@@ -266,6 +266,15 @@ export function initSettings(app) {
     type: Number,
   });
 
+  game.settings.register(moduleId, SETTINGS.FILES_WHITE_LIST, {
+    name: 'Folders white list',
+    hint: "List of folders for indexing. Do not forget specify a storage. For example: 'data/modules/jb2a_patreon/Library' instead of 'modules/jb2a_patreon/Library'",
+    scope: "world",
+    config: false,
+    default: [],
+    type: Array,
+  });
+
   game.settings.register(moduleId, SETTINGS.FILES_EXCLUDE_SOURCES, {
     name: 'Excluded storages',
     hint: "E.g. you can exclude 'Data' to prevent 'modules' folders indexing",
@@ -384,8 +393,9 @@ export function initSettings(app) {
       'auto': "Automatic",
       'persist': "Stored index",
       'manual': "Manual",
+      'ondemand': "On demand",
     },
-    default: "auto",
+    default: "ondemand",
     type: String,
   });
 

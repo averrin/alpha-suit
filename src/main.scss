@@ -14,3 +14,8 @@
       background: hsl(var(--window-background));
     }
 }
+#alpha-grid {
+    .window-content {
+      overflow: visible !important;
+    }
+}

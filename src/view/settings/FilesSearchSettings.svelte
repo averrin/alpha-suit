@@ -77,6 +77,8 @@
       <SettingsInput key={SETTINGS.FILES_DEPTH_LIMIT} />
       <SettingsInput key={SETTINGS.FILES_INDEX_COUNT} />
 
+      <SettingsInput key={SETTINGS.FILES_WHITE_LIST} type="multiselect" onlyAutocomplete={false} />
+
       <SettingsInput key={SETTINGS.FILES_EXCLUDE_SOURCES} type="multiselect" options={storages} />
 
       <SettingsInput key={SETTINGS.FILES_EXCLUDE_FOLDERS} type="multiselect" onlyAutocomplete={false} />

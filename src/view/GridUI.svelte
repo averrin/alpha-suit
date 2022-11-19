@@ -9,6 +9,8 @@
    import DocumentThumb from "./components/DocumentThumb.svelte";
    import ActiveEffectThumb from "./components/ActiveEffectThumb.svelte";
    import RemoveButton from "crew-components/RemoveButton";
+   import ArgInput from "crew-components/ArgInput";
+   import EditWidgetDialog from "./EditWidgetDialog.svelte";
    import { gridLayout } from "../modules/stores.js";
    import { getContext, onDestroy, tick } from "svelte";
    const { application } = getContext("external");
@@ -23,8 +25,16 @@
    import Grid from "svelte-grid";
    import gridHelp from "svelte-grid/build/helper/index.mjs";
    import FileThumb from "./components/FileThumb.svelte";
+   import { notify } from "../modules/notify";
+   import CreateApplication from "crew-components/AlphaApplication";
 
    let entities = [];
+   let gap = 4;
+   let rowHeight = 52;
+   let hm = 1;
+   let COLS = 6;
+   let ROWS = $height / (rowHeight * hm);
+   let cols = [[1200, COLS]];
 
    let items = [];
    let layoutId = uuidv4();
@@ -32,20 +42,13 @@
    if ($gridLayout.length > 0) {
       layoutId = $gridLayout[0].layoutId;
    } else {
-      serializeItems();
+      serializeItems(true);
    }
    tick().then(async (_) => {
       items = await deserializeItems();
       resizeItems();
    });
    let locked = true;
-
-   let gap = 4;
-   let rowHeight = 52;
-   let hm = 1;
-   let COLS = 6;
-   let ROWS = $height / (rowHeight * hm);
-   let cols = [[1200, COLS]];
 
    function _resizeItems() {
       const old_items = [...items];
@@ -75,6 +78,7 @@
       let layout = l?.layout ?? [];
       layoutId = l?.layoutId ?? layoutId;
       layoutName = l?.name ?? layoutName;
+      rowHeight = l?.options?.rowHeight ?? rowHeight;
       for (const i of layout) {
          let source;
          if (i.uuid) {
@@ -86,8 +90,8 @@
             };
          } else if (i.type == "File") {
             source = {
-               id: i.id,
                name: i.id.split("/")[i.id.split("/").length - 1],
+               ...i,
             };
          } else if (i.type == "ActiveEffect") {
             source = game.dfreds?.effects?.all.find((e) => e._id == i.id);
@@ -113,9 +117,18 @@
       // logger.info(JSON.stringify(layout));
       // logger.info(layout);
       gridLayout.update((gl) => {
-         const l = gl.find((l) => l.layoutId == layoutId);
+         let l = gl.find((l) => l.layoutId == layoutId);
+         if (!l) {
+            layoutId = uuidv4();
+            l = { layoutId };
+            gl.push(l);
+         }
          l.layout = layout;
          l.name = layoutName;
+         if (!l.options) {
+            l.options = {};
+         }
+         l.options.rowHeight = rowHeight;
          return gl;
       });
    }
@@ -200,6 +213,7 @@
 
    async function dropHandler(event) {
       const data = TextEditor.getDragEventData(event);
+      logger.info(data);
       let w,
          h = 1;
       let entity;
@@ -212,13 +226,17 @@
          entity.documentName = "ActiveEffect";
          entity.id = entity._id;
          if (entities.find((e) => e?.id == data?.id)) return;
-      } else {
+      } else if (data.uuid) {
          if (entities.find((e) => e.uuid == data.uuid)) return;
          entity = await fromUuid(data.uuid);
 
          if (data.type == "JournalEntry" || data.type == "Scene") {
             w = 4;
          }
+      }
+      if (!entity) {
+         logger.error("Drop item is unknown", data);
+         return;
       }
       logger.info(entity);
       entities = [...entities, entity];
@@ -267,9 +285,7 @@
    function reset() {
       entities = [];
       items = [];
-      gridLayout.update((gl) => {
-         return gl.filter((l) => l.layoutId != layoutId);
-      });
+      serializeItems(true);
    }
 
    function removeItem(dataItem) {
@@ -288,73 +304,108 @@
          return gl;
       });
    }
+
+   function editWidget() {
+     const dialogClass = CreateApplication("edit-widget", "Edit widget", EditWidgetDialog, 600,600, true);
+      const dialog = new dialogClass();
+      dialog.start();
+      dialog.show();
+   }
 </script>
 
 <AlphaShell bind:elementRoot id="grid">
-   <div
-      class="ui-p-1 ui-w-full ui-h-12 ui-flex ui-flex-row ui-items-center ui-gap-2"
-      style="background-color: hsv(var(--b3))"
-      id={layoutId}
-   >
-      <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
-      <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
-      <IconButton
-         icon={locked ? "material-symbols:edit-square" : "material-symbols:lock"}
-         on:click={toggleEdit}
-         size="xs"
-      />
-      <IconButton
-         icon="material-symbols:refresh"
-         on:click={async (_) => {
-            items = await deserializeItems();
-            resizeItems();
-         }}
-         size="xs"
-      />
-      <IconButton
-         icon="material-symbols:add-box-rounded"
-         on:click={async (_) => {
-            const text = `<span> <b style="color: red">This</b> is a text!<span>`;
-            addItem(
-               {
-                  type: "Text",
-                  id: uuidv4(),
-                  text: text,
-                  persist: text,
-               },
-               0,
-               0,
-               2,
-               1
-            );
+   <div class="ui-flex ui-flex-col" style="background-color: hsl(var(--b2))">
+      <div class="ui-p-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
+         <IconButton
+            icon={locked ? "material-symbols:edit-square" : "material-symbols:lock"}
+            on:click={toggleEdit}
+            size="xs"
+         />
+         <!-- <IconButton -->
+         <!--    icon="material-symbols:refresh" -->
+         <!--    on:click={async (_) => { -->
+         <!--       items = await deserializeItems(); -->
+         <!--       resizeItems(); -->
+         <!--    }} -->
+         <!--    size="xs" -->
+         <!-- /> -->
+         <!-- <IconButton -->
+         <!--    icon="material-symbols:add-box-rounded" -->
+         <!--    on:click={async (_) => { -->
+         <!--       const text = `<span> <b style="color: red">This</b> is a text!<span>`; -->
+         <!--       addItem( -->
+         <!--          { -->
+         <!--             type: "Text", -->
+         <!--             id: uuidv4(), -->
+         <!--             text: text, -->
+         <!--             persist: text, -->
+         <!--          }, -->
+         <!--          0, -->
+         <!--          0, -->
+         <!--          2, -->
+         <!--          1 -->
+         <!--       ); -->
 
-            serializeItems();
-         }}
-         size="xs"
-      />
+         <!--       serializeItems(); -->
+         <!--    }} -->
+         <!--    size="xs" -->
+         <!-- /> -->
 
-      <div style="background: unset" class="ui-tabs ui-tabs-boxed ui-flex ui-items-center ui-h-full ">
          <div
-            class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-h-full ui-justify-center ui-items-center ui-flex-wrap ui-gap-2"
+            style="background: unset"
+            class="ui-justify-center ui-w-full ui-tabs ui-tabs-boxed ui-flex ui-items-center ui-h-full "
          >
-            {#each $gridLayout as l (l.layoutId)}
-               <a
-                  on:click={async (_) => {
-                     layoutId = l.layoutId;
-                     items = await deserializeItems();
-                  }}
-                  class="ui-tab ui-tab-xs ui-text-base-content ui-h-full"
-                  class:ui-tab-active={l.layoutId == layoutId}
-               >
-                  {l.name}
-               </a>
-            {/each}
-            <InlineButton on:click={addLayout} icon="material-symbols:add-circle-rounded" size="xs" />
-        {layoutId}
+            <div
+               class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-h-full ui-justify-center ui-items-center ui-flex-wrap ui-gap-2"
+            >
+               {#each $gridLayout as l (l.layoutId)}
+                  <a
+                     on:click={async (_) => {
+                        if (!locked) {
+                           notify.info("Lock the grid before switching.");
+                           return;
+                        }
+                        layoutId = l.layoutId;
+                        items = await deserializeItems();
+                     }}
+                     class="ui-tab ui-tab-xs ui-text-base-content ui-h-full"
+                     class:ui-tab-active={l.layoutId == layoutId}
+                  >
+                     {l.name}
+                  </a>
+               {/each}
+               <InlineButton on:click={addLayout} icon="material-symbols:add-circle-rounded" size="xs" />
+            </div>
          </div>
       </div>
+      {#if !locked}
+         <div class="ui-p-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
+            <ArgInput
+               size="xs"
+               label="Name"
+               type="string"
+               bind:value={layoutName}
+               on:change={(_) => {
+                  serializeItems();
+               }}
+            />
+            <!-- <ArgInput -->
+            <!--    size="xs" -->
+            <!--    label="Row height" -->
+            <!--    type="int" -->
+            <!--    bind:value={rowHeight} -->
+            <!--    on:change={async (_) => { -->
+            <!--       serializeItems(); -->
+            <!--       items = await deserializeItems(); -->
+            <!--    }} -->
+            <!-- /> -->
+
+            <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
+            <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
+         </div>
+      {/if}
    </div>
-   <div class="ui-h-full ui-w-full" style="background-color: hsv(var(--b1))" on:drop={dropHandler}>
+   <div id={layoutId} class="ui-h-full ui-w-full" style="background-color: hsv(var(--b1))" on:drop={dropHandler}>
       <Grid
          offset={{ top: -$top, left: -$left }}
          scroller={elementRoot}
@@ -411,8 +462,10 @@
          <div class="overlay">
             <span>Drop <b>Item / Actor / File / Macros</b> here</span>
             <div class="ui-divider">OR</div>
-            <button style="pointer-events: all !important" class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
-               >Add widget</button
+            <button
+               style="pointer-events: all !important"
+               class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
+               on:click={editWidget}>Add widget</button
             >
          </div>
       {/if}

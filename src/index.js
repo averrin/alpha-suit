@@ -173,24 +173,48 @@ Hooks.once('init', async () => {
   });
 });
 
+const gridTool = {
+  name: "alpha-grid-btn",
+  title: "Toggle Alpha Grid",
+  icon: "ic:twotone-widgets",
+  onClick: () => {
+    grid.toggle();
+  },
+  toggle: true,
+  isActive: _ => setting("show-grid"),
+}
+
 Hooks.on('renderSceneControls', (_) => {
   if (game?.user?.isGM) {
-    if (!document.querySelector(`[data-control='${tools.name}']`)) {
-      addTools(tools);
+    if (setting(SETTINGS.DEV_FEATURES) && !tools.tools.includes(gridTool)) {
+      tools.tools.push(...[
+        gridTool,
+      ])
     }
+  } else {
+    tools.tools = []
+    if (setting(SETTINGS.DEV_FEATURES)) {
+      tools.tools = [
+        gridTool
+      ]
+    }
+  }
+  if (tools.tools?.length > 0 && !document.querySelector(`[data-control='${tools.name}']`)) {
+    addTools(tools);
   }
 });
 
 Hooks.once('ready', async () => {
+  helperStores()
+  initStores();
+  grid.start();
+
   if (game.user.isGM) {
-    helperStores()
-    initStores();
     tree.start();
     browser.start();
     help.start();
     settings.start();
     files.start();
-    grid.start();
 
     if (globalThis.game.modules.get("director")?.active) {
       hud.add(new DirectorWidget());
@@ -203,23 +227,8 @@ Hooks.once('ready', async () => {
     new NotificationsApp().render(true);
     logger.info(`Started! Version: ${game.modules.get("alpha-suit").data.version}`)
 
-    if (setting(SETTINGS.DEV_FEATURES)) {
-      tools.tools.push(...[
-        {
-          name: "alpha-grid-btn",
-          title: "Toggle Alpha Grid",
-          icon: "ic:twotone-widgets",
-          onClick: () => {
-            grid.toggle();
-          },
-          toggle: true,
-          isActive: _ => setting("show-grid"),
-        },
-      ])
-    }
-
     const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
-    if (indexMode != "manual") {
+    if (indexMode != "manual" && indexMode != "ondemand") {
       const delay = indexMode == "auto" ? setting(SETTINGS.FILES_INDEX_DELAY) : 0;
       if (delay >= 0) {
         if (delay != 0) {
