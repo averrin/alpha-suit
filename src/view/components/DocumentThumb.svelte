@@ -5,6 +5,8 @@
 
    export let item;
    export let title;
+   export let draggable=true;
+   export let maximize = false;
 
    export let fromCompendium = null;
    import { currentCollection } from "../../modules/stores.js";
@@ -13,7 +15,14 @@
    async function drag(e) {
       let id = $item.id;
       let type = $item?.compendium?.metadata?.type ?? $currentCollection.documentName;
-      let data = { type, id, data: $item.data, uuid: $item.uuid, compendium: fromCompendium?.metadata?.id, _id: $item._id };
+      let data = {
+         type,
+         id,
+         data: $item.data,
+         uuid: $item.uuid,
+         compendium: fromCompendium?.metadata?.id,
+         _id: $item._id,
+      };
       let sData = { data: JSON.stringify(data) };
       e.dataTransfer.setData("text/plain", sData.data);
    }
@@ -95,14 +104,16 @@
 <div
    class="zoom-container ui-w-full ui-h-full ui-border-none ui-rounded-md ui-bg-contain ui-bg-no-repeat"
    style:background-image="url({thumb})"
+  style:background-size={maximize ? "cover" : "contain"}
    alt=""
-   draggable={true}
+  {draggable}
    on:pointerdown={() => null}
    on:click
    on:dragstart={drag}
    style:cursor="grab"
    {title}
    on:drop={handleDrop}
+   on:click
 />
 
 <style>

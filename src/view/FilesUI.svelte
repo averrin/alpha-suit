@@ -14,8 +14,6 @@
    import { writable, get } from "svelte/store";
    import TreeModel from "tree-model";
    import IconButton from "crew-components/IconButton";
-   // import InlineButton from "crew-components/InlineButton";
-   import CopyButton from "crew-components/CopyButton";
    import { SETTINGS } from "../modules/constants.js";
    import Tag from "crew-components/tags";
    import Intro from "./components/Intro.svelte";
@@ -24,10 +22,8 @@
    import SelectedFiles from "./components/SelectedFiles.svelte";
    import { isImage, isSound, isVideo, showFile } from "crew-components/helpers";
 
-   import tippy from "sveltejs-tippy";
    import { isPremium } from "crew-components/premium";
-
-   const isSequencer = game.modules.get("sequencer")?.active;
+   import FileThumb from "./components/FileThumb.svelte";
 
    const { application } = getContext("external");
    const position = application.position;
@@ -59,11 +55,6 @@
    let imageHeightBig = setting(SETTINGS.FILES_IMAGE_HEIGHT_BIG);
    let navHistory = writable([]);
    let navIndex = writable(0);
-
-   function findPoster(file) {
-      if (isVideo(file.name)) return "icons/svg/video.svg";
-      return "icons/svg/sound.svg";
-   }
 
    function onTagClick(_, tag) {
       const fav = $favs.find((f) => f.text == tag);
@@ -99,19 +90,6 @@
             return sf;
          });
       }
-   }
-
-   function onDragStart(event, file) {
-      if (!isImage(file.name) && !isVideo(file.name)) return;
-      const dragData = {
-         type: "Tile",
-         texture: { src: file.id },
-         tileSize: setting(SETTINGS.FILES_DROP_GRID),
-         blockDirector: event.ctrlKey && !event.altKey,
-         temp: event.ctrlKey,
-         instant: event.altKey,
-      };
-      event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
    }
 
    const tree = new TreeModel();
@@ -489,7 +467,7 @@
                }),
                ["name"]
             );
-            topic.source.files.push(...result.slice(0, searchLimit).map(r => r.item));
+            topic.source.files.push(...result.slice(0, searchLimit).map((r) => r.item));
             filterFiles();
          }
          let fileTags = setting(SETTINGS.FILES_TAGS);
@@ -534,37 +512,35 @@
 <TwoColUI bind:elementRoot id="files" {paddingTop}>
    <svelte:fragment slot="top">
       <TagSettings {editTag} />
-      {#if $favs.length > 0}
-         <div id="alpha-files-favbar" class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-1 ui-bg-base-200">
-               <!-- <IconButton loading={$indexInProcess} icon="octicon:cache-16" size="xs" on:click={rebuildIndex} /> -->
-               <ArgInput
-                  label="Search"
-                  type="string"
-                  bind:value={search}
-                  disabled={$fileIndex.length == 0 || $indexInProcess}
-                  size="xs"
-                  width="18rem"
-                  on:change={foundry.utils.debounce(searchFile, 500)}
-                  clearable={true}
-               >
-                  <svelte:fragment slot="right">
-                     {#if $fileIndex.length == 0}
-                        <IconButton icon="mdi:database" on:click={rebuildIndex} type="primary" title="Start indexing" />
-                     {/if}
-                  </svelte:fragment>
-               </ArgInput>
+      <div id="alpha-files-favbar" class="ui-flex ui-flex-row ui-gap-1 ui-items-center ui-p-1 ui-bg-base-200">
+         <!-- <IconButton loading={$indexInProcess} icon="octicon:cache-16" size="xs" on:click={rebuildIndex} /> -->
+         <ArgInput
+            label="Search"
+            type="string"
+            bind:value={search}
+            disabled={$fileIndex.length == 0 || $indexInProcess}
+            size="xs"
+            width="18rem"
+            on:change={foundry.utils.debounce(searchFile, 500)}
+            clearable={true}
+         >
+            <svelte:fragment slot="right">
+               {#if $fileIndex.length == 0}
+                  <IconButton icon="mdi:database" on:click={rebuildIndex} type="primary" title="Start indexing" />
+               {/if}
+            </svelte:fragment>
+         </ArgInput>
 
-            <div class="ui-flex ui-flex-1 ui-w-full">
-               <Tags {onTagClick} tags={$favs.map((f) => f.text)} disable={true} />
-            </div>
-            <div class="ui-flex-none ui-group-xs">
-               <!-- {#if M3Session} -->
-               <!--    <IconButton icon="fa-solid:paint-brush" title="Browse from Melvin's Workshop" on:click={openMMM} /> -->
-               <!-- {/if} -->
-               <IconButton icon="clarity:help-solid" on:click={AlphaSuit.showHelp} />
-            </div>
+         <div class="ui-flex ui-flex-1 ui-w-full">
+            <Tags {onTagClick} tags={$favs.map((f) => f.text)} disable={true} />
          </div>
-      {/if}
+         <div class="ui-flex-none ui-group-xs">
+            <!-- {#if M3Session} -->
+            <!--    <IconButton icon="fa-solid:paint-brush" title="Browse from Melvin's Workshop" on:click={openMMM} /> -->
+            <!-- {/if} -->
+            <IconButton icon="clarity:help-solid" on:click={AlphaSuit.showHelp} />
+         </div>
+      </div>
 
       {#if topic}
          <div
@@ -609,13 +585,15 @@
             </div>
             <div class="ui-flex-none ui-flex ui-flex-row ui-items-center ui-gap-1">
                <div class="ui-mr-2">
-                  <IconButton
-                     size="xs"
-                     type="primary"
-                     icon={!isFav ? "fa-regular:star" : "fa-solid:star"}
-                     title="Toggle favorite"
-                     on:click={(_) => toggleFav(topic)}
-                  />
+                  {#if topic.id != "Search"}
+                     <IconButton
+                        size="xs"
+                        type="primary"
+                        icon={!isFav ? "fa-regular:star" : "fa-solid:star"}
+                        title="Toggle favorite"
+                        on:click={(_) => toggleFav(topic)}
+                     />
+                  {/if}
                </div>
 
                <iconify-icon icon="fa6-solid:folder" />
@@ -663,80 +641,14 @@
                {/if}
                {#if topic?.source?.files}
                   {#each files as file, i (file.id)}
-                     <div
-                        id={`file--${file.id}`}
-                        class="ui-rounded-md ui-cursor-pointer ui-bg-base-300 ui-flex ui-flex-row ui-items-center ui-p-2"
-                        class:zoom-container={mode == "tiles" && (isImage(file.id) || isVideo(file.id))}
-                        style:height={`${imageHeight}px`}
-                        style:min-width={mode == "big" ? `100%` : `${imageHeight}px`}
-                        style:background-image={isImage(file.id)
-                           ? useThumbs
-                              ? `url(modules/alpha-suit/assets/question.svg)`
-                              : `url(${file.id})`
-                           : "unset"}
-                        alt={file.name}
-                        title={file.name}
-                        style="background-size: contain; background-repeat: no-repeat;"
-                        on:mouseup={(e) => onFileClick(e, file)}
-                        draggable="true"
-                        on:dragstart={(e) => onDragStart(e, file)}
-                        class:ui-w-full={mode == "list"}
-                        style:background-position={mode == "list" ? "left" : "center"}
-                        class:file-video={mode != "list" && (isVideo(file.name) || isSound(file.name))}
-                        class:selected-file={$selectedFiles.find((f) => f.id == file.id)}
-                        use:tippy={{
-                           content: () => {
-                              let content = `<div class="alpha-file-tooltip">${file.name}</div>`;
-                              return content;
-                           },
-                           placement: "bottom",
-                           allowHTML: true,
-                        }}
-                     >
-                        {#if isVideo(file.name) || isSound(file.name)}
-                           <video
-                              id={`video--${file.id}`}
-                              class="ui-rounded-md"
-                              class:file-video={mode == "list"}
-                              poster={findPoster(file)}
-                              preload="none"
-                              disablePictureInPicture
-                              style="height: 100%;"
-                              style:width={mode != "list" ? "100%" : "unset"}
-                              loop
-                              on:mouseover={(e) => {
-                                 e.target.play();
-                              }}
-                              on:mouseout={(e) => {
-                                 e.target.pause();
-                                 e.target.currentTime = 0;
-                              }}
-                           >
-                              <source src={file.id} type="video/webm" />
-                           </video>
-                           <!-- <iconify-icon class="seq-icon" icon="fa6-solid:database" title="Sequencer" /> -->
-                           {#if isSequencer && Sequencer.Database.inverseFlattenedEntries?.get(file.id)}
-                              <CopyButton
-                                 size="xs"
-                                 icon="fa6-solid:database"
-                                 title={"Copy Sequencer path: " +
-                                    Sequencer.Database.inverseFlattenedEntries.get(file.id)}
-                                 text={Sequencer.Database.inverseFlattenedEntries.get(file.id)}
-                                 notification={"Copy Sequencer path: " +
-                                    Sequencer.Database.inverseFlattenedEntries.get(file.id)}
-                              />
-                           {/if}
-                        {/if}
-
-                        {#if (!isImage(file.name) && !isVideo(file.name) && !isSound(file.name)) || mode == "list"}
-                           <div
-                              class="ui-text-base-content ui-w-full"
-                              style:text-align={mode == "list" ? `center` : "left"}
-                           >
-                              {file.name}
-                           </div>
-                        {/if}
-                     </div>
+                     <FileThumb
+                        on:click={(e) => onFileClick(e.detail.e, e.detail.file)}
+                        {useThumbs}
+                        {imageHeight}
+                        {file}
+                        {mode}
+                        selected={$selectedFiles.find((f) => f.id == file.id)}
+                     />
                   {/each}
                {/if}
             </div>
@@ -827,20 +739,6 @@
    .break {
       flex-basis: 100%;
       height: 0;
-   }
-   .file-video {
-      border: solid 1px cadetblue;
-   }
-   .zoom-container {
-      transition: 0.4s ease;
-   }
-   .zoom-container:hover {
-      transform: scale(2);
-   }
-
-   .selected-file {
-      border: solid 3px indianred;
-      transform: scale(1.2);
    }
 
    :global(.alpha-file-tooltip) {

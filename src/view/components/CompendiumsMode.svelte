@@ -26,11 +26,13 @@
 
    const unsub = selectedBrowser.subscribe((s) => {
       tick().then(() => {
-         if (s.length > 0) {
-            width.set(setting(SETTINGS.WINDOW_WIDTH_EXPANDED));
-         } else {
-            width.set(setting(SETTINGS.WINDOW_WIDTH_COLLAPSED));
-         }
+         setTimeout((_) => {
+            if (s.length > 0) {
+               width.set(setting(SETTINGS.WINDOW_WIDTH_EXPANDED));
+            } else {
+               width.set(setting(SETTINGS.WINDOW_WIDTH_COLLAPSED));
+            }
+         }, 1);
       });
    });
    onDestroy(unsub);

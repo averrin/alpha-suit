@@ -42,13 +42,13 @@
    );
 
    const unsub = selected.subscribe((s) => {
-      tick().then(() => {
+      setTimeout(() => {
          if (s.length > 0) {
             width.set(setting(SETTINGS.WINDOW_WIDTH_EXPANDED));
          } else {
             width.set(setting(SETTINGS.WINDOW_WIDTH_COLLAPSED));
          }
-      });
+      }, 10);
    });
    onDestroy(unsub);
 </script>

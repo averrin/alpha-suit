@@ -5,6 +5,7 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  GRID_LAYOUT: "grid-layout",
   FILES_FUZZY: "files-fuzzy",
   FILES_INDEX_MODE: "files-index-mode",
   FILE_CACHE: "file-cache",

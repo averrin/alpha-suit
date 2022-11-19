@@ -17,7 +17,7 @@ import SettingsUI from './view/SettingsUI.svelte';
 import FilesUI from './view/FilesUI.svelte';
 import HUDApplication from './view/HUDApplication.js';
 
-// import GridUI from './view/GridUI.svelte';
+import GridUI from './view/GridUI.svelte';
 
 import { initStores, buildHelpTree, helpTree, addSystem } from './modules/stores.js';
 import { addTools } from "crew-components/helpers"
@@ -38,7 +38,7 @@ const browser = new (CreateApplication("browser", "Alpha Browser", BrowserUI))()
 const help = new (CreateApplication("help", "Alpha Help Center", HelpUI))();
 const settings = new (CreateApplication("settings", "Alpha Settings", SettingsUI))();
 const files = new (CreateApplication("files", "Alpha File Manager [BETA]", FilesUI))();
-// const grid = new (CreateApplication("grid", "Alpha Grid [ALPHA]", GridUI))();
+const grid = new (CreateApplication("grid", "Alpha Grid [ALPHA]", GridUI))();
 const hud = new HUDApplication();
 
 import pf2e from "./systems/pf2e.js";
@@ -109,6 +109,17 @@ const tools = {
       toggle: true,
       isActive: _ => setting("show-help"),
     },
+
+    // {
+    //   name: "alpha-grid-btn",
+    //   title: "Toggle Alpha Grid",
+    //   icon: "ic:twotone-widgets",
+    //   onClick: () => {
+    //     grid.toggle();
+    //   },
+    //   toggle: true,
+    //   isActive: _ => setting("show-grid"),
+    // },
   ]
 }
 /* ic:twotone-widgets */
@@ -179,7 +190,7 @@ Hooks.once('ready', async () => {
     help.start();
     settings.start();
     files.start();
-    // grid.start();
+    grid.start();
 
     if (globalThis.game.modules.get("director")?.active) {
       hud.add(new DirectorWidget());
@@ -194,16 +205,6 @@ Hooks.once('ready', async () => {
 
     if (setting(SETTINGS.DEV_FEATURES)) {
       tools.tools.push(...[
-        {
-          name: "alpha-hud-btn",
-          title: "Toggle Alpha HUD",
-          icon: "ic:twotone-widgets",
-          onClick: () => {
-            hud.toggle();
-          },
-          toggle: true,
-          isActive: _ => setting("show-hud"),
-        },
         {
           name: "alpha-grid-btn",
           title: "Toggle Alpha Grid",

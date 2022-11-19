@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.4.12 - 0.4.13](https://github.com/averrin/alpha-suit/compare/0.4.12...0.4.13)
+Fixed: 
+  * File search input is hidden when there is no favs
+  * Faving search breaks the file manager
+  * Browser export is broken in v10
+
 ## [0.4.11 - 0.4.12](https://github.com/averrin/alpha-suit/compare/0.4.11...0.4.12)
 Fixed:
   * File manager doesn't launch

@@ -1,35 +1,138 @@
 <svelte:options accessors={true} />
 
 <script>
+   import { v4 as uuidv4 } from "uuid";
    import IconButton from "crew-components/IconButton";
+   import InlineButton from "crew-components/InlineButton";
    import AlphaShell from "crew-components/AlphaShell";
    import ItemThumb from "./components/ItemThumb.svelte";
+   import DocumentThumb from "./components/DocumentThumb.svelte";
+   import ActiveEffectThumb from "./components/ActiveEffectThumb.svelte";
+   import RemoveButton from "crew-components/RemoveButton";
+   import { gridLayout } from "../modules/stores.js";
    import { getContext, onDestroy, tick } from "svelte";
    const { application } = getContext("external");
    const position = application.position;
-   const { width, top, left } = position.stores;
+   const { width, height, top, left } = position.stores;
+   import { writable } from "svelte/store";
+
+   import { TJSProseMirror } from "@typhonjs-fvtt/svelte-standard/component";
 
    export let elementRoot;
 
    import Grid from "svelte-grid";
    import gridHelp from "svelte-grid/build/helper/index.mjs";
+   import FileThumb from "./components/FileThumb.svelte";
 
    let entities = [];
 
    let items = [];
+   let layoutId = uuidv4();
+   let layoutName = `Grid #${$gridLayout.length}`;
+   if ($gridLayout.length > 0) {
+      layoutId = $gridLayout[0].layoutId;
+   } else {
+      serializeItems();
+   }
+   tick().then(async (_) => {
+      items = await deserializeItems();
+      resizeItems();
+   });
    let locked = true;
 
    let gap = 4;
    let rowHeight = 52;
    let hm = 1;
    let COLS = 6;
+   let ROWS = $height / (rowHeight * hm);
    let cols = [[1200, COLS]];
 
-   function updateItems() {
+   function _resizeItems() {
+      const old_items = [...items];
       items = [];
-      for (const item of entities) {
-         addItem(item);
+      for (const item of old_items) {
+         const oc = Object.keys(item)[0];
+         let x = item[oc].x;
+         if (x > COLS - 1) {
+            x = 0;
+         }
+         let y = item[oc].y;
+         if (y > ROWS - 1) {
+            y = 0;
+         }
+         const w = item[oc].w;
+         const h = item[oc].h;
+         delete item[oc];
+         addItem(item.source, x, y, w, h);
       }
+      serializeItems();
+   }
+   const resizeItems = foundry.utils.debounce(_resizeItems, 50);
+
+   async function deserializeItems() {
+      entities = [];
+      const l = $gridLayout.find((l) => l.layoutId == layoutId);
+      let layout = l?.layout ?? [];
+      layoutId = l?.layoutId ?? layoutId;
+      layoutName = l?.name ?? layoutName;
+      for (const i of layout) {
+         let source;
+         if (i.uuid) {
+            source = await fromUuid(i.uuid);
+         } else if (i.type == "Text") {
+            source = {
+               text: i.persist,
+               ...i,
+            };
+         } else if (i.type == "File") {
+            source = {
+               id: i.id,
+               name: i.id.split("/")[i.id.split("/").length - 1],
+            };
+         } else if (i.type == "ActiveEffect") {
+            source = game.dfreds?.effects?.all.find((e) => e._id == i.id);
+            source.type = "ActiveEffect";
+            source.id = i.id;
+         } else {
+            continue;
+         }
+         i.source = source;
+         entities.push(source);
+      }
+      return layout.filter((i) => i.source);
+   }
+
+   function serializeItems(force = false) {
+      if (items.length == 0 && !force) return;
+      let layout = items.map((i) => {
+         return { ...i };
+      });
+      for (const i of layout) {
+         delete i.source;
+      }
+      // logger.info(JSON.stringify(layout));
+      // logger.info(layout);
+      gridLayout.update((gl) => {
+         const l = gl.find((l) => l.layoutId == layoutId);
+         l.layout = layout;
+         l.name = layoutName;
+         return gl;
+      });
+   }
+
+   function updateItems() {
+      const old_items = [...items];
+      items = [];
+      for (const item of old_items) {
+         const oc = Object.keys(item)[0];
+         let x = 0;
+         let y = 0;
+         const w = item[oc].w;
+         const h = item[oc].h;
+         delete item[oc];
+         addItem(item.source, x, y, w, h);
+      }
+      serializeItems();
    }
 
    function toggleEdit() {
@@ -40,15 +143,24 @@
          return i;
       });
       items = [...items];
-      // updateItems();
+      serializeItems();
    }
 
    onDestroy(
       width.subscribe((w) => {
          tick().then((_) => {
+            const oc = COLS;
             COLS = Math.round((w - gap * 2) / (rowHeight * hm + gap));
+            if (COLS == oc) return;
             cols = [[1200, COLS]];
-            updateItems();
+            resizeItems();
+            // logger.info(cols);
+         });
+      }),
+      height.subscribe((h) => {
+         tick().then((_) => {
+            ROWS = h / (rowHeight * hm);
+            resizeItems();
             // logger.info(cols);
          });
       })
@@ -56,6 +168,27 @@
 
    function itemClick(e, dataItem) {
       if (!locked) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (dataItem.type == "ActiveEffect") {
+         game.dfreds.effectInterface.toggleEffect(dataItem.source.name);
+         return;
+      }
+      if (dataItem.type == "Macro") {
+         dataItem.source.execute();
+         return;
+      }
+      if (dataItem.type == "Scene") {
+         dataItem.source.view();
+         return;
+      }
+      if (dataItem.type == "Actor") {
+         dataItem.source.sheet.render(true);
+         return;
+      }
+      if (dataItem.type == "File" || dataItem.type == "Text") {
+         return;
+      }
       if (dataItem.source.toChat) {
          dataItem.source.toChat();
       } else if (dataItem.source.roll) {
@@ -67,26 +200,55 @@
 
    async function dropHandler(event) {
       const data = TextEditor.getDragEventData(event);
-      // if (data.type != "Item") return;
-      if (entities.find((e) => e.uuid == data.uuid)) return;
-      const entity = await fromUuid(data.uuid);
+      let w,
+         h = 1;
+      let entity;
+      if (data.type == "Tile") {
+         data.documentName = "File";
+         entity = data;
+         if (entities.find((e) => e.id == data.id)) return;
+      } else if (data.type == "ActiveEffect") {
+         entity = game.dfreds?.effects?.all.find((e) => e._id == data.data.id);
+         entity.documentName = "ActiveEffect";
+         entity.id = entity._id;
+         if (entities.find((e) => e?.id == data?.id)) return;
+      } else {
+         if (entities.find((e) => e.uuid == data.uuid)) return;
+         entity = await fromUuid(data.uuid);
+
+         if (data.type == "JournalEntry" || data.type == "Scene") {
+            w = 4;
+         }
+      }
       logger.info(entity);
       entities = [...entities, entity];
-      addItem(entity, Math.round(event.offsetX / (rowHeight + gap))-1, Math.round(event.offsetY / (rowHeight + gap)));
+      addItem(
+         entity,
+         Math.round(event.offsetX / (rowHeight + gap)) - 1,
+         Math.round(event.offsetY / (rowHeight + gap)),
+         w,
+         h
+      );
+      serializeItems();
    }
 
-   function addItem(item, x = 0, y = 0) {
+   function addItem(item, x = 0, y = 0, w = 1, h = hm) {
+      if (!item) return;
+      const i = gridHelp.item({
+         w,
+         h,
+         x,
+         y,
+         draggable: !locked,
+         resizable: !locked,
+      });
       let newItem = {
-         [COLS]: gridHelp.item({
-            w: 1,
-            h: hm,
-            x,
-            y,
-            draggable: !locked,
-            resizable: !locked,
-         }),
+         [COLS]: i,
          id: item.id,
+         uuid: item.uuid,
          source: item,
+         type: item.documentName ?? item.type,
+         persist: item.persist,
       };
 
       if (x == 0 && y == 0) {
@@ -103,16 +265,36 @@
    }
 
    function reset() {
-     entities = []
-     items = []
+      entities = [];
+      items = [];
+      gridLayout.update((gl) => {
+         return gl.filter((l) => l.layoutId != layoutId);
+      });
    }
 
+   function removeItem(dataItem) {
+      items = items.filter((i) => i.id != dataItem.id);
+      entities = entities.filter((e) => e.id != dataItem.source.id);
+      serializeItems(true);
+   }
+
+   function addLayout() {
+      serializeItems();
+      items = [];
+      layoutId = uuidv4();
+      layoutName = `Grid #${$gridLayout.length}`;
+      gridLayout.update((gl) => {
+         gl.push({ layout: [], name: layoutName, layoutId });
+         return gl;
+      });
+   }
 </script>
 
 <AlphaShell bind:elementRoot id="grid">
    <div
-      class="ui-p-1 ui-w-full ui-h-8 ui-flex ui-flex-row ui-iteems-centeer ui-gap-2"
+      class="ui-p-1 ui-w-full ui-h-12 ui-flex ui-flex-row ui-items-center ui-gap-2"
       style="background-color: hsv(var(--b3))"
+      id={layoutId}
    >
       <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
       <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
@@ -121,6 +303,56 @@
          on:click={toggleEdit}
          size="xs"
       />
+      <IconButton
+         icon="material-symbols:refresh"
+         on:click={async (_) => {
+            items = await deserializeItems();
+            resizeItems();
+         }}
+         size="xs"
+      />
+      <IconButton
+         icon="material-symbols:add-box-rounded"
+         on:click={async (_) => {
+            const text = `<span> <b style="color: red">This</b> is a text!<span>`;
+            addItem(
+               {
+                  type: "Text",
+                  id: uuidv4(),
+                  text: text,
+                  persist: text,
+               },
+               0,
+               0,
+               2,
+               1
+            );
+
+            serializeItems();
+         }}
+         size="xs"
+      />
+
+      <div style="background: unset" class="ui-tabs ui-tabs-boxed ui-flex ui-items-center ui-h-full ">
+         <div
+            class="ui-flex ui-flex-1 ui-flex-row ui-w-full ui-h-full ui-justify-center ui-items-center ui-flex-wrap ui-gap-2"
+         >
+            {#each $gridLayout as l (l.layoutId)}
+               <a
+                  on:click={async (_) => {
+                     layoutId = l.layoutId;
+                     items = await deserializeItems();
+                  }}
+                  class="ui-tab ui-tab-xs ui-text-base-content ui-h-full"
+                  class:ui-tab-active={l.layoutId == layoutId}
+               >
+                  {l.name}
+               </a>
+            {/each}
+            <InlineButton on:click={addLayout} icon="material-symbols:add-circle-rounded" size="xs" />
+        {layoutId}
+         </div>
+      </div>
    </div>
    <div class="ui-h-full ui-w-full" style="background-color: hsv(var(--b1))" on:drop={dropHandler}>
       <Grid
@@ -134,13 +366,56 @@
          let:dataItem
       >
          <div
-            class="ui-h-full ui-w-full ui-rounded-md ui-flex ui-items-center ui-justify-center"
-            style="background-color: #232323"
+            class="grid-item ui-h-full ui-w-full ui-rounded-md ui-flex ui-items-center ui-justify-center"
+            style="background-color: hsl(var(--b2))"
+            class:editable={!locked}
             class:ui-cursor-pointer={locked}
+            on:click={(e) => itemClick(e, dataItem)}
+            id={dataItem.id}
+            data-type={dataItem.type}
          >
-            <ItemThumb maximize={true} item={dataItem.source} on:click={(e) => itemClick(e, dataItem)} />
+            {#if dataItem.type == "Item"}
+               <ItemThumb maximize={true} item={dataItem.source} />
+            {:else if dataItem.type == "ActiveEffect"}
+               <ActiveEffectThumb draggable={false} maximize={true} item={dataItem.source} />
+            {:else if dataItem.type == "File"}
+               <FileThumb zoom={false} maximize={true} file={dataItem.source} />
+            {:else if dataItem.type == "Text"}
+               <div class="ui-p-1">
+                  <TJSProseMirror content={dataItem.source.text} options={{ editable: false }} />
+               </div>
+            {:else if dataItem.type == "JournalEntry"}
+               <div class="ui-p-1 ui-font-bold ui-link">
+                  {dataItem.source.name}
+               </div>
+            {:else if dataItem.type == "Scene"}
+               <div
+                  class="ui-text-shadow-lg ui-flex ui-items-center ui-justify-center ui-rounded-md ui-font-bold ui-link ui-bg-cover ui-w-full ui-h-full"
+                  style:background-image={`url(${dataItem.source.thumb})`}
+               >
+                  {dataItem.source.name}
+               </div>
+            {:else}
+               <DocumentThumb maximize={true} item={writable(dataItem.source)} />
+            {/if}
+
+            {#if !locked}
+               <div class="remove">
+                  <RemoveButton size="xs" on:click={(_) => removeItem(dataItem)} />
+               </div>
+            {/if}
          </div>
       </Grid>
+
+      {#if items.length == 0}
+         <div class="overlay">
+            <span>Drop <b>Item / Actor / File / Macros</b> here</span>
+            <div class="ui-divider">OR</div>
+            <button style="pointer-events: all !important" class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
+               >Add widget</button
+            >
+         </div>
+      {/if}
    </div>
 </AlphaShell>
 
@@ -156,5 +431,31 @@
    :global(.svlt-grid-resizer::after) {
       /* Resizer color */
       border-color: white !important;
+   }
+   .overlay {
+      /* background: rebeccapurple; */
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      top: 30px;
+      /* opacity: 50%; */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 4rem;
+      pointer-events: none;
+   }
+   .editable {
+      border: 1px indianred solid;
+   }
+   .remove {
+      cursor: pointer;
+      position: absolute;
+      right: -30px;
+      top: 0px;
+   }
+   :global(.svlt-grid-item:hover) {
+      z-index: 10;
    }
 </style>

@@ -2,13 +2,17 @@ import { writable, get } from 'svelte/store';
 import { getFlag } from "crew-components/helpers"
 import { TreeItem } from "./Tree.js";
 import Tag from "crew-components/tags";
-import { moduleId, SETTINGS } from "./constants.js";
 import { setting } from './settings.js';
 import { filterItemPredicate } from "crew-components/helpers";
 import { isPremium } from "crew-components/premium";
 import { helpContent } from "./help_content.js"
 import { settingsContent } from "./settings_content.js"
 import { tick } from "svelte";
+
+import { moduleId, SETTINGS, infoColor } from "./constants.js";
+import initHelpers from "crew-components/helpers";
+import { userSettingStore } from 'crew-components/stores';
+initHelpers(moduleId, infoColor, SETTINGS);
 let tagSource = moduleId;
 
 
@@ -256,7 +260,16 @@ function initDropHandler() {
   })
 }
 
+export let gridLayout = writable([]);
+
 export function initStores() {
+  gridLayout = userSettingStore(SETTINGS.GRID_LAYOUT, {
+    scope: "world",
+    config: false,
+    default: [],
+    type: Array,
+  })
+
   initDropHandler()
 
   let sys = get(systems)[globalThis.game.system.id] || get(systems)["*"];

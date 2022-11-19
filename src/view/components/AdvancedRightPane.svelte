@@ -140,7 +140,7 @@
 
       const citems = fc.map((item) => ({
          type: CONST.TABLE_RESULT_TYPES.COMPENDIUM,
-         collection: `${item.compendium.metadata.package}.${item.compendium.metadata.name}`,
+         collection: `${item.compendium.metadata.packageName}.${item.compendium.metadata.name}`,
          text: item.name,
          img: item.img || item.thumbnail,
          weight: 1,
