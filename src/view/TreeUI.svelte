@@ -7,7 +7,7 @@
    import LeftPane from "./components/LeftPane.svelte";
    import { setContext, getContext, tick, onDestroy } from "svelte";
    import TagSettings from "crew-components/TagSettings";
-   import Tag from "crew-components/tags";
+   import Tag from "crew-components/tagsLogic";
    import ArgInput from "crew-components/ArgInput";
    import { setting } from "crew-components/helpers";
    import { SETTINGS } from "../modules/constants.js";

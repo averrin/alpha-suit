@@ -63,6 +63,7 @@ export async function startCache() {
 
   console.time("indexing");
   const depthLimit = setting(SETTINGS.FILES_DEPTH_LIMIT);
+  const onlyAssets = setting(SETTINGS.FILES_INDEX_ONLY_ASSETS);
   let sources = [...storages];
   const excludedSources = setting(SETTINGS.FILES_EXCLUDE_SOURCES);
   const excludedFolders = setting(SETTINGS.FILES_EXCLUDE_FOLDERS);
@@ -105,7 +106,7 @@ export async function startCache() {
             if (res.error) return [];
             res.files = res.files.map(p => source + "/" + p);
             if (get(stopFileIndex)) return [];
-            if (setting(SETTINGS.FILES_INDEX_ONLY_ASSETS)) {
+            if (onlyAssets) {
               index.push(...res.files.filter((f) => isImage(f) || isVideo(f) || isSound(f)));
             } else {
               index.push(...res.files);
@@ -158,4 +159,17 @@ export function rebuildIndex() {
     success: "Files indexed successfully!",
     error: "Indexing failed.",
   });
+}
+
+export function initIndex() {
+    const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
+    if (indexMode != "manual" && indexMode != "ondemand") {
+      const delay = indexMode == "auto" ? setting(SETTINGS.FILES_INDEX_DELAY) : 0;
+      if (delay >= 0) {
+        if (delay != 0) {
+          notify.info(`Indexing will start in ${delay} seconds.`)
+        }
+        setTimeout(rebuildIndex, delay * 1000)
+      }
+    }
 }

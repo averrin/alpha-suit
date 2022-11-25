@@ -1,31 +1,14 @@
 import { moduleId, SETTINGS } from './constants.js';
-import { theme } from "crew-components/stores"
+import { theme, scale } from "crew-components/stores"
 import { setIconCollection } from "crew-components/specs"
 
-export let setting = key => {
-  return game.settings.get(moduleId, key);
-};
-
-export async function migrateFromString(key) {
-  try {
-    let current = game.settings.get(moduleId, key);
-    if (typeof current === "string" || current instanceof String) {
-      current = JSON.parse(current);
-      await game.settings.set(moduleId, key, current);
-    }
-    if (typeof current[0] === "string" || current[0] instanceof String) {
-      current = JSON.parse(current[0]);
-      if (Array.isArray(current)) {
-        await game.settings.set(moduleId, key, current);
-      }
-    }
-  } catch (error) {
-
-  }
-}
-
-const debouncedReload = debounce(() => window.location.reload(), 100);
-export function initSettings(app) {
+export function initSettings() {
+  game.settings.register(moduleId, SETTINGS.DEBUG, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
 
   game.settings.register(moduleId, SETTINGS.SHOW_TREE_TIP, {
     scope: "client",
@@ -59,7 +42,8 @@ export function initSettings(app) {
       min: 0.1,
       max: 2,
       step: 0.01
-    }
+    },
+    onChange: v => scale.set(v)
   });
   game.settings.register(moduleId, SETTINGS.RESOLUTION, {
     name: "Selected image resolution",
@@ -73,7 +57,6 @@ export function initSettings(app) {
     },
     default: 200,
     type: Number,
-    onChange: debouncedReload
   });
 
 
@@ -105,9 +88,6 @@ export function initSettings(app) {
     config: false,
     type: Boolean,
     default: false,
-    onChange: value => {
-      debouncedReload();
-    },
   });
 
 
@@ -406,5 +386,14 @@ export function initSettings(app) {
     config: false,
     default: false,
     type: Boolean,
+  });
+
+  game.settings.register(moduleId, SETTINGS.GRID_FOR_PLAYERS, {
+    name: "Allow grid for players",
+    hint: "Players will be able to open and edit their own grids.",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
   });
 }

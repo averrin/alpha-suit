@@ -1,18 +1,14 @@
 import { writable, get } from 'svelte/store';
-import { getFlag } from "crew-components/helpers"
+import { setting, filterItemPredicate } from "crew-components/helpers"
 import { TreeItem } from "./Tree.js";
-import Tag from "crew-components/tags";
-import { setting } from './settings.js';
-import { filterItemPredicate } from "crew-components/helpers";
+import Tag from "crew-components/tagsLogic";
 import { isPremium } from "crew-components/premium";
 import { helpContent } from "./help_content.js"
 import { settingsContent } from "./settings_content.js"
 import { tick } from "svelte";
 
-import { moduleId, SETTINGS, infoColor } from "./constants.js";
-import initHelpers from "crew-components/helpers";
+import { moduleId, SETTINGS } from "./constants.js";
 import { userFlagStore } from 'crew-components/stores';
-initHelpers(moduleId, infoColor, SETTINGS);
 let tagSource = moduleId;
 
 
@@ -202,7 +198,7 @@ function updateDropHandlers(sheet) {
   const selectors = [".profile", ".profile-img", ".player-image"];
   for (const selector of selectors) {
     sheet.element[0].querySelectorAll(selector).forEach((e) => {
-      e.ondrop = (event) => {
+      e.ondrop = async (event) => {
         const data = TextEditor.getDragEventData(event);
         if (data.type != "Tile") return;
         if (isPremium() && sheet.actor) {
@@ -221,6 +217,13 @@ function updateDropHandlers(sheet) {
           }
         } else {
           sheet.document.update({ img: data.texture.src });
+        }
+        if (game.system.id == "pf1") {
+          for (const action of sheet.document.actions?.contents) {
+            if (["Attack", "Use"].includes(action.data.name)) {
+              await action.update({ img: data.texture.src });
+            }
+          }
         }
       }
     });

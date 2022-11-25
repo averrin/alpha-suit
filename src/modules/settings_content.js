@@ -1,13 +1,17 @@
 import BrowserSettings from "../view/settings/BrowserSettings.svelte";
 import GeneralSettings from "../view/settings/GeneralSettings.svelte";
 import TreeSettings from "../view/settings/TreeSettings.svelte";
-import HUDSettings from "../view/settings/HUDSettings.svelte";
+// import HUDSettings from "../view/settings/HUDSettings.svelte";
 import FilesSettings from "../view/settings/FilesSettings.svelte";
 import FilesSearchSettings from "../view/settings/FilesSearchSettings.svelte";
 import SystemSettings from "../view/settings/SystemSettings.svelte";
 import PremiumSettings from "../view/settings/PremiumSettings.svelte";
 import SupportSettings from "../view/settings/SupportSettings.svelte";
 import DNDSettings from "../view/settings/DNDSettings.svelte";
+import GridSettings from "../view/settings/GridSettings.svelte";
+
+import DirectorSettings from "../view/settings/DirectorSettings.svelte";
+import EffectEditorSettings from "../view/settings/EffectEditorSettings.svelte";
 
 export const settingsContent = {
   content: [], children: [
@@ -36,7 +40,6 @@ export const settingsContent = {
       id: "s-alpha-files",
       name: "Alpha File Manager",
       icon: "fa6-solid:folder",
-      // component: FilesSettings,
       content: [], children: [
         {
           id: "s-alpha-files-general",
@@ -57,6 +60,12 @@ export const settingsContent = {
           component: DNDSettings,
         },
       ],
+    },
+    {
+      id: "s-alpha-grid",
+      name: "Alpha Grid",
+      icon: "ic:twotone-widgets",
+      component: GridSettings,
     },
     {
       id: "s-alpha-system",
@@ -83,3 +92,28 @@ export const settingsContent = {
   ],
 };
 
+export function initSettingsTopics() {
+  if (game.modules.get("director")?.active) {
+    settingsContent.children.splice(5, 0, {
+
+      id: "s-director",
+      name: "Director",
+      icon: "twemoji:clapper-board",
+      children: [
+        {
+          id: "s-director-general",
+          name: "General",
+          icon: "twemoji:clapper-board",
+          component: DirectorSettings,
+        },
+
+        {
+          id: "s-director-effects",
+          name: "Effect Editor",
+          icon: "material-symbols:magic-button",
+          component: EffectEditorSettings,
+        }
+      ]
+    })
+  }
+}

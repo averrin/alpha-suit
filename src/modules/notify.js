@@ -31,6 +31,13 @@ export const notify = {
     })
   },
 
+  error: (text, id) => {
+    toast.error(text, {
+      style: styles[get(theme)],
+      id
+    })
+  },
+
   progress: (promise, settings) => {
     toast.promise(promise, settings, {
       style: styles[get(theme)],

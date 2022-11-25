@@ -15,7 +15,7 @@
    import TreeModel from "tree-model";
    import IconButton from "crew-components/IconButton";
    import { SETTINGS } from "../modules/constants.js";
-   import Tag from "crew-components/tags";
+   import Tag from "crew-components/tagsLogic";
    import Intro from "./components/Intro.svelte";
    import HelpFilesControls from "../view/help/HelpFilesControls.svelte";
    import { fileIndex, indexInProcess, rebuildIndex } from "../modules/file_index.js";

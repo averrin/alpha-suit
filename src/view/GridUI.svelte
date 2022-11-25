@@ -17,6 +17,7 @@
    const position = application.position;
    const { width, height, top, left } = position.stores;
    import { writable } from "svelte/store";
+   import { moduleId } from "../modules/constants.js";
 
    import { TJSProseMirror } from "@typhonjs-fvtt/svelte-standard/component";
 
@@ -27,6 +28,7 @@
    import FileThumb from "./components/FileThumb.svelte";
    import { notify } from "../modules/notify";
    import CreateApplication from "crew-components/AlphaApplication";
+   import { isPremium } from "crew-components/premium";
 
    let entities = [];
    let gap = 4;
@@ -179,10 +181,7 @@
       })
    );
 
-   function itemClick(e, dataItem) {
-      if (!locked) return;
-      e.preventDefault();
-      e.stopPropagation();
+   async function itemClick(e, dataItem) {
       if (dataItem.type == "ActiveEffect") {
          game.dfreds.effectInterface.toggleEffect(dataItem.source.name);
          return;
@@ -196,7 +195,17 @@
          return;
       }
       if (dataItem.type == "Actor") {
-         dataItem.source.sheet.render(true);
+         // dataItem.source.sheet.render(true);
+         const token = canvas.tokens.placeables.find((t) => t.actor?.id == dataItem.source?.id);
+         logger.info(token);
+         if (token) {
+            token.control();
+            globalThis.canvas.animatePan({
+               x: token.document.object.center.x,
+               y: token.document.object.center.y,
+               scale: 1,
+            });
+         }
          return;
       }
       if (dataItem.type == "File" || dataItem.type == "Text") {
@@ -204,8 +213,12 @@
       }
       if (dataItem.source.toChat) {
          dataItem.source.toChat();
-      } else if (dataItem.source.roll) {
-         dataItem.source.roll();
+      } else if (dataItem.source.use) {
+         if (dataItem.source.actor) {
+            dataItem.source.use();
+         } else {
+            notify.error("You cannot use unowned items.");
+         }
       } else {
          dataItem.source.sheet.render(true);
       }
@@ -306,10 +319,59 @@
    }
 
    function editWidget() {
-     const dialogClass = CreateApplication("edit-widget", "Edit widget", EditWidgetDialog, 600,600, true);
+      const dialogClass = CreateApplication({
+         moduleId,
+         app_id: "edit-widget",
+         title: "Edit widget",
+         component: EditWidgetDialog,
+         height: 600,
+         width: 600,
+         temp: true,
+      });
       const dialog = new dialogClass();
       dialog.start();
       dialog.show();
+   }
+
+   async function removeGrid() {
+      logger.info(layoutId);
+      gridLayout.update((gl) => {
+         gl = gl.filter((l) => l.layoutId != layoutId);
+         layoutId = gl[0]?.layoutId;
+         locked = true;
+         return gl;
+      });
+      logger.info(layoutId);
+      items = await deserializeItems();
+   }
+
+   function mouseUp(e, dataItem) {
+      if (!locked) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.button == 0) {
+         return itemClick(e, dataItem);
+      }
+      if (e.button == 1) {
+         return itemMidClick(e, dataItem);
+      }
+      if (e.button == 2) {
+         return itemRightClick(e, dataItem);
+      }
+   }
+
+   function itemRightClick(e, dataItem) {
+      dataItem.source.sheet.render(true);
+   }
+
+   function itemMidClick(e, dataItem) {
+      if (dataItem.type == "Actor") {
+         const token = canvas.tokens.placeables.find((t) => t.actor?.id == dataItem.source?.id);
+         logger.info(token);
+         if (token) {
+            token.setTarget(game.user, { releaseOthers: !e.shiftKey });
+         }
+      }
    }
 </script>
 
@@ -321,35 +383,6 @@
             on:click={toggleEdit}
             size="xs"
          />
-         <!-- <IconButton -->
-         <!--    icon="material-symbols:refresh" -->
-         <!--    on:click={async (_) => { -->
-         <!--       items = await deserializeItems(); -->
-         <!--       resizeItems(); -->
-         <!--    }} -->
-         <!--    size="xs" -->
-         <!-- /> -->
-         <!-- <IconButton -->
-         <!--    icon="material-symbols:add-box-rounded" -->
-         <!--    on:click={async (_) => { -->
-         <!--       const text = `<span> <b style="color: red">This</b> is a text!<span>`; -->
-         <!--       addItem( -->
-         <!--          { -->
-         <!--             type: "Text", -->
-         <!--             id: uuidv4(), -->
-         <!--             text: text, -->
-         <!--             persist: text, -->
-         <!--          }, -->
-         <!--          0, -->
-         <!--          0, -->
-         <!--          2, -->
-         <!--          1 -->
-         <!--       ); -->
-
-         <!--       serializeItems(); -->
-         <!--    }} -->
-         <!--    size="xs" -->
-         <!-- /> -->
 
          <div
             style="background: unset"
@@ -374,34 +407,47 @@
                      {l.name}
                   </a>
                {/each}
-               <InlineButton on:click={addLayout} icon="material-symbols:add-circle-rounded" size="xs" />
+               <InlineButton
+                  disabled={!isPremium()}
+                  title={isPremium() ? "Add grid" : "Grid adding is Patreon-only feature"}
+                  on:click={addLayout}
+                  icon="material-symbols:add-circle-rounded"
+                  size="xs"
+               />
             </div>
          </div>
       </div>
       {#if !locked}
          <div class="ui-p-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
-            <ArgInput
-               size="xs"
-               label="Name"
-               type="string"
-               bind:value={layoutName}
-               on:change={(_) => {
-                  serializeItems();
-               }}
-            />
-            <!-- <ArgInput -->
-            <!--    size="xs" -->
-            <!--    label="Row height" -->
-            <!--    type="int" -->
-            <!--    bind:value={rowHeight} -->
-            <!--    on:change={async (_) => { -->
-            <!--       serializeItems(); -->
-            <!--       items = await deserializeItems(); -->
-            <!--    }} -->
-            <!-- /> -->
+            <div class="ui-flex-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
+               <ArgInput
+                  size="xs"
+                  label="Name"
+                  type="string"
+                  bind:value={layoutName}
+                  on:change={(_) => {
+                     serializeItems();
+                  }}
+               />
+               <!-- <ArgInput -->
+               <!--    size="xs" -->
+               <!--    label="Row height" -->
+               <!--    type="int" -->
+               <!--    bind:value={rowHeight} -->
+               <!--    on:change={async (_) => { -->
+               <!--       serializeItems(); -->
+               <!--       items = await deserializeItems(); -->
+               <!--    }} -->
+               <!-- /> -->
 
-            <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
-            <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
+               <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
+               <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
+            </div>
+            <div class="ui-flex-none">
+               {#if isPremium()}
+                  <RemoveButton disabled={$gridLayout.length <= 1} on:click={removeGrid} size="xs" />
+               {/if}
+            </div>
          </div>
       {/if}
    </div>
@@ -421,7 +467,7 @@
             style="background-color: hsl(var(--b2))"
             class:editable={!locked}
             class:ui-cursor-pointer={locked}
-            on:click={(e) => itemClick(e, dataItem)}
+            on:mouseup={(e) => mouseUp(e, dataItem)}
             id={dataItem.id}
             data-type={dataItem.type}
          >
@@ -446,6 +492,12 @@
                >
                   {dataItem.source.name}
                </div>
+            {:else if dataItem.type == "Actor"}
+               <DocumentThumb
+                  title={`${dataItem.source.data.name} [select | target | open]`}
+                  maximize={true}
+                  item={writable(dataItem.source)}
+               />
             {:else}
                <DocumentThumb maximize={true} item={writable(dataItem.source)} />
             {/if}
@@ -460,12 +512,17 @@
 
       {#if items.length == 0}
          <div class="overlay">
-            <span>Drop <b>Item / Actor / File / Macros</b> here</span>
+            {#if game.user.isGM}
+               <span>Drop <b>Item / Actor / File / Macros / Scene</b> here</span>
+            {:else}
+               <span>Drop <b>Item / Macros</b> here</span>
+            {/if}
             <div class="ui-divider">OR</div>
             <button
+               disabled={true}
                style="pointer-events: all !important"
-               class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
-               on:click={editWidget}>Add widget</button
+               class="ui-btn ui-btn-md ui-btn-primary ui-w-48 ui-btn-disabled"
+               on:click={editWidget}>Add widget<br />[coming soon...]</button
             >
          </div>
       {/if}

@@ -12,6 +12,7 @@
     <li>Gage Eakins</li>
     <li>Thomakaze</li>
     <li>Oshy</li>
+    <li>TehT</li>
   </ul>
 
   <h1>Special Thanks</h1>

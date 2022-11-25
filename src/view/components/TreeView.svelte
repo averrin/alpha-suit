@@ -145,6 +145,7 @@
          return items;
       });
    }
+   const showSysInfo = setting(SETTINGS.SHOW_SYSTEM_INFO);
 </script>
 
 <div class="ui-h-full">
@@ -159,6 +160,6 @@
       on:select={handleSelection}
       {selected}
       showCreateButtons={true}
-      extraComponents={(_) => (setting(SETTINGS.SHOW_SYSTEM_INFO) ? [TreeItemExtra] : [])}
+      extraComponents={(_) => (showSysInfo ? [TreeItemExtra] : [])}
    />
 </div>
