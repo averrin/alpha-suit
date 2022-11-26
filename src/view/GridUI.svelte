@@ -375,10 +375,11 @@
    }
 </script>
 
-<AlphaShell bind:elementRoot id="grid">
+<AlphaShell bind:elementRoot id="grid" trackSize={true}>
    <div class="ui-flex ui-flex-col" style="background-color: hsl(var(--b2))">
       <div class="ui-p-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
          <IconButton
+            title={locked ? `Edit grid` : `Lock grid`}
             icon={locked ? "material-symbols:edit-square" : "material-symbols:lock"}
             on:click={toggleEdit}
             size="xs"
@@ -440,12 +441,12 @@
                <!--    }} -->
                <!-- /> -->
 
-               <IconButton icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
-               <IconButton icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
+               <IconButton title="Reset layout" icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
             </div>
             <div class="ui-flex-none">
+               <IconButton title="Remove all items" icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
                {#if isPremium()}
-                  <RemoveButton disabled={$gridLayout.length <= 1} on:click={removeGrid} size="xs" />
+                  <RemoveButton title="Delete grid" disabled={$gridLayout.length <= 1} on:click={removeGrid} size="xs" />
                {/if}
             </div>
          </div>
@@ -489,6 +490,7 @@
                <div
                   class="ui-text-shadow-lg ui-flex ui-items-center ui-justify-center ui-rounded-md ui-font-bold ui-link ui-bg-cover ui-w-full ui-h-full"
                   style:background-image={`url(${dataItem.source.thumb})`}
+                  style:color="#eee"
                >
                   {dataItem.source.name}
                </div>
@@ -504,7 +506,7 @@
 
             {#if !locked}
                <div class="remove">
-                  <RemoveButton size="xs" on:click={(_) => removeItem(dataItem)} />
+                  <RemoveButton size="xs" on:click={(_) => removeItem(dataItem)} title="Remove item" />
                </div>
             {/if}
          </div>

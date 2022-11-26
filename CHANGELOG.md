@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.5.0 - 0.5.1](https://github.com/averrin/alpha-suit/compare/0.5.0...0.5.1)
+Added:
+  * Titles for grid buttons
+  * Grid window size saving
+
 ## [0.4.14 - 0.5.0](https://github.com/averrin/alpha-suit/compare/0.4.14...0.5.0)
 Added:
   * New Grid feature. Available for DM and players (you can disable it in the settings)

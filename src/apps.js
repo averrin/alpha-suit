@@ -17,7 +17,7 @@ const appSpecs = [
   { app_id: "help", title: "Alpha Help Center", component: HelpUI, isGM: true },
   { app_id: "settings", title: "Alpha Settings", component: SettingsUI, isGM: true },
   { app_id: "files", title: "Alpha File Manager [BETA]", component: FilesUI, isGM: true },
-  { app_id: "grid", title: "Alpha Grid [ALPHA]", component: GridUI, isGM: false },
+  { app_id: "grid", title: "Alpha Grid [ALPHA]", component: GridUI, isGM: false, trackSize: true},
 ]
 
 export function createApps() {
