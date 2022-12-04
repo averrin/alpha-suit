@@ -167,7 +167,7 @@
             ol.forEach((l) => {
                delete l.source;
             });
-            if (JSON.stringify(layout) == JSON.stringify(ol)) {
+            if (JSON.stringify(layout) == JSON.stringify(ol) && ll.name == layoutName) {
                return;
             }
          }
@@ -574,7 +574,7 @@
                type="string"
                bind:value={layoutName}
                on:change={(_) => {
-                  serializeItems();
+                  foundry.utils.debounce(serializeItems, 500)();
                }}
             />
             <!-- <ArgInput -->
