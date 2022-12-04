@@ -27,7 +27,6 @@ export function createApps() {
     const app = new (CreateApplication(spec, props))();
     apps[spec.app_id] = app;
   }
-  logger.info(apps)
   return apps;
 }
 

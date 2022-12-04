@@ -13,6 +13,7 @@
     <li>Thomakaze</li>
     <li>Oshy</li>
     <li>TehT</li>
+    <li>Aaron Dougherty</li>
   </ul>
 
   <h1>Special Thanks</h1>

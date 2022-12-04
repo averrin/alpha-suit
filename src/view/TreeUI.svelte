@@ -65,7 +65,7 @@
          class:ui-w-full={$selected.length == 0}
          style="height: {contentH}px;"
       >
-         <LeftPane />
+         <LeftPane {elementRoot} />
       </div>
       {#if $selected.length > 0}
          <div

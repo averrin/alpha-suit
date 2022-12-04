@@ -396,4 +396,22 @@ export function initSettings() {
     type: Boolean,
     default: true,
   });
+
+  game.settings.register(moduleId, SETTINGS.GRID_IN_SIDEBAR, {
+    name: "Show grid tab in sidebar",
+    hint: "[EXPERIMENTAL] Add grid tab to the sidebar",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register(moduleId, SETTINGS.GRID_IN_TREE, {
+    name: "Show grid tab in Alpha Tree",
+    hint: "[EXPERIMENTAL] Add grid tab in Alpha Tree",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
 }

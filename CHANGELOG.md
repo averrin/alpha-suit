@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.5.1 - 0.5.2](https://github.com/averrin/alpha-suit/compare/0.5.1...0.5.2)
+Added:
+  * Expanding dropped folders for grid
+  * [Director integration] support saved effects for grid
+  * Support dropped compendiums for grid [Compendium Folders required]
+  * [Premium, Experimental] Grid tab in the sidebar
+  * [Premium, Experimental] Grid tab in Alpha Tree
+  * Folders are now grid-droppable in Alpha Tree 
+  * [Experimental] Checkbox to search files within the current folder
+
+Known Issues:
+  * Grid can lost some data. Resizing and auto-placing can act weirdly, especially with experimental features enabled.
+
 ## [0.5.0 - 0.5.1](https://github.com/averrin/alpha-suit/compare/0.5.0...0.5.1)
 Added:
   * Titles for grid buttons

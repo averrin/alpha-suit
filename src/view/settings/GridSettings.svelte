@@ -7,4 +7,7 @@
    <div class="ui-text-center ui-text-base-content ui-text-lg ui-font-bold">Game System Settings</div>
 
    <SettingsInput key={SETTINGS.GRID_FOR_PLAYERS} />
+
+   <SettingsInput key={SETTINGS.GRID_IN_SIDEBAR} premium={true} />
+   <SettingsInput key={SETTINGS.GRID_IN_TREE} premium={true} />
 </div>

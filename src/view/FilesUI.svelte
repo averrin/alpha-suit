@@ -443,15 +443,25 @@
    const ff = foundry.utils.debounce(filterFiles, 5);
    const searchLimit = setting(SETTINGS.FILES_SEARCH_LIMIT);
    const fuzzy = setting(SETTINGS.FILES_FUZZY) && isPremium();
+   let searchInFolder = false;
+   let folderForSearch;
    function searchFile() {
       if (search.length >= 3) {
+         if (topic.id != "Search") {
+            folderForSearch = topic.id;
+         }
+
          selectedFiles.set([]);
          searchStatus = "Searching...";
          files = [];
          topic = { id: "Search", source: { files } };
          filterFiles();
+         let index = $fileIndex;
+         if (searchInFolder && folderForSearch) {
+            index = index.filter((p) => p.startsWith(folderForSearch));
+         }
          if (!fuzzy) {
-            $fileIndex.forEach((f) => {
+            index.forEach((f) => {
                const name = f.split("/")[f.split("/").length - 1];
                const store = f.split("/")[0];
                f = f.replace(store + "/", "");
@@ -464,7 +474,7 @@
          } else {
             const result = fuzzyFindInList(
                search,
-               $fileIndex.map((f) => {
+               index.map((f) => {
                   const name = f.split("/")[f.split("/").length - 1];
                   const store = f.split("/")[0];
                   f = f.replace(store + "/", "");
@@ -530,6 +540,21 @@
             clearable={true}
          >
             <svelte:fragment slot="right">
+               <span
+                  class="ui-p-1"
+                  style="background-color: hsl(var(--n) / var(--tw-bg-opacity));"
+                  title="Search within the current folder"
+               >
+                  <ArgInput
+                     type="check"
+                     size="xs"
+                     bind:value={searchInFolder}
+                     on:change={(e) => {
+                        searchInFolder = e.detail;
+                        searchFile();
+                     }}
+                  />
+               </span>
                {#if $fileIndex.length == 0}
                   <IconButton icon="mdi:database" on:click={rebuildIndex} type="primary" title="Start indexing" />
                {/if}

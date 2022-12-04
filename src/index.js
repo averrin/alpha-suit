@@ -7,7 +7,7 @@ import "iconify-icon";
 
 import { moduleId, SETTINGS, infoColor } from "./modules/constants.js";
 
-import {get} from "svelte/store"
+import { get } from "svelte/store"
 import initHelpers, { logger, moduleId as mid } from "crew-components/helpers";
 import { initStores as helperStores } from "crew-components/stores";
 
@@ -18,9 +18,11 @@ import { initSettingsTopics } from "./modules/settings_content";
 import { createApps, getApp, startGMApps, startUserApps } from "./apps";
 import { getTool, initTools } from "./tools";
 import "./systems.js";
-import {createAPI} from "./api.js";
+import { createAPI } from "./api.js";
+import GridUI_inline from "./view/GridUI_inline.svelte"
 
 import NotificationsApp from "./view/Notifications.js"
+import CreateApplication from "crew-components/AlphaApplication";
 
 initHelpers(moduleId, infoColor, SETTINGS);
 createApps();
@@ -47,10 +49,42 @@ Hooks.on('renderSceneControls', _ => {
   initTools();
 });
 
+function addSidebarTab(id, appSpec) {
+  const tabs = document.getElementById("sidebar-tabs");
+  const tab = document.createElement("a")
+  tab.classList.add("item")
+  tab.dataset.tab = id
+  const icon = document.createElement("i")
+  icon.classList.add("fas")
+  icon.classList.add("fa-icons")
+  tab.appendChild(icon)
+  tabs.prepend(tab)
+
+  const sidebar = document.getElementById("sidebar");
+  const section = document.createElement("section")
+  section.classList.add("sidebar-tab")
+  section.classList.add("tab")
+  section.id = id
+  section.dataset.tab = id
+  sidebar.appendChild(section);
+
+  //TODO: rework resizing
+  document.querySelector(':root').style.setProperty("--sidebar-width", "360px");
+
+  const igApp = new (CreateApplication(appSpec))();
+  igApp.start();
+  igApp.show()
+}
+
 Hooks.once('ready', () => {
   helperStores()
   initStores();
   startUserApps()
+
+    if (game.settings.get(moduleId, SETTINGS.GRID_IN_SIDEBAR)) {
+      const inlineGrid = { moduleId: "alpha-suit", isTemp: true, app_id: "grid", target: "#grid", title: "Alpha Grid [ALPHA]", component: GridUI_inline }
+      addSidebarTab("grid", inlineGrid)
+    }
 
   if (game.user.isGM) {
     startGMApps()

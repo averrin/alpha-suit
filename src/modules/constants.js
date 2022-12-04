@@ -5,6 +5,8 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  GRID_IN_SIDEBAR: "grid-in-sidebar",
+  GRID_IN_TREE: "grid-in-tree",
   GRID_FOR_PLAYERS: "grid-for-players",
   DEBUG: "debug",
   FILES_WHITE_LIST: "files-white-list",

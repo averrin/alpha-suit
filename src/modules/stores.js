@@ -30,6 +30,8 @@ export const helpTopic = writable(null);
 export const helpTree = writable({});
 export const settingsTopic = writable(null);
 export const settingsTree = writable({});
+export const gridSizes = writable({});
+export const lastEditGrid = writable(null);
 
 export const tagsStore = writable([]);
 export const systems = writable({});
@@ -38,6 +40,8 @@ export const system = writable(null);
 export const directorActionsStore = writable([]);
 export const charactersStore = writable([]);
 export const targetsStore = writable([]);
+
+export const editingWidget = writable(null)
 
 function getTree() {
   let collection = get(currentCollection);

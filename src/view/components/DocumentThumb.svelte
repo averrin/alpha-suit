@@ -5,8 +5,9 @@
 
    export let item;
    export let title;
-   export let draggable=true;
+   export let draggable = true;
    export let maximize = false;
+   export let widthAuto = false;
 
    export let fromCompendium = null;
    import { currentCollection } from "../../modules/stores.js";
@@ -15,6 +16,9 @@
    async function drag(e) {
       let id = $item.id;
       let type = $item?.compendium?.metadata?.type ?? $currentCollection.documentName;
+     if ($item instanceof Folder) {
+       type = "Folder"
+     }
       let data = {
          type,
          id,
@@ -102,11 +106,13 @@
 </script>
 
 <div
-   class="zoom-container ui-w-full ui-h-full ui-border-none ui-rounded-md ui-bg-contain ui-bg-no-repeat"
+   class="zoom-container ui-h-full ui-flex ui-items-center ui-justify-center ui-border-none ui-rounded-md ui-bg-contain ui-bg-no-repeat"
+  class:ui-w-full={!widthAuto}
+  class:ui-w-auto={widthAuto}
    style:background-image="url({thumb})"
-  style:background-size={maximize ? "cover" : "contain"}
+   style:background-size={maximize ? "cover" : "contain"}
    alt=""
-  {draggable}
+   {draggable}
    on:pointerdown={() => null}
    on:click
    on:dragstart={drag}
@@ -114,7 +120,9 @@
    {title}
    on:drop={handleDrop}
    on:click
-/>
+>
+  <slot />
+</div>
 
 <style>
    .zoom-container {

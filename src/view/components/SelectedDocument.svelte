@@ -106,13 +106,13 @@
 
 <div class="ui-flex ui-flex-col ui-gap-2" id={$item.id}>
    <div class="ui-flex ui-flex-row ui-gap-3 ui-items-center">
-      {#if $item.thumbnail}
-         <div class="ui-h-12 ui-w-12">
-            <DocumentThumb {item} on:click={() => $item.sheet.render(true)} />
-         </div>
-      {:else}
-         <iconify-icon icon="fa-solid:folder" class="ui-ml-2 ui-text-lg" />
-      {/if}
+      <div class="ui-h-12 ui-w-12">
+         <DocumentThumb {item} on:click={() => $item.sheet.render(true)}>
+            {#if $item instanceof Folder}
+               <iconify-icon style:color={$item.data.color} icon="fa-solid:folder" style:font-size="2rem" />
+            {/if}
+         </DocumentThumb>
+      </div>
 
       <div class="ui-flex ui-flex-row ui-flex-1">
          <div class="ui-input-group ui-input-group-md">

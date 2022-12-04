@@ -131,27 +131,29 @@
       <div class="ui-flex ui-flex-row ui-w-full ui-justify-center">
          <div class="ui-text-xs ui-font-medium ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-w-full ui-items-center">
             {#if isFolder}
-               {#if !isExpanded}
-                  {#if node.children?.length > 0}
-                     <iconify-icon
-                        icon="fa-solid:folder-plus"
-                        class="ui-ml-2 ui-text-lg ui-text-base-content"
-                        style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
-                     />
+               <DocumentThumb widthAuto={true} item={writable(node.source.folder)}>
+                  {#if !isExpanded}
+                     {#if node.children?.length > 0}
+                        <iconify-icon
+                           icon="fa-solid:folder-plus"
+                           class="ui-ml-2 ui-text-lg ui-text-base-content"
+                           style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
+                        />
+                     {:else}
+                        <iconify-icon
+                           icon="fa-solid:folder-minus"
+                           class="ui-ml-2 ui-text-lg ui-text-base-content"
+                           style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
+                        />
+                     {/if}
                   {:else}
                      <iconify-icon
-                        icon="fa-solid:folder-minus"
+                        icon="fa-solid:folder-open"
                         class="ui-ml-2 ui-text-lg ui-text-base-content"
                         style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
                      />
                   {/if}
-               {:else}
-                  <iconify-icon
-                     icon="fa-solid:folder-open"
-                     class="ui-ml-2 ui-text-lg ui-text-base-content"
-                     style:color={node.color == "#000000" ? "hsv(var(--bc))" : node.color}
-                  />
-               {/if}
+               </DocumentThumb>
             {:else if thumbnail}
                {#if !isScene}
                   <div class="ui-h-8 ui-w-8">

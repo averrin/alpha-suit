@@ -1,4 +1,5 @@
 <script>
+   import GridComponent from "./GridComponent.svelte";
    import { currentCollection, selected, filter, treeItems, aliases, tagsStore } from "../../modules/stores.js";
    import FilterBar from "./FilterBar.svelte";
    import TreeView from "./TreeView.svelte";
@@ -10,6 +11,8 @@
    import Tags from "crew-components/Tags";
    import { createFilter } from "crew-components/helpers";
    import { onDestroy } from "svelte";
+
+   export let elementRoot;
 
    let ftags = $tagsStore.filter((t) => t.fav);
    onDestroy(
@@ -31,12 +34,21 @@
          icon: "fa-solid:magic",
       });
    }
+   if (setting(SETTINGS.GRID_IN_TREE)) {
+      availableTabs.push({
+         title: "Grid",
+         icon: "ic:twotone-widgets",
+      });
+   }
+
    let mode = availableTabs[0].title;
    function selectMode(t) {
       mode = t.title;
-      $currentCollection = t.get();
-      $selected = [];
-      $filter = t.filter ? { persist_filters: [createFilter({}, t.filter, "default", true)] } : {};
+      if (t.get) {
+         $currentCollection = t.get();
+         $filter = t.filter ? { persist_filters: [createFilter({}, t.filter, "default", true)] } : {};
+      }
+         $selected = [];
    }
    let showTip = setting(SETTINGS.SHOW_TREE_TIP);
    function closeTip() {
@@ -95,39 +107,45 @@
       </div>
    </div>
 
-   <div class="ui-bg-base-100 ui-p-2 ui-h-full ui-pb-[120px]">
-      <div class="ui-flex ui-flex-1 ui-flex-col">
-         <FilterBar {filter} />
-      </div>
-
-      <div class="ui-flex ui-flex-row ui-gap-1 ui-flex-1 ui-items-center">
-         <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-text-base-content">
-            Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
+   {#if mode != "Grid"}
+      <div class="ui-bg-base-100 ui-p-2 ui-h-full ui-pb-[120px]">
+         <div class="ui-flex ui-flex-1 ui-flex-col">
+            <FilterBar {filter} />
          </div>
 
-         {#if mode == "Actors"}
+         <div class="ui-flex ui-flex-row ui-gap-1 ui-flex-1 ui-items-center">
+            <div class="ui-flex ui-flex-row ui-gap-2 ui-flex-1 ui-items-center ui-text-base-content">
+               Items: <span class="ui-font-bold">{$treeItems ? Object.keys($treeItems)?.length - 1 : 0}</span>
+            </div>
+
+            {#if mode == "Actors"}
+               <InlineButton
+                  title="On Scene"
+                  icon="fa-solid:map"
+                  on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)}
+               />
+            {/if}
             <InlineButton
-               title="On Scene"
-               icon="fa-solid:map"
-               on:click={(_) => toggleFilter(filter, "@onScene", "onScene", aliases)}
+               title="Favs"
+               icon="fa-solid:star"
+               on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)}
             />
-         {/if}
-         <InlineButton
-            title="Favs"
-            icon="fa-solid:star"
-            on:click={(_) => toggleFilter(filter, "@fav", "fav", aliases)}
-         />
-         {#if !$filter?.persist_filters}
-            <CreateButtons />
-         {/if}
-      </div>
+            {#if !$filter?.persist_filters}
+               <CreateButtons />
+            {/if}
+         </div>
 
-      {#if ftags.length > 0}
-         <Tags {onTagClick} tags={ftags.map((t) => t.text)} disable={true} />
-      {/if}
+         {#if ftags.length > 0}
+            <Tags {onTagClick} tags={ftags.map((t) => t.text)} disable={true} />
+         {/if}
 
-      <div class="ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto ui-h-full">
-         <TreeView />
+         <div class="ui-flex ui-flex-1 ui-flex-col ui-overflow-y-auto ui-h-full">
+            <TreeView />
+         </div>
       </div>
-   </div>
+   {:else}
+      <div class="ui-p-1 ui-h-full">
+         <GridComponent {elementRoot} id="tree" />
+      </div>
+   {/if}
 </div>
