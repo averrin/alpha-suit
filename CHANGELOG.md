@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.5.3 - 0.5.4](https://github.com/averrin/alpha-suit/compare/0.5.3...0.5.4)
+Added:
+  * Initial support for PF2e strikes in the grid
+
+Fixed:
+  * "Trial" window is too big
+
 ## [0.5.2 - 0.5.3](https://github.com/averrin/alpha-suit/compare/0.5.2...0.5.3)
 !!! All premium features are now FREE! Only until 1 Jan 2023. !!!
 

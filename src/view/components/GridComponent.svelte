@@ -1,6 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
+  import ActionGridWidget from "./ActionGridWidget.svelte";
    import { theme } from "crew-components/stores";
    import Icon from "crew-components/Icon";
    import { v4 as uuidv4 } from "uuid";
@@ -21,7 +22,6 @@
 
    export let elementRoot;
    export let id;
-   const widgetsEnabled = false;
 
    import TextGridWidget from "./TextGridWidget.svelte";
    import Grid from "svelte-grid";
@@ -29,6 +29,8 @@
    import FileThumb from "./FileThumb.svelte";
    import { notify } from "../../modules/notify";
    import { isPremium } from "crew-components/premium";
+   import { SETTINGS, setting } from "crew-components/helpers";
+   const widgetsEnabled = setting(SETTINGS.DEV_FEATURES);
 
    async function setVideoThumb(effect) {
       const els = document.querySelectorAll(`img#et-${effect.id ?? effect.effect.id}`);
@@ -119,6 +121,10 @@
          let source;
          if (i.uuid) {
             source = await fromUuid(i.uuid);
+         } else if (i.type == "Action") {
+            source = game.actors.get(i.persist.actorId).system.actions.find(a => a.item.id == i.persist.itemId);
+            source.persist = i.persist;
+            source.type = "Action";
          } else if (i.type == "CompendiumEntry") {
             source = game.packs.get(i.persist);
             source.persist = i.persist;
@@ -307,11 +313,18 @@
          data.documentName = "File";
          entity = data;
          if (entities.find((e) => e.id == data.id)) return;
+      } else if (data.type == "Action") {
+         data.documentName = "Action";
+         entity = game.actors.get(data.actorId).system.actions[data.index];
+         entity.type = "Action";
+         entity.persist = { ...data, itemId: entity.item.id };
+         entity.h = 2;
+         entity.w = 6;
       } else if (data.type == "CompendiumEntry") {
+         data.documentName = "CompendiumEntry";
          entity = game.packs.get(data.id);
          entity.persist = data.id;
          // logger.error(entity);
-         data.documentName = "CompendiumEntry";
          entity.w = 4;
          if (entities.find((e) => e?.id == data?.id)) return;
       } else if (data.type == "Effect") {
@@ -672,6 +685,8 @@
                <Icon icon="fa-solid:atlas" />
                {dataItem.source.metadata.label}
             </div>
+         {:else if dataItem.type == "Action"}
+          <ActionGridWidget action={dataItem.source} />
          {:else if dataItem.type == "Actor"}
             <DocumentThumb
                title={`${dataItem.source.data.name} [select | target | open]`}

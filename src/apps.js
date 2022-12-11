@@ -12,7 +12,7 @@ import GridUI from './view/GridUI.svelte';
 import CreatorUI from './view/CreatorUI.svelte';
 import EditWidgetDialog from "./view/EditWidgetDialog.svelte";
 import TrialDialog from "./view/TrialDialog.svelte"
-import { isTrial } from "crew-components/premium";
+import { isPremiumClean, isTrial } from "crew-components/premium";
 import { setting } from "crew-components/helpers";
 
 const apps = {};
@@ -36,10 +36,10 @@ const appSpecs = [
     app_id: "trial",
     title: "Merry Christmas!",
     component: TrialDialog,
-    height: 810,
-    width: 800,
+    height: Math.min(window.innerHeight * 0.9, 900),
+    width: 600,
     isTemp: true,
-    showIf: _ => isTrial() && !setting(SETTINGS.HIDE_TRIAL_2023),
+    showIf: _ => !isPremiumClean() && isTrial() && !setting(SETTINGS.HIDE_TRIAL_2023),
     isGM: true,
   }
 ]

@@ -7,7 +7,7 @@
    export let elementRoot;
 </script>
 
-<AlphaShell bind:elementRoot id="trial">
+<AlphaShell bind:elementRoot id="trial" scrollable={true}>
    <div class="ui-p-4">
       <div style:font-size="2rem" class="ui-font-bold ui-p-2 ui-w-full ui-text-center">Merry Christmas and the Happy New Year!</div>
 

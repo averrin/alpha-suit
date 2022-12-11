@@ -8,7 +8,6 @@
   <h1>Premium Access</h1>
   <ul>
     <li>iotech</li>
-    <li>Christopher Allbritton</li>
     <li>Gage Eakins</li>
     <li>Thomakaze</li>
     <li>Oshy</li>
