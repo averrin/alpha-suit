@@ -92,6 +92,7 @@ export function initSettings() {
 
 
   game.settings.register(moduleId, SETTINGS.IGNORED_PACKS, {
+    name: "Ignored compendiums",
     config: false,
     type: Array,
     default: [],
@@ -413,5 +414,70 @@ export function initSettings() {
     config: false,
     type: Boolean,
     default: false,
+  });
+
+  game.settings.register(moduleId, SETTINGS.HIDE_TRIAL_2023, {
+    name: "Do not show this window again",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_TREE, {
+    name: "Enable Alpha Tree",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_BROWSER, {
+    name: "Enable Alpha Browser",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_FILES, {
+    name: "Enable Alpha File Manager",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_SETTINGS, {
+    name: "Enable Alpha Settings",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_HELP, {
+    name: "Enable Alpha Help Center",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_GRID, {
+    name: "Enable Alpha Grid",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.TOOLS_CREATOR, {
+    name: "Enable Alpha Creator",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
   });
 }

@@ -11,26 +11,23 @@
    import ActiveEffectThumb from "./ActiveEffectThumb.svelte";
    import RemoveButton from "crew-components/RemoveButton";
    import ArgInput from "crew-components/ArgInput";
-   import EditWidgetDialog from "../EditWidgetDialog.svelte";
    import { gridLayout, gridSizes, lastEditGrid } from "../../modules/stores.js";
    import { getContext, onDestroy, tick } from "svelte";
    const { application } = getContext("external");
    const position = application.position;
    const { width, height, top, left } = position.stores;
    import { writable } from "svelte/store";
-   import { moduleId } from "../../modules/constants.js";
    import { editingWidget } from "../../modules/stores.js";
 
    export let elementRoot;
    export let id;
+   const widgetsEnabled = false;
 
-   import { TJSProseMirror } from "@typhonjs-fvtt/svelte-standard/component";
-
+   import TextGridWidget from "./TextGridWidget.svelte";
    import Grid from "svelte-grid";
    import gridHelp from "svelte-grid/build/helper/index.mjs";
    import FileThumb from "./FileThumb.svelte";
    import { notify } from "../../modules/notify";
-   import CreateApplication from "crew-components/AlphaApplication";
    import { isPremium } from "crew-components/premium";
 
    async function setVideoThumb(effect) {
@@ -89,6 +86,7 @@
       const old_items = [...items];
       items = [];
       for (const item of old_items) {
+         if (!item || Object.keys(item).length == 0) continue;
          let oc = $gridSizes[$lastEditGrid] ?? Object.keys(item)[0];
          if (!item[oc]) {
             oc = Object.keys(item)[0];
@@ -116,6 +114,7 @@
       layoutId = l?.layoutId ?? layoutId;
       layoutName = l?.name ?? layoutName;
       rowHeight = l?.options?.rowHeight ?? rowHeight;
+
       for (const i of layout) {
          let source;
          if (i.uuid) {
@@ -125,7 +124,7 @@
             source.persist = i.persist;
          } else if (i.type == "Text") {
             source = {
-               text: i.persist,
+               ...i.persist,
                ...i,
             };
          } else if (i.type == "Effect") {
@@ -143,6 +142,9 @@
             source.type = "ActiveEffect";
             source.id = i.sourceId;
          } else {
+            continue;
+         }
+         if (!source) {
             continue;
          }
          i.source = source;
@@ -433,19 +435,25 @@
 
    function editWidget() {
       editingWidget.set(null);
-      const dialogClass = CreateApplication({
-         moduleId,
-         app_id: "edit-widget",
-         title: "Edit widget",
-         component: EditWidgetDialog,
-         height: 600,
-         width: 600,
-         isTemp: true,
-      });
-      const dialog = new dialogClass();
-      dialog.start();
-      dialog.show();
+      AlphaSuit.showApp("edit-widget");
    }
+
+   onDestroy(
+      editingWidget.subscribe((w) => {
+         if (!w) return;
+         logger.info(w);
+         const item = items.find((i) => i.widgetId == w.widgetId);
+         if (!item) {
+            items = [...items, w];
+         } else {
+            items[items.indexOf(item)] = w;
+            items = [...items];
+         }
+         logger.info(items);
+         serializeItems();
+         resizeItems();
+      })
+   );
 
    async function removeGrid() {
       gridLayout.update((gl) => {
@@ -500,7 +508,6 @@
    }
 
    function onDragStartEffect(event, effect) {
-      // debugger;
       let section = { ...effect.section };
       section.id = uuidv4();
       section.savedId = null;
@@ -564,6 +571,9 @@
             />
          </div>
       </div>
+      {#if id != "standalone"}
+         <IconButton icon="material-symbols:open-in-browser" size="xs" on:click={(_) => AlphaSuit.showApp("grid")} />
+      {/if}
    </div>
    {#if !locked}
       <div class="ui-p-1 ui-w-full ui-h-fit ui-flex ui-flex-row ui-items-center ui-gap-2">
@@ -577,18 +587,14 @@
                   foundry.utils.debounce(serializeItems, 500)();
                }}
             />
-            <!-- <ArgInput -->
-            <!--    size="xs" -->
-            <!--    label="Row height" -->
-            <!--    type="int" -->
-            <!--    bind:value={rowHeight} -->
-            <!--    on:change={async (_) => { -->
-            <!--       serializeItems(); -->
-            <!--       items = await deserializeItems(); -->
-            <!--    }} -->
-            <!-- /> -->
 
             <IconButton title="Reset layout" icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
+
+            {#if widgetsEnabled}
+               <button title="Add new widget" class="ui-btn ui-btn-xs ui-btn-primary ui-w-24" on:click={editWidget}
+                  >Add widget</button
+               >
+            {/if}
          </div>
          <div class="ui-flex-none">
             <IconButton title="Remove all items" icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
@@ -630,9 +636,7 @@
          {:else if dataItem.type == "File"}
             <FileThumb zoom={false} maximize={true} file={dataItem.source} />
          {:else if dataItem.type == "Text"}
-            <div class="ui-p-1">
-               <TJSProseMirror content={dataItem.source.text} options={{ editable: false }} />
-            </div>
+            <TextGridWidget item={dataItem.source} />
          {:else if dataItem.type == "JournalEntry"}
             <div class="ui-p-1 ui-font-bold ui-link">
                {dataItem.source.name}
@@ -694,12 +698,17 @@
             <span>Drop <b>Item / Macros</b> here</span>
          {/if}
          <div class="ui-divider">OR</div>
-         <button
-            style="pointer-events: all !important"
-            class="ui-btn ui-btn-md ui-btn-primary ui-w-48 ui-btn-disabled"
-            disabled={true}
-            on:click={editWidget}>Add widget<br /> [coming soon...]</button
-         >
+         {#if widgetsEnabled}
+            <button
+               style="pointer-events: all !important"
+               class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
+               on:click={editWidget}>Add widget</button
+            >
+         {:else}
+            <button class="ui-btn ui-btn-md ui-btn-primary ui-w-48 ui-btn-disabled" on:click={editWidget}
+               >Add widget<br />[coming soon]</button
+            >
+         {/if}
       </div>
    {/if}
 </div>

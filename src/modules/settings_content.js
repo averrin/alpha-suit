@@ -9,6 +9,7 @@ import PremiumSettings from "../view/settings/PremiumSettings.svelte";
 import SupportSettings from "../view/settings/SupportSettings.svelte";
 import DNDSettings from "../view/settings/DNDSettings.svelte";
 import GridSettings from "../view/settings/GridSettings.svelte";
+import ToolsSettings from "../view/settings/ToolsSettings.svelte"
 
 import DirectorSettings from "../view/settings/DirectorSettings.svelte";
 import EffectEditorSettings from "../view/settings/EffectEditorSettings.svelte";
@@ -20,6 +21,13 @@ export const settingsContent = {
       name: "General",
       icon: "eva:options-outline",
       component: GeneralSettings,
+      content: [], children: [],
+    },
+    {
+      id: "s-alpha-tools",
+      name: "Tools",
+      icon: "vaadin:tools",
+      component: ToolsSettings,
       content: [], children: [],
     },
     {

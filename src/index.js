@@ -1,3 +1,4 @@
+import {isPremium} from "crew-components/premium"
 import "crew-components/styles/foundry-fixes.scss";
 import "crew-components/styles/alpha-ui.scss";
 import "crew-components/styles/global.scss";
@@ -81,7 +82,7 @@ Hooks.once('ready', () => {
   initStores();
   startUserApps()
 
-    if (game.settings.get(moduleId, SETTINGS.GRID_IN_SIDEBAR)) {
+    if (isPremium() && game.settings.get(moduleId, SETTINGS.GRID_IN_SIDEBAR)) {
       const inlineGrid = { moduleId: "alpha-suit", isTemp: true, app_id: "grid", target: "#grid", title: "Alpha Grid [ALPHA]", component: GridUI_inline }
       addSidebarTab("grid", inlineGrid)
     }

@@ -447,7 +447,7 @@
    let folderForSearch;
    function searchFile() {
       if (search.length >= 3) {
-         if (topic.id != "Search") {
+         if (topic?.id && topic.id != "Search") {
             folderForSearch = topic.id;
          }
 
@@ -498,7 +498,7 @@
          // });
 
          searchStatus = `Found ${topic.source.files.length} files.`;
-      } else {
+      } else if (topic?.id == "Search") {
          topic = null;
       }
    }

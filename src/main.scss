@@ -13,9 +13,36 @@
       overflow-y: hidden;
       background: hsl(var(--window-background));
     }
+
+    .prosemirror {
+      textarea {
+        color: hsl(var(--bc))
+      }
+
+    a.editor-edit, .editor-menu button:not(.pm-dropdown) {
+      width: 2rem;
+    }
+
+    .pm-dropdown ul {
+      background-color: hsl(var(--b1));
+    }
+
+    a.editor-edit, .editor-menu button, .pm-dropdown li {
+      background-color: hsl(var(--b1));
+      color: hsl(var(--bc));
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pm-dropdown li:hover {
+      background-color: hsl(var(--b3));
+    }
+}
 }
 #alpha-grid {
     .window-content {
       overflow: visible !important;
     }
 }
+

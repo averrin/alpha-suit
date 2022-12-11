@@ -16,5 +16,8 @@ export function createAPI() {
       helpTree.set(buildHelpTree())
     },
     notify,
+    showApp: (a) => getApp(a).show(),
+    toggleApp: (a) => getApp(a).toggle(),
+    closeApp: (a) => getApp(a).close(),
   }
 }

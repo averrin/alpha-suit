@@ -51,7 +51,7 @@ export async function startCache() {
   indexPercents.set(0)
   indexInProcess.set(true);
 
-  if (setting(SETTINGS.FILES_SHOW_INDEX_STATUS)) {
+  if (setting(SETTINGS.FILES_SHOW_INDEX_STATUS) || !isPremium()) {
     notify.component(IndexStatus, "indexing")
   }
 

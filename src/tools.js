@@ -1,6 +1,6 @@
 import { addTools, setting } from "crew-components/helpers"
 import { getApp } from "./apps";
-import {SETTINGS} from "./modules/constants.js"
+import { SETTINGS } from "./modules/constants.js"
 
 const specs = {
   name: "alpha-suit",
@@ -17,6 +17,7 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-tree"),
+      showIf: _ => setting(SETTINGS.TOOLS_TREE),
       isGM: true,
     },
     {
@@ -28,6 +29,7 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-browser"),
+      showIf: _ => setting(SETTINGS.TOOLS_BROWSER),
       isGM: true,
     },
 
@@ -40,6 +42,7 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-files"),
+      showIf: _ => setting(SETTINGS.TOOLS_FILES),
       isGM: true,
     },
     {
@@ -51,6 +54,7 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-settings"),
+      showIf: _ => setting(SETTINGS.TOOLS_SETTINGS),
       isGM: true,
     },
     {
@@ -62,6 +66,7 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-help"),
+      showIf: _ => setting(SETTINGS.TOOLS_HELP),
       isGM: true,
     },
     {
@@ -73,8 +78,22 @@ const specs = {
       },
       toggle: true,
       isActive: _ => setting("show-grid"),
+      showIf: _ => setting(SETTINGS.TOOLS_GRID),
       isGM: false,
       isDev: false,
+    },
+    {
+      name: "alpha-creator-btn",
+      title: "Toggle Alpha Creator",
+      icon: "eva:file-add-fill",
+      onClick: () => {
+        getApp("creator").toggle();
+      },
+      toggle: true,
+      isActive: _ => setting("show-creator"),
+      showIf: _ => setting(SETTINGS.TOOLS_CREATOR),
+      isGM: true,
+      isDev: true,
     }
 
   ]
@@ -89,17 +108,25 @@ export function addTool(spec) {
 
 export function initTools() {
   const dev = setting(SETTINGS.DEV_FEATURES);
-  specs.tools = specs.tools.filter(t => {
-    if (!game.user.isGM) {
-      return !t.isGM;
-    }
-    return true;
-  }).filter(t => {
-    if (!dev) {
-      return !t.isDev;
-    }
-    return true
-  });
+  specs.tools = specs.tools
+    .filter(t => {
+      if (t.showIf) {
+        return t.showIf();
+      }
+      return true;
+    })
+    .filter(t => {
+      if (!game.user.isGM) {
+        return !t.isGM;
+      }
+      return true;
+    })
+    .filter(t => {
+      if (!dev) {
+        return !t.isDev;
+      }
+      return true
+    });
 
   if (specs.tools?.length > 0 && !document.querySelector(`[data-control='${specs.name}']`)) {
     addTools(specs);

@@ -14,6 +14,7 @@
     <li>Oshy</li>
     <li>TehT</li>
     <li>Aaron Dougherty</li>
+    <li>Shadow</li>
   </ul>
 
   <h1>Special Thanks</h1>

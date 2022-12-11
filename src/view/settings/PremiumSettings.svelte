@@ -36,8 +36,12 @@
       </a>
 
       <p>
-      If you already have the Patreon Subscription, please install the Unlocker module from <a href="https://www.patreon.com/posts/73639802" class="ui-link ui-font-bold" target="_blank">HERE</a>
-    </p>
+         If you already have the Patreon Subscription, please install the Unlocker module from <a
+            href="https://www.patreon.com/posts/73639802"
+            class="ui-link ui-font-bold"
+            target="_blank">HERE</a
+         >
+      </p>
    {/if}
 
    <h1 class="ui-mt-6">Premium features</h1>
@@ -47,5 +51,6 @@
       <li>Option to hide Indexing Status widget</li>
       <li>Changing token art by dropping image file</li>
       <li>Default path setting for File Manager</li>
+      <li>Embedded versions of Grid (sidebar & Alpha Tree)</li>
    </ul>
 </div>

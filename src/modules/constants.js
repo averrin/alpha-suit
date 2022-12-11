@@ -5,6 +5,15 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  TOOLS_TREE: "tools-tree",
+  TOOLS_BROWSER: "tools-browser",
+  TOOLS_FILES: "tools-files",
+  TOOLS_SETTINGS: "tools-settings",
+  TOOLS_HELP: "tools-help",
+  TOOLS_GRID: "tools-grid",
+  TOOLS_CREATOR: "tools-creator",
+
+  HIDE_TRIAL_2023: "hide-trial-2023",
   GRID_IN_SIDEBAR: "grid-in-sidebar",
   GRID_IN_TREE: "grid-in-tree",
   GRID_FOR_PLAYERS: "grid-for-players",

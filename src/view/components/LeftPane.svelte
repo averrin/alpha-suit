@@ -11,6 +11,7 @@
    import Tags from "crew-components/Tags";
    import { createFilter } from "crew-components/helpers";
    import { onDestroy } from "svelte";
+   import {isPremium} from "crew-components/premium"
 
    export let elementRoot;
 
@@ -34,7 +35,7 @@
          icon: "fa-solid:magic",
       });
    }
-   if (setting(SETTINGS.GRID_IN_TREE)) {
+   if (isPremium() && setting(SETTINGS.GRID_IN_TREE)) {
       availableTabs.push({
          title: "Grid",
          icon: "ic:twotone-widgets",

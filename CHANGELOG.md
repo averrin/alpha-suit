@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.5.2 - 0.5.3](https://github.com/averrin/alpha-suit/compare/0.5.2...0.5.3)
+!!! All premium features are now FREE! Only until 1 Jan 2023. !!!
+
+Added:
+  * Button in tabbed grids to open the standalone one
+  * Tools settings page. Now you can hide any toolbar button.
+
+Fixed:
+  * Some search issues in File Manager
+  * Missed label for "Ignored compendiums" setting
+
 ## [0.5.1 - 0.5.2](https://github.com/averrin/alpha-suit/compare/0.5.1...0.5.2)
 Added:
   * Expanding dropped folders for grid
