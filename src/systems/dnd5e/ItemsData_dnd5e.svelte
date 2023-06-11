@@ -23,7 +23,7 @@
       </div>
       <div class="ui-text-center">|</div>
    {/if}
-   {#if data.price}
+   {#if data.price && data.price.value > 0}
       <div>
          {data.price.value}<span class="ui-font-bold">{data.price.denomination}</span>
       </div>
