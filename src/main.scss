@@ -14,6 +14,10 @@
       background: hsl(var(--window-background));
     }
 
+   .grid-item .editor p {
+     margin: 0 !important;
+   }
+
     .prosemirror {
       textarea {
         color: hsl(var(--bc))

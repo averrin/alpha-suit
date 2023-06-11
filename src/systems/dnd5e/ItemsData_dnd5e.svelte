@@ -25,14 +25,16 @@
    {/if}
    {#if data.price}
       <div>
-         {data.price}<span class="ui-font-bold">gp</span>
+         {data.price.value}<span class="ui-font-bold">{data.price.denomination}</span>
       </div>
    {/if}
+   {#if data.rarity}
    <div
       class="ui-w-3 ui-h-3 ui-rounded-full ui-border"
       style:background-color={colors[data.rarity]}
       title={data.rarity}
    />
+   {/if}
    {#if data?.weight}
       <div class="ui-text-center">|</div>
       <div class="ui-w-5 ui-text-center">{data.weight}</div>

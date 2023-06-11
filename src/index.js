@@ -33,6 +33,32 @@ Hooks.once('init', async () => {
   initSettings();
   initSettingsTopics()
 
+
+  game.keybindings.register(moduleId, SETTINGS.KEY_TOGGLE_TREE, {
+    name: 'Alpha Tree',
+    editable: [{ key: 'KeyT', modifiers: [KeyboardManager.MODIFIER_KEYS.ALT] }],
+    namespace: 'Alpha Suit',
+    onDown: () => {
+      getApp("tree").toggle();
+    }
+  });
+  game.keybindings.register(moduleId, SETTINGS.KEY_TOGGLE_GRID, {
+    name: 'Alpha Grid',
+    editable: [{ key: 'KeyG', modifiers: [KeyboardManager.MODIFIER_KEYS.ALT] }],
+    namespace: 'Alpha Suit',
+    onDown: () => {
+      getApp("grid").toggle();
+    }
+  });
+  game.keybindings.register(moduleId, SETTINGS.KEY_TOGGLE_DRAW, {
+    name: 'Alpha Draw',
+    editable: [{ key: 'KeyQ', modifiers: [] }],
+    namespace: 'Alpha Suit',
+    onDown: () => {
+      getApp("draw").toggle();
+    }
+  });
+
   game.settings.registerMenu(moduleId, "configure-settings", {
     name: "",
     label: "Alpha Settings",

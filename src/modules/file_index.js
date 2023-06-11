@@ -86,6 +86,8 @@ export async function startCache() {
       path = source.startsWith("forge") ? "" : ".";
       await picker.browse(source, path).then((res) => {
         firstLevel.push(...res.dirs);
+      }).catch(err => {
+        // console.error(err);
       });
     }
   }
@@ -113,7 +115,10 @@ export async function startCache() {
             }
             fileIndex.set(index);
             return res.dirs;
-          }).catch(_ => []);
+          }).catch(err => {
+            console.error(err);
+            return [];
+          });
         },
         leave(node) {
           if (firstLevel.includes(node)) {
@@ -162,14 +167,14 @@ export function rebuildIndex() {
 }
 
 export function initIndex() {
-    const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
-    if (indexMode != "manual" && indexMode != "ondemand") {
-      const delay = indexMode == "auto" ? setting(SETTINGS.FILES_INDEX_DELAY) : 0;
-      if (delay >= 0) {
-        if (delay != 0) {
-          notify.info(`Indexing will start in ${delay} seconds.`)
-        }
-        setTimeout(rebuildIndex, delay * 1000)
+  const indexMode = setting(SETTINGS.FILES_INDEX_MODE);
+  if (indexMode != "manual" && indexMode != "ondemand") {
+    const delay = indexMode == "auto" ? setting(SETTINGS.FILES_INDEX_DELAY) : 0;
+    if (delay >= 0) {
+      if (delay != 0) {
+        notify.info(`Indexing will start in ${delay} seconds.`)
       }
+      setTimeout(rebuildIndex, delay * 1000)
     }
+  }
 }

@@ -3,7 +3,8 @@
 
    export let item;
    export let maximize = false;
-   export let draggable=true;
+   export let draggable = true;
+   export let autoHighlight = true;
 
    async function drag(e) {
       let type = "Item";
@@ -13,10 +14,12 @@
    }
    let thumb = item?.img || item.data.icon;
    let highlight;
-   if (item.system?.equipped) {
-      highlight = "1px solid #88cc88";
-   } else if (item.type != "spell" && item.system?.actionType) {
-      highlight = "2px solid #6666ee";
+   if (autoHighlight) {
+      if (item.system?.equipped) {
+         highlight = "1px solid #88cc88";
+      } else if (item.type != "spell" && item.system?.actionType) {
+         highlight = "2px solid #6666ee";
+      }
    }
    let title = `${item.data.label || item.name}`;
    if (item.data?.data?.quantity > 1) {
@@ -61,7 +64,7 @@
       style:background-image="url({thumb})"
       style:border={highlight}
       alt=""
-    {draggable}
+      {draggable}
       on:pointerdown={() => null}
       on:click
       on:dragstart={drag}

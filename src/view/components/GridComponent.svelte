@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script>
-  import ActionGridWidget from "./ActionGridWidget.svelte";
+   import ActionGridWidget from "./ActionGridWidget.svelte";
    import { theme } from "crew-components/stores";
    import Icon from "crew-components/Icon";
    import { v4 as uuidv4 } from "uuid";
@@ -19,6 +19,7 @@
    const { width, height, top, left } = position.stores;
    import { writable } from "svelte/store";
    import { editingWidget } from "../../modules/stores.js";
+   import exportFromJSON from "export-from-json";
 
    export let elementRoot;
    export let id;
@@ -102,7 +103,7 @@
          }
          const w = pos.w;
          const h = pos.h;
-         addItem(item.source, x, y, w, h);
+         addItem(item.source ?? item, x, y, w, h);
       }
       serializeItems();
    }
@@ -122,7 +123,7 @@
          if (i.uuid) {
             source = await fromUuid(i.uuid);
          } else if (i.type == "Action") {
-            source = game.actors.get(i.persist.actorId).system.actions.find(a => a.item.id == i.persist.itemId);
+            source = game.actors.get(i.persist.actorId).system.actions.find((a) => a.item.id == i.persist.itemId);
             source.persist = i.persist;
             source.type = "Action";
          } else if (i.type == "CompendiumEntry") {
@@ -158,6 +159,21 @@
          entities.push(source);
       }
       return Array.from(new Set(layout.filter((i) => i.source)));
+   }
+
+   function serializeLayout() {
+      let layout = items.map((i) => {
+         return { ...i };
+      });
+      for (const i of layout) {
+         delete i.source;
+      }
+      const l = { layoutId, layout, name: layoutName };
+      if (!l.options) {
+         l.options = {};
+      }
+      l.options.rowHeight = rowHeight;
+      return l;
    }
 
    function serializeItems(force = false) {
@@ -268,16 +284,12 @@
          return;
       }
       if (dataItem.type == "Effect") {
-         logger.info(dataItem.source);
-         // dataItem.source.data = dataItem.source.effect;
-         // Director.openEffectEditor(dataItem.source);
          notify.error("Editing is not available yet.");
          return;
       }
       if (dataItem.type == "Actor") {
          // dataItem.source.sheet.render(true);
          const token = canvas.tokens.placeables.find((t) => t.actor?.id == dataItem.source?.id);
-         // logger.info(token);
          if (token) {
             token.control();
             globalThis.canvas.animatePan({
@@ -305,8 +317,27 @@
    }
 
    async function dropHandler(event) {
+      if (event.dataTransfer.items[0].kind == "file") {
+         const file = event.dataTransfer.items[0].getAsFile();
+         logger.info("file import");
+         file.text().then((content) => {
+            const parsed = JSON.parse(content);
+            if (!parsed || !parsed.layout) {
+               logger.error("Grid import is corrupted.");
+            }
+            gridLayout.update((gl) => {
+               const l = gl.find((l) => l.layoutId == layoutId);
+               l.layout = parsed.layout;
+               l.name = parsed.name;
+               return gl;
+            });
+            tick().then(async (_) => {
+               items = await deserializeItems();
+            });
+         });
+         return;
+      }
       const data = TextEditor.getDragEventData(event);
-      // logger.info(data);
       // TODO: replace on drop
       let entity;
       if (data.type == "Tile") {
@@ -446,25 +477,25 @@
       // });
    }
 
-   function editWidget() {
-      editingWidget.set(null);
-      AlphaSuit.showApp("edit-widget");
+   function editWidget(widget) {
+      editingWidget.set(widget);
+      tick().then((_) => AlphaSuit.showApp("edit-widget"));
    }
 
    onDestroy(
       editingWidget.subscribe((w) => {
          if (!w) return;
-         logger.info(w);
          const item = items.find((i) => i.widgetId == w.widgetId);
+         delete w.source;
          if (!item) {
             items = [...items, w];
          } else {
             items[items.indexOf(item)] = w;
             items = [...items];
          }
-         logger.info(items);
          serializeItems();
          resizeItems();
+         Hooks.call("updateWidget");
       })
    );
 
@@ -533,6 +564,14 @@
       };
       event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
    }
+
+   function exportLayout() {
+      const fileName = `grid-${layoutName}`;
+      const exportType = exportFromJSON.types.json;
+      exportFromJSON({ data: serializeLayout(), fileName, exportType });
+   }
+
+   tick().then((_) => Hooks.call("updateWidget"));
 </script>
 
 <div class="ui-flex ui-flex-col alpha-ui" data-theme={$theme} style="background-color: hsl(var(--b2))">
@@ -543,13 +582,6 @@
          on:click={toggleEdit}
          size="xs"
       />
-
-      <!-- <IconButton -->
-      <!--    title={locked ? `Edit grid` : `Lock grid`} -->
-      <!--    icon={"uil:arrow-resize-diagonal"} -->
-      <!--    on:click={resizeItems} -->
-      <!--    size="xs" -->
-      <!-- /> -->
 
       <div
          style="background: unset"
@@ -604,10 +636,15 @@
             <IconButton title="Reset layout" icon="gg:arrow-top-left-r" on:click={updateItems} size="xs" />
 
             {#if widgetsEnabled}
-               <button title="Add new widget" class="ui-btn ui-btn-xs ui-btn-primary ui-w-24" on:click={editWidget}
-                  >Add widget</button
-               >
+               <IconButton
+                  icon="fa6-solid:plus"
+                  title="Add new widget"
+                  type="primary"
+                  size="xs"
+                  on:click={(_) => editWidget()}
+               />
             {/if}
+            <IconButton icon="ph:export-bold" title="Export layout" size="xs" on:click={exportLayout} />
          </div>
          <div class="ui-flex-none">
             <IconButton title="Remove all items" icon="icon-park-solid:clear-format" on:click={reset} size="xs" />
@@ -641,15 +678,18 @@
          on:mouseup={(e) => mouseUp(e, dataItem)}
          id={dataItem.widgetId}
          data-type={dataItem.type}
+         style:border-width={dataItem?.source?.persist?.borderWidth}
+         style:border-color={dataItem?.source?.persist?.borderColor}
+         style:border-style={dataItem?.source?.persist?.borderColor ? "solid" : "none"}
       >
          {#if dataItem.type == "Item"}
-            <ItemThumb maximize={true} item={dataItem.source} />
+            <ItemThumb autoHighlight={false} maximize={true} item={dataItem.source} />
          {:else if dataItem.type == "ActiveEffect"}
             <ActiveEffectThumb draggable={false} maximize={true} item={dataItem.source} />
          {:else if dataItem.type == "File"}
             <FileThumb zoom={false} maximize={true} file={dataItem.source} />
          {:else if dataItem.type == "Text"}
-            <TextGridWidget item={dataItem.source} />
+            <TextGridWidget item={writable(dataItem.source)} />
          {:else if dataItem.type == "JournalEntry"}
             <div class="ui-p-1 ui-font-bold ui-link">
                {dataItem.source.name}
@@ -686,7 +726,7 @@
                {dataItem.source.metadata.label}
             </div>
          {:else if dataItem.type == "Action"}
-          <ActionGridWidget action={dataItem.source} />
+            <ActionGridWidget action={dataItem.source} />
          {:else if dataItem.type == "Actor"}
             <DocumentThumb
                title={`${dataItem.source.data.name} [select | target | open]`}
@@ -701,6 +741,16 @@
             <div class="remove">
                <RemoveButton size="xs" on:click={(_) => removeItem(dataItem)} title="Remove item" />
             </div>
+            {#if dataItem.type == "Text"}
+               <div class="edit">
+                  <IconButton
+                     icon="material-symbols:edit-square"
+                     size="xs"
+                     on:click={(_) => editWidget(dataItem)}
+                     title="Remove item"
+                  />
+               </div>
+            {/if}
          {/if}
       </div>
    </Grid>
@@ -717,16 +767,17 @@
             <button
                style="pointer-events: all !important"
                class="ui-btn ui-btn-md ui-btn-primary ui-w-48"
-               on:click={editWidget}>Add widget</button
+               on:click={(_) => editWidget()}>Add widget</button
             >
          {:else}
-            <button class="ui-btn ui-btn-md ui-btn-primary ui-w-48 ui-btn-disabled" on:click={editWidget}
+            <button class="ui-btn ui-btn-md ui-btn-primary ui-w-48 ui-btn-disabled"
                >Add widget<br />[coming soon]</button
             >
          {/if}
       </div>
    {/if}
 </div>
+
 
 <style>
    :global(.svlt-grid-shadow) {
@@ -756,13 +807,19 @@
       pointer-events: none;
    }
    .editable {
-      border: 1px indianred solid;
+      border: 1px indianred solid !important;
    }
    .remove {
       cursor: pointer;
       position: absolute;
       right: -30px;
       top: 0px;
+   }
+   .edit {
+      cursor: pointer;
+      position: absolute;
+      right: -30px;
+      top: 30px;
    }
    :global(.svlt-grid-item:hover) {
       z-index: 10;

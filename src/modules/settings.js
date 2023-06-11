@@ -480,4 +480,25 @@ export function initSettings() {
     type: Boolean,
     default: true,
   });
+
+  game.settings.register(moduleId, SETTINGS.DRAW_SHOW_CP, {
+    name: "Show color picker for players",
+    scope: "world",
+    config: false,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register(moduleId, SETTINGS.DRAW_MARKERS, {
+    scope: "world",
+    config: false,
+    default: [
+      { path: "modules/alpha-suit/assets/markers/target-arrows.png", colored: true },
+      { path: "modules/alpha-suit/assets/markers/crossed-swords.png", colored: true },
+      { path: "modules/alpha-suit/assets/markers/target.png", colored: true },
+      { path: "modules/alpha-suit/assets/markers/position.png", colored: true },
+      { path: "modules/alpha-suit/assets/markers/death-skull.png", colored: true },
+    ],
+    type: Array,
+  });
 }

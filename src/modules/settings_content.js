@@ -10,6 +10,7 @@ import SupportSettings from "../view/settings/SupportSettings.svelte";
 import DNDSettings from "../view/settings/DNDSettings.svelte";
 import GridSettings from "../view/settings/GridSettings.svelte";
 import ToolsSettings from "../view/settings/ToolsSettings.svelte"
+import DrawSettings from "../view/settings/DrawSettings.svelte"
 
 import DirectorSettings from "../view/settings/DirectorSettings.svelte";
 import EffectEditorSettings from "../view/settings/EffectEditorSettings.svelte";
@@ -74,6 +75,12 @@ export const settingsContent = {
       name: "Alpha Grid",
       icon: "ic:twotone-widgets",
       component: GridSettings,
+    },
+    {
+      id: "s-alpha-Draw",
+      name: "Alpha Draw",
+      icon: "mingcute:paint-brush-fill",
+      component: DrawSettings,
     },
     {
       id: "s-alpha-system",

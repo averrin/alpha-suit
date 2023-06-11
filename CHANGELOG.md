@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
 ## [Unreleased]
+## [0.6.0 - 0.7.0](https://github.com/averrin/alpha-suit/compare/0.6.0...0.7.0)
+Added:
+  * Foundry v11 support.
+
+Fixed:
+  * DnD price displaying error
+
+## [0.5.4 - 0.6.0](https://github.com/averrin/alpha-suit/compare/0.5.4...0.6.0)
+Added:
+  * Export/Import for grids (just drop a file onto a grid to rewrite it)
+
 ## [0.5.3 - 0.5.4](https://github.com/averrin/alpha-suit/compare/0.5.3...0.5.4)
 Added:
   * Initial support for PF2e strikes in the grid

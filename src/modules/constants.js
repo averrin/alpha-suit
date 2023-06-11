@@ -5,6 +5,13 @@ export const FLAGS = {
 }
 
 export const SETTINGS = {
+  KEY_TOGGLE_TREE: "key-toggle-tree",
+  KEY_TOGGLE_GRID: "key-toggle-grid",
+  KEY_TOGGLE_DRAW: "key-toggle-draw",
+
+  DRAW_SHOW_CP: "draw-show-cp",
+  DRAW_MARKERS: "draw-markers",
+
   TOOLS_TREE: "tools-tree",
   TOOLS_BROWSER: "tools-browser",
   TOOLS_FILES: "tools-files",

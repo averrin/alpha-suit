@@ -2,43 +2,75 @@
    import { TJSProseMirror } from "@typhonjs-fvtt/svelte-standard/component";
    import { SETTINGS, setting, onHook, calculateValue, logger } from "crew-components/helpers";
    import { tick } from "svelte";
+   import { writable } from "svelte/store";
+   import DocumentThumb from "./DocumentThumb.svelte";
    export let item;
-
-   let result = "";
-   let source = item.target;
+   let _item;
    let target;
+   const st = writable(target);
+   let result = "";
 
-   async function getTarget() {
-      if (!source) return;
-      target = await fromUuid(source);
-      if (!(target instanceof Actor)) {
-         target = target.actor;
+   function getTarget() {
+      logger.info(_item);
+      if (_item.type == "text") {
+         target = null;
+         _item.target = null;
+         st.set(target);
+         return;
       }
-      // logger.info(target);
-   }
-
-   async function process() {
+      if (!_item.target) return;
       try {
-         await getTarget();
-         if (target) {
-            result = Handlebars.compile(item.template)(target);
-            // logger.info(item.template, result, target);
-         } else {
-            result = "Target is not found.";
+         target = calculateValue(_item.target, "actor");
+         if (!(target instanceof Actor)) {
+            target = target.actor;
          }
+         st.set(target);
       } catch (e) {
-         logger.error(e);
          result = e;
       }
    }
 
-   tick().then(process);
+   function process() {
+      try {
+         getTarget();
+         if (target) {
+            let template = _item.template;
+            template = template.replaceAll(new RegExp(/{[\t]*@/g), "{system.");
+            result = Handlebars.compile(template)({ ...target, actor: target });
+         } else if (_item.target) {
+            // logger.error(_item);
+            result = "Target is not found.";
+         } else {
+            result = _item.template;
+         }
+      } catch (e) {
+         // logger.error(e);
+         result = e;
+      }
+   }
+
+   item.subscribe((i) => {
+      // debugger;
+      _item = i;
+      if (_item.persist) {
+         _item = _item.persist;
+      }
+      process();
+   });
    $: process();
 
-   onHook(["updateActor"], process)
+   onHook(["updateActor", "controlToken", "targetToken", "updateWidget"], process);
+
+   function thumbClick() {
+     target.sheet.render(true)
+   }
 </script>
 
-<!-- {JSON.stringify(item)} -->
-<div class="ui-p-1">
+<div class="ui-p-1 ui-flex-row ui-items-center ui-flex ui-gap-2">
+   {#if _item.thumb && $st && _item.target}
+      <div class="ui-min-w-10 ui-min-h-10 ui-h-10 ui-w-10">
+         <DocumentThumb on:click={thumbClick} item={st} maximize={true} />
+      </div>
+   {/if}
    <TJSProseMirror content={result} options={{ editable: false }} />
 </div>

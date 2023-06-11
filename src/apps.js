@@ -10,6 +10,7 @@ import FilesUI from './view/FilesUI.svelte';
 // import HUDApplication from './view/HUDApplication.js';
 import GridUI from './view/GridUI.svelte';
 import CreatorUI from './view/CreatorUI.svelte';
+import DrawUI from './view/DrawUI.svelte';
 import EditWidgetDialog from "./view/EditWidgetDialog.svelte";
 import TrialDialog from "./view/TrialDialog.svelte"
 import { isPremiumClean, isTrial } from "crew-components/premium";
@@ -31,6 +32,15 @@ const appSpecs = [
     height: 600,
     width: 600,
     isTemp: true,
+  },
+  {
+    app_id: "draw",
+    title: "Alpha Draw",
+    component: DrawUI,
+    height: 150,
+    width: 360,
+    isGM: false,
+    hidden: true,
   },
   {
     app_id: "trial",
@@ -57,7 +67,7 @@ export function createApps() {
 export function startUserApps() {
   for (const spec of appSpecs) {
     if (!spec.isGM) {
-      getApp(spec.app_id).start()
+      getApp(spec.app_id).start(spec.hidden)
       if (spec.showIf && spec.showIf()) {
         getApp(spec.app_id).show();
       }
@@ -68,7 +78,7 @@ export function startUserApps() {
 export function startGMApps() {
   for (const spec of appSpecs) {
     if (spec.isGM) {
-      getApp(spec.app_id).start()
+      getApp(spec.app_id).start(spec.hidden)
       if (spec.showIf && spec.showIf()) {
         getApp(spec.app_id).show();
       }

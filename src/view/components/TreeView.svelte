@@ -146,6 +146,7 @@
       });
    }
    const showSysInfo = setting(SETTINGS.SHOW_SYSTEM_INFO);
+   console.log($treeItems);
 </script>
 
 <div class="ui-h-full">

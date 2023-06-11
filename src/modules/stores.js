@@ -8,7 +8,7 @@ import { settingsContent } from "./settings_content.js"
 import { tick } from "svelte";
 
 import { moduleId, SETTINGS } from "./constants.js";
-import { userFlagStore } from 'crew-components/stores';
+import { userFlagStore, settingStore } from 'crew-components/stores';
 let tagSource = moduleId;
 
 
@@ -45,7 +45,7 @@ export const editingWidget = writable(null)
 
 function getTree() {
   let collection = get(currentCollection);
-  return collection.directory.tree;
+  return {children: collection.directory.folders, content: collection.directory.documents.filter(d => d.folder == null)};
 }
 
 export function addSystem(system) {
@@ -268,9 +268,11 @@ function initDropHandler() {
 }
 
 export let gridLayout = writable([]);
+export let drawMarkers = writable([]);
 
 export function initStores() {
   gridLayout = userFlagStore(SETTINGS.GRID_LAYOUT, [])
+  drawMarkers = settingStore(drawMarkers, SETTINGS.DRAW_MARKERS)
 
   initDropHandler()
 
@@ -308,6 +310,9 @@ export function initStores() {
 }
 
 export function addTree(tree, parent, transform, folderTransform) {
+  if (tree == null || !tree) {
+    debugger
+  }
   let items = [];
   tree = tree.model ?? tree;
   const item = TreeItem.from(tree);

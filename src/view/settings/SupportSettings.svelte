@@ -14,6 +14,8 @@
     <li>TehT</li>
     <li>Aaron Dougherty</li>
     <li>Shadow</li>
+    <li>The Sky</li>
+    <li>Laurel Knapik-Blaisure</li>
   </ul>
 
   <h1>Special Thanks</h1>
